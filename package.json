@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "build:cloudflare": "npx opennextjs-cloudflare",
+    "build:cloudflare": "npx opennextjs-cloudflare build",
     "preview:cloudflare": "npx wrangler pages dev"
   },
   "dependencies": {
