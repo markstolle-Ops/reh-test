@@ -19,34 +19,34 @@
 | Create | `.github/workflows/ci.yml` | Single CI pipeline with branch-conditional steps |
 | Create | `wrangler.toml` | Cloudflare Pages config with per-environment R2 bindings |
 | Create | `open-next.config.ts` | OpenNext adapter configuration for Cloudflare |
-| Modify | `package.json` | Add build scripts and @opennextjs/cloudflare dependency |
+| Modify | `package.json` | Add build scripts, @opennextjs/cloudflare and wrangler dependencies |
 | Modify | `next.config.ts` | Make CSP headers environment-variable-driven |
-| Modify | `.env.example` | Add Clerk domain env var for CSP |
-| Modify | `playwright.config.ts` | Ensure CI compatibility |
+| Modify | `.env.example` | Add Clerk domain env var, Redis env vars, environment docs |
+| Modify | `.gitignore` | Add `.open-next/` build output directory |
 
 ---
 
-### Task 1: Install @opennextjs/cloudflare adapter
+### Task 1: Install @opennextjs/cloudflare adapter and wrangler
 
 **Files:**
 - Modify: `package.json`
 
-- [ ] **Step 1: Install the adapter**
+- [ ] **Step 1: Install the adapter and wrangler**
 
 Run:
 ```bash
-npm install --save-dev @opennextjs/cloudflare
+npm install --save-dev @opennextjs/cloudflare wrangler
 ```
 
 - [ ] **Step 2: Verify installation**
 
 Run:
 ```bash
-node -e "require('@opennextjs/cloudflare')" && echo "OK"
+ls node_modules/@opennextjs/cloudflare/package.json && ls node_modules/wrangler/package.json && echo "OK"
 ```
-Expected: `OK` (no errors)
+Expected: Both paths exist, prints `OK`.
 
-- [ ] **Step 3: Add Cloudflare build script to package.json**
+- [ ] **Step 3: Add Cloudflare build and preview scripts to package.json**
 
 In `package.json`, add to the `"scripts"` section:
 
@@ -57,11 +57,20 @@ In `package.json`, add to the `"scripts"` section:
 
 The existing `"build": "next build"` stays unchanged for local development.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Add `.open-next/` to .gitignore**
+
+Add the following line to `.gitignore`:
+
+```
+# Cloudflare Pages build output
+.open-next/
+```
+
+- [ ] **Step 5: Commit**
 
 ```bash
-git add package.json package-lock.json
-git commit -m "feat: add @opennextjs/cloudflare adapter and build scripts"
+git add package.json package-lock.json .gitignore
+git commit -m "feat: add @opennextjs/cloudflare adapter and wrangler"
 ```
 
 ---
@@ -73,7 +82,7 @@ git commit -m "feat: add @opennextjs/cloudflare adapter and build scripts"
 
 - [ ] **Step 1: Create the config file**
 
-Create `open-next.config.ts` at the project root:
+Create `open-next.config.ts` at the project root. Start with a minimal config — the adapter auto-detects most settings:
 
 ```typescript
 import type { OpenNextConfig } from "@opennextjs/cloudflare";
@@ -90,7 +99,7 @@ const config: OpenNextConfig = {
 export default config;
 ```
 
-This is the minimal config needed. The adapter handles the rest automatically.
+Note: If the build fails with this config, consult the `@opennextjs/cloudflare` docs for the correct config shape for the installed version. The `wrapper` and `converter` fields may differ.
 
 - [ ] **Step 2: Verify the build works**
 
@@ -98,7 +107,7 @@ Run:
 ```bash
 npm run build:cloudflare
 ```
-Expected: Build completes without errors. If it fails due to missing environment variables, that's OK at this stage — the build structure should be valid.
+Expected: Build completes without errors. If it fails due to missing environment variables, that's OK at this stage — the build structure should be valid. If it fails due to config shape issues, check the adapter docs and adjust `open-next.config.ts`.
 
 - [ ] **Step 3: Commit**
 
@@ -120,7 +129,7 @@ Create `wrangler.toml` at the project root:
 
 ```toml
 name = "realestatehunter"
-compatibility_date = "2024-09-23"
+compatibility_date = "2026-03-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".open-next"
 
@@ -170,7 +179,7 @@ NEXT_PUBLIC_CLERK_DOMAIN=
 
 - [ ] **Step 2: Update next.config.ts to use env var for Clerk CSP**
 
-Replace the hardcoded CSP `connect-src` in `next.config.ts` with:
+Replace the contents of `next.config.ts` with:
 
 ```typescript
 import type { NextConfig } from "next";
@@ -182,13 +191,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Apply CSP to all routes
         source: "/(.*)",
         headers: [
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
+              // Allow SignWell iframe for embedded signing
               "frame-src https://www.signwell.com",
+              // Allow SignWell embed script
               "script-src 'self' 'unsafe-inline' https://cdn.signwell.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
@@ -222,7 +234,49 @@ git commit -m "feat: make CSP Clerk domain configurable via env var"
 
 ---
 
-### Task 5: Create GitHub Actions CI workflow
+### Task 5: Update .env.example with environment documentation
+
+**Files:**
+- Modify: `.env.example`
+
+This task runs BEFORE branch creation so the changes propagate to all branches.
+
+- [ ] **Step 1: Add environment header comment to .env.example**
+
+Add the following at the top of `.env.example`:
+
+```bash
+# ============================================
+# RealEstateHunter Environment Configuration
+# ============================================
+# This app runs in three environments: dev, staging, prod.
+# Each environment needs its own set of credentials.
+# Configure these in Cloudflare Pages dashboard per branch.
+# Local development: copy this file to .env.local
+# ============================================
+```
+
+- [ ] **Step 2: Add Upstash Redis env vars**
+
+The Inngest env vars already exist in `.env.example`. Add the following Redis vars (these are missing):
+
+```bash
+# Upstash Redis (caching)
+# Each environment needs its own Redis instance
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add .env.example
+git commit -m "docs: add environment documentation and Redis vars to .env.example"
+```
+
+---
+
+### Task 6: Create GitHub Actions CI workflow
 
 **Files:**
 - Create: `.github/workflows/ci.yml`
@@ -278,7 +332,10 @@ jobs:
   e2e-test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    # Run E2E on staging/main pushes AND on PRs targeting staging/main
+    if: >-
+      github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main' ||
+      github.base_ref == 'staging' || github.base_ref == 'main'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -294,7 +351,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint, unit-test]
+    # Wait for all test jobs; proceed if e2e was skipped (dev branch) but not if it failed
+    needs: [lint, unit-test, e2e-test]
+    if: always() && !failure() && !cancelled()
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -303,6 +362,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:cloudflare
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: .open-next/
+          retention-days: 1
 
   deploy:
     name: Deploy to Cloudflare Pages
@@ -314,12 +378,10 @@ jobs:
       deployments: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/download-artifact@v4
         with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build:cloudflare
+          name: build-output
+          path: .open-next/
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -327,14 +389,13 @@ jobs:
           command: pages deploy .open-next --project-name=realestatehunter --branch=${{ github.ref_name }}
 ```
 
-- [ ] **Step 3: Verify workflow syntax**
+- [ ] **Step 3: Verify workflow YAML is valid**
 
 Run:
 ```bash
-cat .github/workflows/ci.yml | npx yaml-lint 2>/dev/null || echo "Install yaml-lint or verify manually"
+npx js-yaml .github/workflows/ci.yml > /dev/null && echo "YAML valid"
 ```
-
-Alternatively, verify the YAML is valid by checking indentation manually. The workflow should have 5 jobs: lint, unit-test, e2e-test, build, deploy.
+Expected: `YAML valid`
 
 - [ ] **Step 4: Commit**
 
@@ -345,7 +406,7 @@ git commit -m "feat: add GitHub Actions CI workflow with branch-conditional step
 
 ---
 
-### Task 6: Create `dev` and `staging` branches
+### Task 7: Create `dev` and `staging` branches and push to remote
 
 **Files:**
 - None (git operations only)
@@ -385,10 +446,9 @@ Expected:
 
 All three branches now exist with identical content. From this point forward, day-to-day work happens on feature branches off `dev`.
 
-- [ ] **Step 5: Push all branches to remote**
+- [ ] **Step 5: Configure remote and push all branches**
 
-Before this step, ensure the remote is configured:
-
+Check if remote exists:
 ```bash
 git remote -v
 ```
@@ -398,7 +458,7 @@ If no remote exists, add it:
 git remote add origin https://github.com/roybomberger-arch/RealEstateHunter.git
 ```
 
-Then push all branches:
+Push all branches:
 ```bash
 git push -u origin main
 git push -u origin staging
@@ -407,7 +467,7 @@ git push -u origin dev
 
 ---
 
-### Task 7: Configure GitHub branch protection rules
+### Task 8: Configure GitHub branch protection rules
 
 **Files:**
 - None (GitHub API operations)
@@ -425,13 +485,13 @@ Expected: Logged in to github.com.
 - [ ] **Step 2: Protect the `main` branch**
 
 ```bash
-gh api repos/{owner}/{repo}/branches/main/protection \
+gh api repos/roybomberger-arch/RealEstateHunter/branches/main/protection \
   --method PUT \
   --input - <<EOF
 {
   "required_status_checks": {
     "strict": true,
-    "contexts": ["Lint", "Unit Tests", "Build"]
+    "contexts": ["Lint", "Unit Tests", "E2E Tests", "Build"]
   },
   "enforce_admins": false,
   "required_pull_request_reviews": {
@@ -442,18 +502,16 @@ gh api repos/{owner}/{repo}/branches/main/protection \
 EOF
 ```
 
-Note: Replace `{owner}/{repo}` with `roybomberger-arch/RealEstateHunter`.
-
 - [ ] **Step 3: Protect the `staging` branch**
 
 ```bash
-gh api repos/{owner}/{repo}/branches/staging/protection \
+gh api repos/roybomberger-arch/RealEstateHunter/branches/staging/protection \
   --method PUT \
   --input - <<EOF
 {
   "required_status_checks": {
     "strict": true,
-    "contexts": ["Lint", "Unit Tests", "Build"]
+    "contexts": ["Lint", "Unit Tests", "E2E Tests", "Build"]
   },
   "enforce_admins": false,
   "required_pull_request_reviews": null,
@@ -465,60 +523,14 @@ EOF
 - [ ] **Step 4: Verify protection rules**
 
 ```bash
-gh api repos/{owner}/{repo}/branches/main/protection --jq '.required_pull_request_reviews.required_approving_review_count'
+gh api repos/roybomberger-arch/RealEstateHunter/branches/main/protection --jq '.required_pull_request_reviews.required_approving_review_count'
 ```
 Expected: `1`
 
 ```bash
-gh api repos/{owner}/{repo}/branches/staging/protection --jq '.required_status_checks.contexts'
+gh api repos/roybomberger-arch/RealEstateHunter/branches/staging/protection --jq '.required_status_checks.contexts'
 ```
-Expected: `["Lint", "Unit Tests", "Build"]`
-
----
-
-### Task 8: Update .env.example with environment documentation
-
-**Files:**
-- Modify: `.env.example`
-
-- [ ] **Step 1: Add environment header comment to .env.example**
-
-Add the following at the top of `.env.example`:
-
-```bash
-# ============================================
-# RealEstateHunter Environment Configuration
-# ============================================
-# This app runs in three environments: dev, staging, prod.
-# Each environment needs its own set of credentials.
-# Configure these in Cloudflare Pages dashboard per branch.
-# Local development: copy this file to .env.local
-# ============================================
-```
-
-- [ ] **Step 2: Add Inngest and Redis env vars if missing**
-
-Verify these exist in `.env.example`. If missing, add:
-
-```bash
-# Inngest (background jobs)
-# Dev: use local dev server (npx inngest-cli dev)
-# Staging/Prod: use Inngest Cloud with separate environments
-INNGEST_EVENT_KEY=
-INNGEST_SIGNING_KEY=
-
-# Upstash Redis (caching)
-# Each environment needs its own Redis instance
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-```
-
-- [ ] **Step 3: Commit**
-
-```bash
-git add .env.example
-git commit -m "docs: add environment documentation to .env.example"
-```
+Expected: `["Lint", "Unit Tests", "E2E Tests", "Build"]`
 
 ---
 
@@ -528,12 +540,14 @@ After all tasks are complete, verify:
 
 - [ ] All three branches exist (`dev`, `staging`, `main`)
 - [ ] Branches are pushed to GitHub remote
-- [ ] `main` branch requires 1 PR approval + CI pass
-- [ ] `staging` branch requires CI pass
+- [ ] `main` branch requires 1 PR approval + CI pass (including E2E)
+- [ ] `staging` branch requires CI pass (including E2E)
 - [ ] `dev` branch has no protection (direct push allowed)
 - [ ] GitHub Actions workflow runs on push to any of the three branches
-- [ ] E2E tests only run on `staging` and `main`
+- [ ] E2E tests run on `staging` and `main` pushes, and on PRs targeting `staging`/`main`
 - [ ] `npm run build:cloudflare` produces output in `.open-next/`
+- [ ] `.open-next/` is in `.gitignore`
 - [ ] `wrangler.toml` has per-environment R2 bindings
 - [ ] CSP headers use env var for Clerk domain
-- [ ] `.env.example` documents all environment-specific variables
+- [ ] `.env.example` documents all environment-specific variables including Redis
+- [ ] Deploy job uses build artifact (not a fresh rebuild)
