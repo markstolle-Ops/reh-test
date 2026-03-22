@@ -1,0 +1,23 @@
+name = "realestatehunter"
+compatibility_date = "2026-03-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".open-next"
+
+# R2 bucket bindings — per-environment
+# Dev environment
+[env.dev]
+r2_buckets = [
+  { binding = "R2_BUCKET", bucket_name = "reh-photos-dev" }
+]
+
+# Staging environment
+[env.staging]
+r2_buckets = [
+  { binding = "R2_BUCKET", bucket_name = "reh-photos-staging" }
+]
+
+# Production environment
+[env.production]
+r2_buckets = [
+  { binding = "R2_BUCKET", bucket_name = "reh-photos-prod" }
+]
