@@ -1,7 +1,11 @@
 name = "reh-test"
+main = ".open-next/worker.js"
 compatibility_date = "2026-03-01"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".open-next"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
 # R2 bucket bindings — per-environment
 # Dev environment
