@@ -10,11 +10,10 @@
  * Export pattern: raw async fn for testability + inngest-wrapped fn for route.
  */
 
-import { eq, and } from "drizzle-orm";
-
-import { inngest } from "@/inngest/client";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { transactionEvents } from "@/db/schema";
+import { inngest } from "@/inngest/client";
 import { calculateClosingDisclosureDeadline } from "@/services/transaction/deadlines";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -53,7 +52,7 @@ export interface CfpbMonitorResult {
  *   - Not found + today before mustSendBy → no alert yet
  */
 export async function cfpbDisclosureMonitorRaw(
-  params: CfpbMonitorParams
+  params: CfpbMonitorParams,
 ): Promise<CfpbMonitorResult> {
   const { transactionId, closingDate, loanType, today = new Date() } = params;
 
@@ -72,8 +71,8 @@ export async function cfpbDisclosureMonitorRaw(
     .where(
       and(
         eq(transactionEvents.transactionId, transactionId),
-        eq(transactionEvents.eventType, "closing_disclosure_sent")
-      )
+        eq(transactionEvents.eventType, "closing_disclosure_sent"),
+      ),
     );
 
   if (events.length > 0) {
@@ -126,10 +125,7 @@ export const cfpbDisclosureMonitor = inngest.createFunction(
     const { mustSendBy } = calculateClosingDisclosureDeadline(closingDate);
 
     // Sleep until mustSendBy date to run the compliance check at the right time
-    await step.sleepUntil(
-      "sleep-until-must-send-by",
-      mustSendBy.toISOString()
-    );
+    await step.sleepUntil("sleep-until-must-send-by", mustSendBy.toISOString());
 
     // Run the compliance check after mustSendBy has passed
     const result = await step.run("check-cfpb-compliance", async () => {
@@ -164,5 +160,5 @@ export const cfpbDisclosureMonitor = inngest.createFunction(
     }
 
     return { transactionId, ...result };
-  }
+  },
 );

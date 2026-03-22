@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 // ACCT-05: Role-specific dashboards
 // Requires CLERK_TESTING_TOKEN for authenticated test sessions.
@@ -24,16 +24,12 @@ test.describe("ACCT-05: Role-specific dashboards", () => {
     await expect(page.getByRole("heading", { name: "Seller Dashboard" })).toBeVisible();
   });
 
-  test("unauthenticated user accessing /buyer/* is redirected to /sign-in", async ({
-    page,
-  }) => {
+  test("unauthenticated user accessing /buyer/* is redirected to /sign-in", async ({ page }) => {
     await page.goto("/buyer/dashboard");
     await expect(page).toHaveURL(/\/sign-in/);
   });
 
-  test("unauthenticated user accessing /seller/* is redirected to /sign-in", async ({
-    page,
-  }) => {
+  test("unauthenticated user accessing /seller/* is redirected to /sign-in", async ({ page }) => {
     await page.goto("/seller/dashboard");
     await expect(page).toHaveURL(/\/sign-in/);
   });

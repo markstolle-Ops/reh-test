@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { syncResoBoardsRaw } from "./sync-reso-boards";
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
@@ -77,7 +77,7 @@ const mockNormalized = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function setupMockDb(boards: typeof mockBoard1[]) {
+function setupMockDb(boards: (typeof mockBoard1)[]) {
   const fromMock = vi.fn().mockReturnValue({
     where: vi.fn().mockResolvedValue(boards),
   });
@@ -191,7 +191,7 @@ describe("syncResoBoardsRaw", () => {
   it("sets lastSyncError on board when sync fails", async () => {
     setupMockDb([mockBoard1]);
     (fetchResoDelta as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
-      new Error("Connection refused")
+      new Error("Connection refused"),
     );
 
     await syncResoBoardsRaw();

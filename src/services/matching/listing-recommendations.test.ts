@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mock modules ─────────────────────────────────────────────────────────────
 
@@ -25,20 +25,18 @@ const { mockEmbeddingsCreate } = vi.hoisted(() => ({
 }));
 
 vi.mock("openai", () => ({
-  default: vi.fn(function () {
-    return {
-      embeddings: {
-        create: mockEmbeddingsCreate,
-      },
-    };
-  }),
+  default: vi.fn(() => ({
+    embeddings: {
+      create: mockEmbeddingsCreate,
+    },
+  })),
 }));
 
 // ─── Import after mocks ────────────────────────────────────────────────────────
 import { db } from "@/db";
 import { getRecentEvents } from "./buyer-events";
-import { buildPreferenceSummary } from "./preference-profile";
 import { getRecommendations } from "./listing-recommendations";
+import { buildPreferenceSummary } from "./preference-profile";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -92,14 +90,18 @@ describe("getRecommendations", () => {
 
   it("calls pgvector query and returns NormalizedListing array", async () => {
     vi.mocked(getRecentEvents).mockResolvedValue([sampleEvent, sampleEvent, sampleEvent]);
-    vi.mocked(buildPreferenceSummary).mockResolvedValue("3 bedroom single_family $350k-$350k Phoenix AZ");
+    vi.mocked(buildPreferenceSummary).mockResolvedValue(
+      "3 bedroom single_family $350k-$350k Phoenix AZ",
+    );
 
     // Mock OpenAI embedding via shared hoisted mock
     mockEmbeddingsCreate.mockResolvedValue({
       data: [{ embedding: new Array(1536).fill(0.1) }],
     });
 
-    vi.mocked(db.execute).mockResolvedValue([sampleDbRow] as unknown as Awaited<ReturnType<typeof db.execute>>);
+    vi.mocked(db.execute).mockResolvedValue([sampleDbRow] as unknown as Awaited<
+      ReturnType<typeof db.execute>
+    >);
 
     const results = await getRecommendations("user-1");
     expect(Array.isArray(results)).toBe(true);
@@ -107,14 +109,18 @@ describe("getRecommendations", () => {
 
   it("normalizes db rows to NormalizedListing shape", async () => {
     vi.mocked(getRecentEvents).mockResolvedValue([sampleEvent, sampleEvent, sampleEvent]);
-    vi.mocked(buildPreferenceSummary).mockResolvedValue("3 bedroom single_family $350k-$350k Phoenix AZ");
+    vi.mocked(buildPreferenceSummary).mockResolvedValue(
+      "3 bedroom single_family $350k-$350k Phoenix AZ",
+    );
 
     // Mock OpenAI embedding via shared hoisted mock
     mockEmbeddingsCreate.mockResolvedValue({
       data: [{ embedding: new Array(1536).fill(0.1) }],
     });
 
-    vi.mocked(db.execute).mockResolvedValue([sampleDbRow] as unknown as Awaited<ReturnType<typeof db.execute>>);
+    vi.mocked(db.execute).mockResolvedValue([sampleDbRow] as unknown as Awaited<
+      ReturnType<typeof db.execute>
+    >);
 
     const results = await getRecommendations("user-1");
     if (results.length > 0) {

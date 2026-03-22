@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mock the DB module ────────────────────────────────────────────────────────
 // vi.mock is hoisted — factory must use vi.fn() inline (not outer variables).
@@ -17,12 +17,8 @@ vi.mock("@/db/schema", () => ({
 
 // ─── Import after mocks ────────────────────────────────────────────────────────
 import { db } from "@/db";
-import {
-  createSavedSearch,
-  getSavedSearches,
-  deleteSavedSearch,
-} from "./saved-searches";
 import type { SearchParams } from "@/types";
+import { createSavedSearch, deleteSavedSearch, getSavedSearches } from "./saved-searches";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 

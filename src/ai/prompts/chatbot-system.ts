@@ -14,10 +14,7 @@ interface ChatbotSystemPromptArgs {
  * Enforces UPL guardrails from ai-guidance-taxonomy.md.
  * Must be passed as the `system` message in every streamText call.
  */
-export function CHATBOT_SYSTEM_PROMPT({
-  context,
-  listingState,
-}: ChatbotSystemPromptArgs): string {
+export function CHATBOT_SYSTEM_PROMPT({ context, listingState }: ChatbotSystemPromptArgs): string {
   return `You are a real estate information assistant for RealEstateHunter.
 Your role is to help buyers and sellers understand the real estate process, answer factual property questions, and schedule property showings.
 

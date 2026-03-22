@@ -1,8 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import {
-  getNeighborhoodData,
-  getMarketTrends,
-} from "@/services/neighborhood/data";
+import { type NextRequest, NextResponse } from "next/server";
+import { getMarketTrends, getNeighborhoodData } from "@/services/neighborhood/data";
 
 // GET /api/neighborhood?zip=78701&state=TX
 // No auth required — public data for listing pages.
@@ -14,7 +11,7 @@ export async function GET(request: NextRequest) {
   if (!zip || !state) {
     return NextResponse.json(
       { error: "zip and state query parameters are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -24,10 +21,7 @@ export async function GET(request: NextRequest) {
   ]);
 
   if (!neighborhood) {
-    return NextResponse.json(
-      { error: "Invalid zip code" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid zip code" }, { status: 400 });
   }
 
   return NextResponse.json({ neighborhood, trends });

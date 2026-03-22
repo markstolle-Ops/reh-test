@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { StatusBadge } from "@/components/listing/StatusBadge";
 import { buttonVariants } from "@/components/ui/button";
 import type { Listing, ListingStatus } from "@/types";
@@ -55,9 +55,7 @@ export default async function SellerListingsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">My Listings</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage your property listings
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Manage your property listings</p>
         </div>
         <Link href="/seller/listings/new" className={buttonVariants()}>
           + Create New Listing
@@ -66,9 +64,7 @@ export default async function SellerListingsPage() {
 
       {listings.length === 0 ? (
         <div className="rounded-xl border border-dashed border-muted-foreground/30 py-16 text-center">
-          <p className="text-lg font-medium text-muted-foreground">
-            No listings yet
-          </p>
+          <p className="text-lg font-medium text-muted-foreground">No listings yet</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Create your first listing to get started.
           </p>
@@ -116,9 +112,7 @@ export default async function SellerListingsPage() {
 
                 {/* Listing info */}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">
-                    {listing.streetAddress}
-                  </p>
+                  <p className="truncate text-sm font-medium">{listing.streetAddress}</p>
                   <p className="text-xs text-muted-foreground">
                     {listing.city}, {listing.state} {listing.zip}
                   </p>
@@ -129,10 +123,7 @@ export default async function SellerListingsPage() {
 
                 {/* Status badge */}
                 <div className="shrink-0">
-                  <StatusBadge
-                    listingId={listing.id}
-                    status={listing.status as ListingStatus}
-                  />
+                  <StatusBadge listingId={listing.id} status={listing.status as ListingStatus} />
                 </div>
 
                 {/* Actions */}

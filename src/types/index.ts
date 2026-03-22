@@ -1,5 +1,5 @@
-import type { LAUNCH_STATES } from "@/lib/constants";
 import type { listings } from "@/db/schema";
+import type { LAUNCH_STATES } from "@/lib/constants";
 
 /**
  * Platform user roles
@@ -14,10 +14,7 @@ export type LaunchState = (typeof LAUNCH_STATES)[number];
 /**
  * Closing process type based on state requirements
  */
-export type ClosingType =
-  | "title-company"
-  | "attorney-required"
-  | "customary-attorney";
+export type ClosingType = "title-company" | "attorney-required" | "customary-attorney";
 
 /**
  * Breakdown of closing costs comparing platform vs traditional agent

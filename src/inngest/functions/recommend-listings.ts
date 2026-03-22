@@ -1,16 +1,12 @@
 import { sql } from "drizzle-orm";
-import { inngest } from "@/inngest/client";
 import { db } from "@/db";
+import { inngest } from "@/inngest/client";
 import { getRecommendations } from "@/services/matching/listing-recommendations";
 import type { NormalizedListing } from "@/types";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type SendEmail = (opts: {
-  to: string;
-  subject: string;
-  text: string;
-}) => Promise<void>;
+type SendEmail = (opts: { to: string; subject: string; text: string }) => Promise<void>;
 
 // ─── Default email sender ─────────────────────────────────────────────────────
 
@@ -58,7 +54,7 @@ export async function getActiveBuyerUserIds(): Promise<string[]> {
 export async function sendRecommendationEmailRaw(
   userId: string,
   userEmail: string,
-  sendEmail: SendEmail = defaultSendEmail
+  sendEmail: SendEmail = defaultSendEmail,
 ): Promise<void> {
   const recommendations = await getRecommendations(userId);
 
@@ -68,7 +64,7 @@ export async function sendRecommendationEmailRaw(
   const listingLines = top5
     .map(
       (l: NormalizedListing) =>
-        `• $${(l.price / 100).toLocaleString()} — ${l.bedrooms ?? "?"}BR, ${l.city}, ${l.state} ${l.zip}`
+        `• $${(l.price / 100).toLocaleString()} — ${l.bedrooms ?? "?"}BR, ${l.city}, ${l.state} ${l.zip}`,
     )
     .join("\n");
 
@@ -79,9 +75,7 @@ export async function sendRecommendationEmailRaw(
       `We found ${recommendations.length} listing${recommendations.length !== 1 ? "s" : ""} that match your recent activity:`,
       "",
       listingLines,
-      recommendations.length > 5
-        ? `\n...and ${recommendations.length - 5} more.`
-        : "",
+      recommendations.length > 5 ? `\n...and ${recommendations.length - 5} more.` : "",
       "",
       "Visit RealEstateHunter to view all results.",
     ]
@@ -115,10 +109,10 @@ export const recommendListingsCron = inngest.createFunction(
         userIds.map((userId) => ({
           name: "matching/recommendation.send",
           data: { userId },
-        }))
+        })),
       );
     }
-  }
+  },
 );
 
 /**
@@ -139,12 +133,12 @@ export const sendRecommendationEmail = inngest.createFunction(
       const clerk = await clerkClient();
       const user = await clerk.users.getUser(userId);
       const email = user.emailAddresses.find(
-        (e) => e.id === user.primaryEmailAddressId
+        (e) => e.id === user.primaryEmailAddressId,
       )?.emailAddress;
 
       if (!email) return;
 
       await sendRecommendationEmailRaw(userId, email);
     });
-  }
+  },
 );

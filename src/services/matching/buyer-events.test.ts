@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mock modules ─────────────────────────────────────────────────────────────
 // All vi.mock calls are hoisted — use vi.fn() inline only (Vitest hoisting rule).
@@ -20,7 +20,7 @@ vi.mock("nanoid", () => ({
 
 // ─── Import after mocks ────────────────────────────────────────────────────────
 import { db } from "@/db";
-import { recordBuyerEvent, getRecentEvents } from "./buyer-events";
+import { getRecentEvents, recordBuyerEvent } from "./buyer-events";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -77,9 +77,11 @@ describe("recordBuyerEvent", () => {
     const meta = { minPrice: 30000000, city: "Phoenix" };
     vi.mocked(db.insert).mockReturnValue({
       values: vi.fn().mockReturnValue({
-        returning: vi.fn().mockResolvedValue([
-          { ...sampleEvent, eventType: "search_executed", metadata: JSON.stringify(meta) },
-        ]),
+        returning: vi
+          .fn()
+          .mockResolvedValue([
+            { ...sampleEvent, eventType: "search_executed", metadata: JSON.stringify(meta) },
+          ]),
       }),
     } as unknown as ReturnType<typeof db.insert>);
 
@@ -97,7 +99,7 @@ describe("recordBuyerEvent", () => {
       recordBuyerEvent({
         userId: "user-1",
         eventType: "invalid_type" as "listing_viewed",
-      })
+      }),
     ).rejects.toThrow("Invalid eventType");
   });
 });

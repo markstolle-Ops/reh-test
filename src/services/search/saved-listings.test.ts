@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mock the DB module ────────────────────────────────────────────────────────
 // vi.mock is hoisted, so factory cannot reference variables declared above it.
@@ -14,11 +14,7 @@ vi.mock("@/db", () => ({
 
 // ─── Import after mock declaration ────────────────────────────────────────────
 import { db } from "@/db";
-import {
-  toggleSavedListing,
-  getSavedListings,
-  isListingSaved,
-} from "./saved-listings";
+import { getSavedListings, isListingSaved, toggleSavedListing } from "./saved-listings";
 
 // ─── Chainable mock builders ───────────────────────────────────────────────────
 
@@ -85,10 +81,10 @@ describe("toggleSavedListing", () => {
   it("inserts a saved_listings row when listing is not saved (returns { saved: true })", async () => {
     // First call (isListingSaved check): empty → not saved
     vi.mocked(db.select).mockReturnValueOnce(
-      makeSelectMock([]) as unknown as ReturnType<typeof db.select>
+      makeSelectMock([]) as unknown as ReturnType<typeof db.select>,
     );
     vi.mocked(db.insert).mockReturnValueOnce(
-      makeInsertMock() as unknown as ReturnType<typeof db.insert>
+      makeInsertMock() as unknown as ReturnType<typeof db.insert>,
     );
 
     const result = await toggleSavedListing("user-1", "listing-1", "platform");
@@ -99,10 +95,10 @@ describe("toggleSavedListing", () => {
   it("deletes the saved_listings row when listing is already saved (returns { saved: false })", async () => {
     // First call (isListingSaved check): has row → already saved
     vi.mocked(db.select).mockReturnValueOnce(
-      makeSelectMock([savedRow]) as unknown as ReturnType<typeof db.select>
+      makeSelectMock([savedRow]) as unknown as ReturnType<typeof db.select>,
     );
     vi.mocked(db.delete).mockReturnValueOnce(
-      makeDeleteMock() as unknown as ReturnType<typeof db.delete>
+      makeDeleteMock() as unknown as ReturnType<typeof db.delete>,
     );
 
     const result = await toggleSavedListing("user-1", "listing-1", "platform");
@@ -118,7 +114,7 @@ describe("isListingSaved", () => {
 
   it("returns true when listing is saved", async () => {
     vi.mocked(db.select).mockReturnValueOnce(
-      makeSelectMock([savedRow]) as unknown as ReturnType<typeof db.select>
+      makeSelectMock([savedRow]) as unknown as ReturnType<typeof db.select>,
     );
     const result = await isListingSaved("user-1", "listing-1");
     expect(result).toBe(true);
@@ -126,7 +122,7 @@ describe("isListingSaved", () => {
 
   it("returns false when listing is not saved", async () => {
     vi.mocked(db.select).mockReturnValueOnce(
-      makeSelectMock([]) as unknown as ReturnType<typeof db.select>
+      makeSelectMock([]) as unknown as ReturnType<typeof db.select>,
     );
     const result = await isListingSaved("user-1", "listing-1");
     expect(result).toBe(false);
@@ -141,17 +137,13 @@ describe("getSavedListings", () => {
   it("returns saved platform listings as NormalizedListing[]", async () => {
     // First select: savedListings rows
     vi.mocked(db.select)
-      .mockReturnValueOnce(
-        makeSelectMock([savedRow]) as unknown as ReturnType<typeof db.select>
-      )
+      .mockReturnValueOnce(makeSelectMock([savedRow]) as unknown as ReturnType<typeof db.select>)
       // Second select: platform listing by id
       .mockReturnValueOnce(
-        makeSelectMock([platformListingRow]) as unknown as ReturnType<typeof db.select>
+        makeSelectMock([platformListingRow]) as unknown as ReturnType<typeof db.select>,
       )
       // Third select: MLS listings (empty for this case)
-      .mockReturnValueOnce(
-        makeSelectMock([]) as unknown as ReturnType<typeof db.select>
-      );
+      .mockReturnValueOnce(makeSelectMock([]) as unknown as ReturnType<typeof db.select>);
 
     const results = await getSavedListings("user-1");
     expect(results).toHaveLength(1);
@@ -162,7 +154,7 @@ describe("getSavedListings", () => {
 
   it("returns empty array when user has no saved listings", async () => {
     vi.mocked(db.select).mockReturnValueOnce(
-      makeSelectMock([]) as unknown as ReturnType<typeof db.select>
+      makeSelectMock([]) as unknown as ReturnType<typeof db.select>,
     );
     const results = await getSavedListings("user-1");
     expect(results).toEqual([]);

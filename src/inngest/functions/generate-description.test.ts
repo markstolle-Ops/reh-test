@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { LISTING_DESCRIPTION_PROMPT } from "@/ai/prompts/listing-description";
 
 // ─── Mock the db module ───────────────────────────────────────────────────────
@@ -127,10 +127,7 @@ describe("generateListingDescription Inngest function", () => {
   const baseEvent = {
     data: {
       listingId: "listing-123",
-      photoUrls: [
-        "https://cdn.example.com/photo1.jpg",
-        "https://cdn.example.com/photo2.jpg",
-      ],
+      photoUrls: ["https://cdn.example.com/photo1.jpg", "https://cdn.example.com/photo2.jpg"],
       details: {
         beds: 3,
         baths: 2,
@@ -169,8 +166,7 @@ describe("generateListingDescription Inngest function", () => {
     expect(Array.isArray(messages)).toBe(true);
     const hasImageContent = messages.some(
       (m: { content: Array<{ type: string }> | string }) =>
-        Array.isArray(m.content) &&
-        m.content.some((c: { type: string }) => c.type === "image")
+        Array.isArray(m.content) && m.content.some((c: { type: string }) => c.type === "image"),
     );
     expect(hasImageContent).toBe(true);
   });

@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { NlqSearchBar } from "@/components/search/NlqSearchBar";
 import { SearchFilters } from "@/components/search/SearchFilters";
 import { SearchResults } from "@/components/search/SearchResults";
-import { NlqSearchBar } from "@/components/search/NlqSearchBar";
 import type { NormalizedListing, SearchParams } from "@/types";
 
 const MapView = dynamic(() => import("@/components/search/MapView"), { ssr: false });
@@ -52,9 +52,7 @@ export default function BuyerSearchPage() {
   }
 
   // ─── State ───────────────────────────────────────────────────────────────────
-  const [filters, setFilters] = useState<SearchParams>(() =>
-    parseSearchParams(searchParams)
-  );
+  const [filters, setFilters] = useState<SearchParams>(() => parseSearchParams(searchParams));
   const [nlq, setNlq] = useState<string>(() => searchParams.get("nlq") ?? "");
   const [listings, setListings] = useState<NormalizedListing[]>([]);
   const [page, setPage] = useState(1);
@@ -71,11 +69,7 @@ export default function BuyerSearchPage() {
   filtersRef.current = filters;
 
   // ─── Build query string ──────────────────────────────────────────────────────
-  function buildQueryString(
-    params: SearchParams,
-    pg: number,
-    activeNlq?: string
-  ): string {
+  function buildQueryString(params: SearchParams, pg: number, activeNlq?: string): string {
     const sp = new URLSearchParams();
     // When NLQ is active, pass it directly to the API — server-side GPT parsing
     if (activeNlq) {
@@ -97,12 +91,7 @@ export default function BuyerSearchPage() {
 
   // ─── Fetch listings ──────────────────────────────────────────────────────────
   const fetchListings = useCallback(
-    async (
-      params: SearchParams,
-      pg: number,
-      append: boolean,
-      activeNlq?: string
-    ) => {
+    async (params: SearchParams, pg: number, append: boolean, activeNlq?: string) => {
       setLoading(true);
       try {
         const qs = buildQueryString(params, pg, activeNlq);
@@ -120,7 +109,7 @@ export default function BuyerSearchPage() {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   // ─── Sync filters with URL and trigger fetch ─────────────────────────────────
@@ -238,8 +227,7 @@ export default function BuyerSearchPage() {
           {nlq && (
             <div className="mb-4 flex items-center justify-between rounded-lg bg-blue-50 border border-blue-200 px-4 py-2.5 text-sm text-blue-800">
               <span>
-                <span className="font-medium">AI search:</span>{" "}
-                &ldquo;{nlq}&rdquo;
+                <span className="font-medium">AI search:</span> &ldquo;{nlq}&rdquo;
               </span>
               <button
                 type="button"
@@ -285,8 +273,19 @@ export default function BuyerSearchPage() {
               onClick={() => setShowSaveModal(true)}
               className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 shadow-sm hover:bg-gray-50 transition"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                />
               </svg>
               Save search
             </button>
@@ -344,7 +343,10 @@ export default function BuyerSearchPage() {
             <div className="flex justify-end gap-2 mt-4">
               <button
                 type="button"
-                onClick={() => { setShowSaveModal(false); setSearchName(""); }}
+                onClick={() => {
+                  setShowSaveModal(false);
+                  setSearchName("");
+                }}
                 className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
               >
                 Cancel

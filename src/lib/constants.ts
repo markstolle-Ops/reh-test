@@ -9,18 +9,7 @@ export const PLATFORM_FEE_PLACEHOLDER = 2500;
  * Original 10 launch states — preserved for backward compatibility.
  * Use ALL_STATES for full platform coverage.
  */
-export const LAUNCH_STATES = [
-  "CA",
-  "TX",
-  "FL",
-  "NY",
-  "GA",
-  "NC",
-  "AZ",
-  "OH",
-  "PA",
-  "IL",
-] as const;
+export const LAUNCH_STATES = ["CA", "TX", "FL", "NY", "GA", "NC", "AZ", "OH", "PA", "IL"] as const;
 
 /**
  * All 51 US states + DC supported by the platform.
@@ -83,16 +72,7 @@ export const ALL_STATES = [
  * States where an attorney is legally required at closing.
  * Expanded to include all known attorney-required states.
  */
-export const ATTORNEY_REQUIRED_STATES = [
-  "CT",
-  "DE",
-  "GA",
-  "MA",
-  "NC",
-  "SC",
-  "VT",
-  "WV",
-] as const;
+export const ATTORNEY_REQUIRED_STATES = ["CT", "DE", "GA", "MA", "NC", "SC", "VT", "WV"] as const;
 
 /**
  * States where an attorney is legally required at closing.
@@ -104,14 +84,7 @@ export const ATTORNEY_STATES = ATTORNEY_REQUIRED_STATES;
  * States where attorney involvement is customary (not legally mandated).
  * Expanded from original 2-state list.
  */
-export const CUSTOMARY_ATTORNEY_STATES = [
-  "IL",
-  "ME",
-  "NH",
-  "NJ",
-  "NY",
-  "RI",
-] as const;
+export const CUSTOMARY_ATTORNEY_STATES = ["IL", "ME", "NH", "NJ", "NY", "RI"] as const;
 
 /**
  * Default traditional agent commission rate (5.5%)
@@ -129,14 +102,14 @@ export const AGENT_FOR_HIRE_FEE_CENTS = 50000;
  * Phase 6 (MLS-04).
  */
 export const RESO_HIGH_VOLUME_BOARDS = [
-  "CRMLS",             // California — largest US MLS
-  "Bright MLS",        // DC/MD/VA/PA/NJ/DE/WV
-  "Stellar MLS",       // Florida
-  "NTREIS",            // North Texas
-  "HAR",               // Houston
-  "GAMLS",             // Georgia
-  "ARMLS",             // Arizona
-  "NWMLS",             // Pacific Northwest
-  "Canopy MLS",        // North Carolina
-  "Midwest RE Data",   // Ohio/KY/IN
+  "CRMLS", // California — largest US MLS
+  "Bright MLS", // DC/MD/VA/PA/NJ/DE/WV
+  "Stellar MLS", // Florida
+  "NTREIS", // North Texas
+  "HAR", // Houston
+  "GAMLS", // Georgia
+  "ARMLS", // Arizona
+  "NWMLS", // Pacific Northwest
+  "Canopy MLS", // North Carolina
+  "Midwest RE Data", // Ohio/KY/IN
 ] as const;

@@ -9,15 +9,15 @@
  *             limit consumption during concurrent user searches.
  */
 
-import { cacheWrap, buildCacheKey } from "@/lib/redis";
+import { buildCacheKey, cacheWrap } from "@/lib/redis";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface ResoBoardConfig {
   boardId: string;
-  apiUrl: string;    // RESO Web API base URL (no trailing slash)
-  apiToken: string;  // Bearer token for Authorization header
-  name: string;      // Human-readable board name (e.g. "CRMLS")
+  apiUrl: string; // RESO Web API base URL (no trailing slash)
+  apiToken: string; // Bearer token for Authorization header
+  name: string; // Human-readable board name (e.g. "CRMLS")
 }
 
 export interface ResoProperty {
@@ -71,7 +71,7 @@ const RESO_CACHE_TTL_SECONDS = 300;
  */
 export async function fetchResoListings(
   board: ResoBoardConfig,
-  params?: FetchParams
+  params?: FetchParams,
 ): Promise<ResoProperty[]> {
   const cacheKey = buildCacheKey(`reso:${board.boardId}`, {
     filter: params?.filter ?? null,
@@ -106,7 +106,7 @@ export async function fetchResoListings(
 
       if (!response.ok) {
         throw new Error(
-          `RESO API error for board ${board.boardId}: ${response.status} ${response.statusText}`
+          `RESO API error for board ${board.boardId}: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -132,10 +132,7 @@ export async function fetchResoListings(
  * @param board  Board config
  * @param since  Fetch listings modified after this date
  */
-export async function fetchResoDelta(
-  board: ResoBoardConfig,
-  since: Date
-): Promise<ResoProperty[]> {
+export async function fetchResoDelta(board: ResoBoardConfig, since: Date): Promise<ResoProperty[]> {
   const filter = `ModificationTimestamp gt ${since.toISOString()}`;
   return fetchResoListings(board, { filter });
 }

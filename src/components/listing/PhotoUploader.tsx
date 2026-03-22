@@ -1,23 +1,23 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  type DragEndEvent,
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  SortableContext,
-  horizontalListSortingStrategy,
-  useSortable,
   arrayMove,
+  horizontalListSortingStrategy,
+  SortableContext,
+  useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { XIcon, GripHorizontalIcon } from "lucide-react";
+import { GripHorizontalIcon, XIcon } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,15 +40,10 @@ interface PhotoUploaderProps {
 
 // ─── SortablePhoto ────────────────────────────────────────────────────────────
 
-function SortablePhoto({
-  photo,
-  onDelete,
-}: {
-  photo: PhotoItem;
-  onDelete: (id: string) => void;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: photo.id });
+function SortablePhoto({ photo, onDelete }: { photo: PhotoItem; onDelete: (id: string) => void }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: photo.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -63,11 +58,7 @@ function SortablePhoto({
       className="relative size-24 shrink-0 overflow-hidden rounded-lg border border-border bg-muted"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={photo.r2Url}
-        alt="Listing photo"
-        className="size-full object-cover"
-      />
+      <img src={photo.r2Url} alt="Listing photo" className="size-full object-cover" />
       {/* Drag handle */}
       <button
         type="button"
@@ -130,9 +121,7 @@ export function PhotoUploader({
 
         // Update progress to 10% after presign
         setUploading((prev) =>
-          prev.map((u) =>
-            u.name === file.name ? { ...u, progress: 10 } : u
-          )
+          prev.map((u) => (u.name === file.name ? { ...u, progress: 10 } : u)),
         );
 
         // 2. PUT file directly to R2
@@ -148,9 +137,7 @@ export function PhotoUploader({
 
         // Update progress to 80% after upload
         setUploading((prev) =>
-          prev.map((u) =>
-            u.name === file.name ? { ...u, progress: 80 } : u
-          )
+          prev.map((u) => (u.name === file.name ? { ...u, progress: 80 } : u)),
         );
 
         // 3. Register the photo record via PATCH listing
@@ -170,9 +157,7 @@ export function PhotoUploader({
 
         // Update progress to 100% and add photo
         setUploading((prev) =>
-          prev.map((u) =>
-            u.name === file.name ? { ...u, progress: 100 } : u
-          )
+          prev.map((u) => (u.name === file.name ? { ...u, progress: 100 } : u)),
         );
 
         const newPhotos = [...photos, { id: photo.id, r2Url: photo.r2Url }];
@@ -186,14 +171,12 @@ export function PhotoUploader({
       } catch (err) {
         setUploading((prev) =>
           prev.map((u) =>
-            u.name === file.name
-              ? { ...u, error: (err as Error).message ?? "Upload failed" }
-              : u
-          )
+            u.name === file.name ? { ...u, error: (err as Error).message ?? "Upload failed" } : u,
+          ),
         );
       }
     },
-    [listingId, photos, onPhotosChange]
+    [listingId, photos, onPhotosChange],
   );
 
   const onDrop = useCallback(
@@ -202,7 +185,7 @@ export function PhotoUploader({
       const toUpload = acceptedFiles.slice(0, remaining);
       toUpload.forEach(uploadFile);
     },
-    [photos.length, uploadFile]
+    [photos.length, uploadFile],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -232,7 +215,7 @@ export function PhotoUploader({
         console.error("Delete photo failed:", err);
       }
     },
-    [listingId, photos, onPhotosChange]
+    [listingId, photos, onPhotosChange],
   );
 
   // ── Reorder ──────────────────────────────────────────────────────────────
@@ -264,7 +247,7 @@ export function PhotoUploader({
         onPhotosChange?.(photos);
       }
     },
-    [listingId, photos, onPhotosChange]
+    [listingId, photos, onPhotosChange],
   );
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -299,18 +282,12 @@ export function PhotoUploader({
             />
           </svg>
           {photos.length >= 20 ? (
-            <p className="text-sm text-muted-foreground">
-              Maximum 20 photos reached
-            </p>
+            <p className="text-sm text-muted-foreground">Maximum 20 photos reached</p>
           ) : isDragActive ? (
-            <p className="text-sm font-medium text-primary">
-              Drop photos here...
-            </p>
+            <p className="text-sm font-medium text-primary">Drop photos here...</p>
           ) : (
             <>
-              <p className="text-sm font-medium">
-                Drag &amp; drop photos or click to browse
-              </p>
+              <p className="text-sm font-medium">Drag &amp; drop photos or click to browse</p>
               <p className="text-xs text-muted-foreground">
                 JPG, PNG, WebP — max 20MB each — up to 20 photos
               </p>
@@ -345,31 +322,18 @@ export function PhotoUploader({
 
       {/* Photo thumbnails with drag-to-reorder */}
       {photos.length > 0 && (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={photos.map((p) => p.id)}
-            strategy={horizontalListSortingStrategy}
-          >
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={photos.map((p) => p.id)} strategy={horizontalListSortingStrategy}>
             <div className="flex flex-wrap gap-2">
               {photos.map((photo) => (
-                <SortablePhoto
-                  key={photo.id}
-                  photo={photo}
-                  onDelete={handleDelete}
-                />
+                <SortablePhoto key={photo.id} photo={photo} onDelete={handleDelete} />
               ))}
             </div>
           </SortableContext>
         </DndContext>
       )}
 
-      <p className="text-xs text-muted-foreground">
-        {photos.length}/20 photos — drag to reorder
-      </p>
+      <p className="text-xs text-muted-foreground">{photos.length}/20 photos — drag to reorder</p>
     </div>
   );
 }

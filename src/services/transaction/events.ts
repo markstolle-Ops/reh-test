@@ -68,9 +68,7 @@ export interface TransactionEvent {
  * APPEND-ONLY: never update or delete event rows.
  * Optionally updates the cached currentStatus on the transactions table.
  */
-export async function appendTransactionEvent(
-  params: AppendEventParams
-): Promise<TransactionEvent> {
+export async function appendTransactionEvent(params: AppendEventParams): Promise<TransactionEvent> {
   const { transactionId, eventType, payload, actorUserId, newStatus } = params;
 
   const id = crypto.randomUUID();

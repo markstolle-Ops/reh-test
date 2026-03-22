@@ -1,11 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { eq } from "drizzle-orm";
+import { notFound, redirect } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db";
 import { listings } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
 import { getMlsStatus } from "@/services/mls/syndication";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -62,8 +61,8 @@ export default async function SellerSyndicatePage({ params }: PageProps) {
 
       {/* Beta notice */}
       <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-200">
-        MLS syndication is currently in beta. Your listing will be submitted to
-        a partner broker for MLS listing.
+        MLS syndication is currently in beta. Your listing will be submitted to a partner broker for
+        MLS listing.
       </div>
 
       {/* Syndication status card */}
@@ -98,16 +97,14 @@ export default async function SellerSyndicatePage({ params }: PageProps) {
           )}
 
           <div className="flex justify-between items-center border-t pt-3 mt-2">
-            <span className="text-sm text-muted-foreground">
-              Flat-Fee MLS Listing
-            </span>
+            <span className="text-sm text-muted-foreground">Flat-Fee MLS Listing</span>
             <span className="text-sm font-semibold">$299.00</span>
           </div>
 
           <p className="text-xs text-muted-foreground">
-            The $299 flat-fee MLS listing connects your property to a licensed
-            partner broker who will list it on your local MLS. This enables
-            buyer&apos;s agents to find and show your property.
+            The $299 flat-fee MLS listing connects your property to a licensed partner broker who
+            will list it on your local MLS. This enables buyer&apos;s agents to find and show your
+            property.
           </p>
         </CardContent>
       </Card>
@@ -116,9 +113,8 @@ export default async function SellerSyndicatePage({ params }: PageProps) {
       <Card>
         <CardContent className="pt-4 space-y-3">
           <p className="text-sm text-muted-foreground">
-            When MLS syndication goes live, clicking the button below will
-            submit your listing to our partner broker and activate your flat-fee
-            MLS listing.
+            When MLS syndication goes live, clicking the button below will submit your listing to
+            our partner broker and activate your flat-fee MLS listing.
           </p>
           <button
             disabled

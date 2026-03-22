@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import { inngest } from "@/inngest/client";
 import { db } from "@/db";
 import { savedSearches } from "@/db/schema";
+import { inngest } from "@/inngest/client";
 import { searchListings } from "@/services/search/listings-search";
 import type { SearchParams } from "@/types";
 
@@ -17,16 +17,9 @@ interface SavedSearchRecord {
   createdAt: Date;
 }
 
-type SendEvent = (event: {
-  name: string;
-  data: Record<string, unknown>;
-}) => Promise<void>;
+type SendEvent = (event: { name: string; data: Record<string, unknown> }) => Promise<void>;
 
-type SendEmail = (opts: {
-  to: string;
-  subject: string;
-  text: string;
-}) => Promise<void>;
+type SendEmail = (opts: { to: string; subject: string; text: string }) => Promise<void>;
 
 // ─── Raw functions (exported for testability) ─────────────────────────────────
 
@@ -34,13 +27,8 @@ type SendEmail = (opts: {
  * Load all active saved searches and fan out one "search/alert.check"
  * event per search. Accepts a sendEvent callback so tests can inject mocks.
  */
-export async function matchSavedSearchesRaw(
-  sendEvent: SendEvent
-): Promise<void> {
-  const searches = await db
-    .select()
-    .from(savedSearches)
-    .where(eq(savedSearches.active, true));
+export async function matchSavedSearchesRaw(sendEvent: SendEvent): Promise<void> {
+  const searches = await db.select().from(savedSearches).where(eq(savedSearches.active, true));
 
   for (const search of searches) {
     await sendEvent({
@@ -83,25 +71,20 @@ async function defaultSendEmail(opts: {
 
 export async function checkSavedSearchAlertRaw(
   search: SavedSearchRecord,
-  sendEmail: SendEmail = defaultSendEmail
+  sendEmail: SendEmail = defaultSendEmail,
 ): Promise<void> {
   const filters: SearchParams = JSON.parse(search.filters);
   const { results } = await searchListings(filters);
 
   // Filter to only listings created after the last alert was sent
   const cutoff = search.lastAlertSentAt ? new Date(search.lastAlertSentAt) : null;
-  const newListings = cutoff
-    ? results.filter((l) => new Date(l.createdAt) > cutoff)
-    : results;
+  const newListings = cutoff ? results.filter((l) => new Date(l.createdAt) > cutoff) : results;
 
   if (newListings.length === 0) return;
 
   const top5 = newListings.slice(0, 5);
   const listingLines = top5
-    .map(
-      (l) =>
-        `• $${(l.price / 100).toLocaleString()} — ${l.city}, ${l.state} ${l.zip}`
-    )
+    .map((l) => `• $${(l.price / 100).toLocaleString()} — ${l.city}, ${l.state} ${l.zip}`)
     .join("\n");
 
   await sendEmail({
@@ -137,11 +120,11 @@ export const matchSavedSearchesCron = inngest.createFunction(
   { cron: "0 9 * * *" },
   async ({ step }) => {
     await step.run("load-and-fan-out", async () => {
-      await matchSavedSearchesRaw(
-        async (event) => { await step.sendEvent("fan-out", event); }
-      );
+      await matchSavedSearchesRaw(async (event) => {
+        await step.sendEvent("fan-out", event);
+      });
     });
-  }
+  },
 );
 
 /**
@@ -153,14 +136,13 @@ export const checkSavedSearchAlert = inngest.createFunction(
   { event: "search/alert.check" },
   async ({ event, step }) => {
     await step.run("check-and-send-alert", async () => {
-      const { savedSearchId, userId, filters, lastAlertSentAt, name } =
-        event.data as {
-          savedSearchId: string;
-          userId: string;
-          filters: string;
-          lastAlertSentAt: string | null;
-          name: string;
-        };
+      const { savedSearchId, userId, filters, lastAlertSentAt, name } = event.data as {
+        savedSearchId: string;
+        userId: string;
+        filters: string;
+        lastAlertSentAt: string | null;
+        name: string;
+      };
 
       const search: SavedSearchRecord = {
         id: savedSearchId,
@@ -174,5 +156,5 @@ export const checkSavedSearchAlert = inngest.createFunction(
 
       await checkSavedSearchAlertRaw(search);
     });
-  }
+  },
 );

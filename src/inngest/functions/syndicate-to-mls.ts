@@ -8,10 +8,10 @@
  */
 
 import { eq } from "drizzle-orm";
-import { inngest } from "@/inngest/client";
 import { db } from "@/db";
 import { listings } from "@/db/schema";
-import { submitToMls, type MlsSyndicationStatus } from "@/services/mls/syndication";
+import { inngest } from "@/inngest/client";
+import { type MlsSyndicationStatus, submitToMls } from "@/services/mls/syndication";
 
 // ─── Event payload type ───────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ interface StepContext {
  */
 export async function syndicateToMlsRaw(
   listingId: string,
-  opts?: { sellerEmail?: string; sellerName?: string }
+  opts?: { sellerEmail?: string; sellerName?: string },
 ): Promise<MlsSyndicationStatus> {
   const listing = await db.query.listings.findFirst({
     where: eq(listings.id, listingId),
@@ -50,12 +50,7 @@ export async function syndicateToMlsRaw(
     throw new Error(`Listing not found: ${listingId}`);
   }
 
-  const address = [
-    listing.streetAddress,
-    listing.city,
-    listing.state,
-    listing.zip,
-  ]
+  const address = [listing.streetAddress, listing.city, listing.state, listing.zip]
     .filter(Boolean)
     .join(", ");
 
@@ -97,5 +92,5 @@ async function syndicateToMlsHandler({ event, step }: StepContext) {
 export const syndicateToMls = inngest.createFunction(
   { id: "syndicate-to-mls", name: "Syndicate Listing to MLS" },
   { event: "listing/published" },
-  syndicateToMlsHandler
+  syndicateToMlsHandler,
 );

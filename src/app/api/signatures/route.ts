@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { createDocumentForSigning } from "@/services/signatures/signwell";
 
 /**
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json() as {
+  const body = (await req.json()) as {
     pdfBase64?: string;
     templateId?: string;
     signers: Array<{ name: string; email: string; role: string }>;
@@ -27,14 +27,14 @@ export async function POST(req: NextRequest) {
   if (!body.name || !Array.isArray(body.signers) || body.signers.length === 0) {
     return NextResponse.json(
       { error: "name and at least one signer are required" },
-      { status: 422 }
+      { status: 422 },
     );
   }
 
   if (!body.pdfBase64 && !body.templateId) {
     return NextResponse.json(
       { error: "Either pdfBase64 or templateId is required" },
-      { status: 422 }
+      { status: 422 },
     );
   }
 

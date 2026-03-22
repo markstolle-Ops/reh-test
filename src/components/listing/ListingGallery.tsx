@@ -97,9 +97,7 @@ export function ListingGallery({ photos }: ListingGalleryProps) {
               onClick={() => setActiveIndex(i)}
               aria-label={`View photo ${i + 1}`}
               className={`flex-shrink-0 w-20 h-14 rounded overflow-hidden border-2 transition-colors ${
-                i === activeIndex
-                  ? "border-blue-600"
-                  : "border-transparent hover:border-gray-400"
+                i === activeIndex ? "border-blue-600" : "border-transparent hover:border-gray-400"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

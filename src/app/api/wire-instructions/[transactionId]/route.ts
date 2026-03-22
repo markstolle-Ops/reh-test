@@ -17,7 +17,7 @@
  */
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getWireInstructions } from "@/services/transaction/wire-instructions";
 
 type Params = { params: Promise<{ transactionId: string }> };
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest, { params }: Params) {
           "MFA required to view wire instructions. Enable two-factor authentication in your account settings.",
         mfaRequired: true,
       },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   if (!wireData) {
     return NextResponse.json(
       { error: "Wire instructions not yet set for this transaction" },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -80,12 +80,8 @@ export async function GET(req: NextRequest, { params }: Params) {
     referenceNote: wireData.referenceNote,
     updatedAt: wireData.updatedAt,
     // Masked by default; full numbers only with ?reveal=true
-    routingNumber: reveal
-      ? wireData.routingNumber
-      : maskNumber(wireData.routingNumber),
-    accountNumber: reveal
-      ? wireData.accountNumber
-      : maskNumber(wireData.accountNumber),
+    routingNumber: reveal ? wireData.routingNumber : maskNumber(wireData.routingNumber),
+    accountNumber: reveal ? wireData.accountNumber : maskNumber(wireData.accountNumber),
   };
 
   return NextResponse.json({ wireInstructions: responseData });

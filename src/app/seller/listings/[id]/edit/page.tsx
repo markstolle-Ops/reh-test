@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { redirect, notFound } from "next/navigation";
 import { headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 import { ListingForm } from "@/components/listing/ListingForm";
 
 export const metadata = {
@@ -56,8 +56,7 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
       <div className="mb-6">
         <h1 className="text-2xl font-semibold">Edit Listing</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {listing.streetAddress}, {listing.city}, {listing.state}{" "}
-          {listing.zip}
+          {listing.streetAddress}, {listing.city}, {listing.state} {listing.zip}
         </p>
       </div>
 

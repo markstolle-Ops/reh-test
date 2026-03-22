@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -52,7 +52,7 @@ describe("queryKnowledgeBase", () => {
     expect(mockEmbed).toHaveBeenCalledWith(
       expect.objectContaining({
         value: "test query",
-      })
+      }),
     );
     expect(result).toContain("First chunk content");
     expect(result).toContain("Second chunk content");
@@ -65,16 +65,14 @@ describe("queryKnowledgeBase", () => {
       usage: { tokens: 5 },
     } as never);
 
-    mockDbExecute.mockResolvedValue([
-      { content: "California specific content" },
-    ] as never);
+    mockDbExecute.mockResolvedValue([{ content: "California specific content" }] as never);
 
     const result = await queryKnowledgeBase("california closing process", "CA");
 
     expect(mockEmbed).toHaveBeenCalledWith(
       expect.objectContaining({
         value: "california closing process",
-      })
+      }),
     );
     expect(result).toBe("California specific content");
   });

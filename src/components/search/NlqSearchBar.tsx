@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 /**
  * NlqSearchBar — Natural Language Query search input for buyer search page.

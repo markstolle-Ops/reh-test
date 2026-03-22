@@ -8,11 +8,7 @@ export interface WorkflowStep {
   label: string;
   requiredDocuments: string[];
   deadlineDays?: number;
-  deadlineType?:
-    | "inspection"
-    | "financing"
-    | "closing_disclosure"
-    | "closing";
+  deadlineType?: "inspection" | "financing" | "closing_disclosure" | "closing";
   triggers?: string[];
 }
 

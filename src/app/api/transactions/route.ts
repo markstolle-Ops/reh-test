@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
 import { eq, or } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { listings, transactions } from "@/db/schema";
 import { createTransaction } from "@/services/transaction/create";
@@ -25,16 +25,13 @@ export async function POST(req: NextRequest) {
   };
 
   if (!listingId || typeof listingId !== "string") {
-    return NextResponse.json(
-      { error: "listingId is required" },
-      { status: 422 }
-    );
+    return NextResponse.json({ error: "listingId is required" }, { status: 422 });
   }
 
   if (!offerPriceCents || typeof offerPriceCents !== "number" || offerPriceCents <= 0) {
     return NextResponse.json(
       { error: "offerPriceCents must be a positive integer" },
-      { status: 422 }
+      { status: 422 },
     );
   }
 
@@ -80,12 +77,7 @@ export async function GET() {
       createdAt: transactions.createdAt,
     })
     .from(transactions)
-    .where(
-      or(
-        eq(transactions.buyerUserId, userId),
-        eq(transactions.sellerUserId, userId)
-      )
-    );
+    .where(or(eq(transactions.buyerUserId, userId), eq(transactions.sellerUserId, userId)));
 
   return NextResponse.json({ transactions: userTransactions });
 }

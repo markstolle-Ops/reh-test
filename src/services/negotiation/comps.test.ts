@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the db module before importing fetchComps
 vi.mock("@/db", () => ({
@@ -7,8 +7,8 @@ vi.mock("@/db", () => ({
   },
 }));
 
-import { fetchComps } from "./comps";
 import { db } from "@/db";
+import { fetchComps } from "./comps";
 
 describe("fetchComps", () => {
   beforeEach(() => {

@@ -50,11 +50,7 @@ export function SearchResults({ listings, savedIds, onToggleSave }: SearchResult
             key={listing.id}
             listing={listing}
             saved={savedIds?.has(listing.id) ?? false}
-            onToggleSave={
-              onToggleSave
-                ? () => onToggleSave(listing.id, listing.source)
-                : undefined
-            }
+            onToggleSave={onToggleSave ? () => onToggleSave(listing.id, listing.source) : undefined}
           />
         ))}
       </div>

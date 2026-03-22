@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the db module before imports
 vi.mock("@/db", () => ({
@@ -7,8 +7,8 @@ vi.mock("@/db", () => ({
   },
 }));
 
-import { createListing, listingSchema } from "./create";
 import { db } from "@/db";
+import { createListing, listingSchema } from "./create";
 
 // Helper to build a valid residential listing payload
 const validResidential = () => ({
@@ -190,7 +190,7 @@ describe("createListing", () => {
 
   it("throws a validation error for price below minimum", async () => {
     await expect(
-      createListing("user_abc", { ...validResidential(), price: 500000 })
+      createListing("user_abc", { ...validResidential(), price: 500000 }),
     ).rejects.toThrow();
     expect(db.insert).not.toHaveBeenCalled();
   });

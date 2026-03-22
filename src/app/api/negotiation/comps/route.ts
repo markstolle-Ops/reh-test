@@ -3,8 +3,8 @@
 // Auth required. Looks up listing for zip and propertyType, then fetches comps.
 
 import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { listings } from "@/db/schema";
 import { fetchComps } from "@/services/negotiation/comps";
@@ -26,10 +26,7 @@ export async function GET(req: NextRequest) {
   const listingId = searchParams.get("listingId");
 
   if (!listingId) {
-    return NextResponse.json(
-      { error: "listingId query parameter is required" },
-      { status: 422 }
-    );
+    return NextResponse.json({ error: "listingId query parameter is required" }, { status: 422 });
   }
 
   const listing = await db.query.listings.findFirst({

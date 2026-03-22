@@ -51,7 +51,7 @@ interface FetchSimplyRetsParams {
  * stores prices in cents — conversion happens in syncMlsListings.
  */
 export async function fetchSimplyRetsListings(
-  params: FetchSimplyRetsParams
+  params: FetchSimplyRetsParams,
 ): Promise<SimplyRetsListing[]> {
   const apiKey = process.env.SIMPLYRETS_API_KEY ?? "simplyrets";
   const apiSecret = process.env.SIMPLYRETS_API_SECRET ?? "simplyrets";
@@ -60,17 +60,12 @@ export async function fetchSimplyRetsListings(
   url.searchParams.set("status", "Active");
 
   if (params.q) url.searchParams.set("q", params.q);
-  if (params.minPrice !== undefined)
-    url.searchParams.set("minprice", String(params.minPrice));
-  if (params.maxPrice !== undefined)
-    url.searchParams.set("maxprice", String(params.maxPrice));
-  if (params.minBeds !== undefined)
-    url.searchParams.set("minbeds", String(params.minBeds));
+  if (params.minPrice !== undefined) url.searchParams.set("minprice", String(params.minPrice));
+  if (params.maxPrice !== undefined) url.searchParams.set("maxprice", String(params.maxPrice));
+  if (params.minBeds !== undefined) url.searchParams.set("minbeds", String(params.minBeds));
   if (params.type) url.searchParams.set("type", params.type);
-  if (params.limit !== undefined)
-    url.searchParams.set("limit", String(params.limit));
-  if (params.offset !== undefined)
-    url.searchParams.set("offset", String(params.offset));
+  if (params.limit !== undefined) url.searchParams.set("limit", String(params.limit));
+  if (params.offset !== undefined) url.searchParams.set("offset", String(params.offset));
 
   const credentials = btoa(`${apiKey}:${apiSecret}`);
 
@@ -82,9 +77,7 @@ export async function fetchSimplyRetsListings(
   });
 
   if (!response.ok) {
-    throw new Error(
-      `SimplyRETS API error: ${response.status} ${response.statusText}`
-    );
+    throw new Error(`SimplyRETS API error: ${response.status} ${response.statusText}`);
   }
 
   return response.json() as Promise<SimplyRetsListing[]>;

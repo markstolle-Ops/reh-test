@@ -1,5 +1,5 @@
-import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { generateObject } from "ai";
 import { z } from "zod";
 import type { SearchParams } from "@/types";
 
@@ -10,45 +10,16 @@ import type { SearchParams } from "@/types";
  * Exported for test-only schema shape verification.
  */
 export const nlqOutputSchema = z.object({
-  q: z
-    .string()
-    .optional()
-    .describe("City name, zip code, or state to search in"),
-  minPrice: z
-    .number()
-    .optional()
-    .describe("Minimum price in dollars"),
-  maxPrice: z
-    .number()
-    .optional()
-    .describe("Maximum price in dollars"),
-  minBeds: z
-    .number()
-    .optional()
-    .describe("Minimum bedrooms"),
-  maxBeds: z
-    .number()
-    .optional()
-    .describe("Maximum bedrooms"),
-  minBaths: z
-    .number()
-    .optional()
-    .describe("Minimum bathrooms"),
-  maxBaths: z
-    .number()
-    .optional()
-    .describe("Maximum bathrooms"),
-  minSqft: z
-    .number()
-    .optional()
-    .describe("Minimum square footage"),
-  maxSqft: z
-    .number()
-    .optional()
-    .describe("Maximum square footage"),
-  propertyType: z
-    .enum(["single_family", "condo", "townhouse", "land_lot"])
-    .optional(),
+  q: z.string().optional().describe("City name, zip code, or state to search in"),
+  minPrice: z.number().optional().describe("Minimum price in dollars"),
+  maxPrice: z.number().optional().describe("Maximum price in dollars"),
+  minBeds: z.number().optional().describe("Minimum bedrooms"),
+  maxBeds: z.number().optional().describe("Maximum bedrooms"),
+  minBaths: z.number().optional().describe("Minimum bathrooms"),
+  maxBaths: z.number().optional().describe("Maximum bathrooms"),
+  minSqft: z.number().optional().describe("Minimum square footage"),
+  maxSqft: z.number().optional().describe("Maximum square footage"),
+  propertyType: z.enum(["single_family", "condo", "townhouse", "land_lot"]).optional(),
 });
 
 type NlqOutput = z.infer<typeof nlqOutputSchema>;
@@ -67,9 +38,7 @@ type NlqOutput = z.infer<typeof nlqOutputSchema>;
  * @param query - Natural language search string from the buyer
  * @returns SearchParams-compatible object (prices in cents)
  */
-export async function parseNaturalLanguageQuery(
-  query: string
-): Promise<SearchParams> {
+export async function parseNaturalLanguageQuery(query: string): Promise<SearchParams> {
   const { object } = await generateObject({
     model: openai("gpt-4o"),
     schema: nlqOutputSchema,

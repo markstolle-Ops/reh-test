@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 // ACCT-04: Session persistence
 // Tests skip gracefully when Clerk testing token is unavailable.
@@ -10,9 +10,7 @@ test.describe("ACCT-04: Session persistence", () => {
     }
   });
 
-  test("authenticated user remains authenticated after page reload", async ({
-    page,
-  }) => {
+  test("authenticated user remains authenticated after page reload", async ({ page }) => {
     // TODO: Use Clerk testing token to:
     // 1. Authenticate a buyer test user
     // 2. Navigate to /buyer/dashboard
@@ -26,9 +24,7 @@ test.describe("ACCT-04: Session persistence", () => {
     await expect(page).toHaveURL(/\/sign-in/);
   });
 
-  test("unauthenticated access to protected route redirects to sign-in", async ({
-    page,
-  }) => {
+  test("unauthenticated access to protected route redirects to sign-in", async ({ page }) => {
     await page.goto("/buyer/dashboard");
     await expect(page).toHaveURL(/\/sign-in/);
   });

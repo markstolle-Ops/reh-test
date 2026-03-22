@@ -30,10 +30,9 @@ export const listingSchema = z
       return true;
     },
     {
-      message:
-        "Bedrooms and bathrooms are required for residential property types",
+      message: "Bedrooms and bathrooms are required for residential property types",
       path: ["bedrooms"],
-    }
+    },
   );
 
 export type ListingInput = z.infer<typeof listingSchema>;

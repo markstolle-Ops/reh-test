@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mock env vars ────────────────────────────────────────────────────────────
 vi.stubEnv("SIMPLYRETS_API_KEY", "test-key");
@@ -21,7 +21,12 @@ const simplyRetsResponse = [
   {
     mlsId: "TX1234567",
     listPrice: 450000,
-    address: { city: "Austin", state: "TX", postalCode: "78701", full: "100 Oak St, Austin, TX 78701" },
+    address: {
+      city: "Austin",
+      state: "TX",
+      postalCode: "78701",
+      full: "100 Oak St, Austin, TX 78701",
+    },
     property: {
       bedrooms: 3,
       bathsFull: 2,
@@ -36,10 +41,13 @@ const simplyRetsResponse = [
 
 describe("fetchSimplyRetsListings", () => {
   beforeEach(() => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => simplyRetsResponse,
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => simplyRetsResponse,
+      }),
+    );
   });
 
   afterEach(() => {
@@ -100,13 +108,19 @@ describe("fetchSimplyRetsListings", () => {
 
 describe("syncMlsListings", () => {
   beforeEach(() => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce({
-      ok: true,
-      json: async () => simplyRetsResponse,
-    }).mockResolvedValue({
-      ok: true,
-      json: async () => [], // second page empty → stop
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => simplyRetsResponse,
+        })
+        .mockResolvedValue({
+          ok: true,
+          json: async () => [], // second page empty → stop
+        }),
+    );
   });
 
   afterEach(() => {

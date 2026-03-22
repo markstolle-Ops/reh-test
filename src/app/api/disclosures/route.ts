@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { eq, and } from "drizzle-orm";
 import { db } from "@/db";
 import { disclosureForms } from "@/db/schema";
 import { createDisclosureForm } from "@/services/disclosures/disclosure-form";
@@ -18,10 +18,7 @@ export async function POST(req: Request) {
   const { listingId, state } = body as { listingId?: string; state?: string };
 
   if (!listingId || !state) {
-    return NextResponse.json(
-      { error: "listingId and state are required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "listingId and state are required" }, { status: 400 });
   }
 
   const form = await createDisclosureForm(userId, listingId, state);
@@ -40,21 +37,13 @@ export async function GET(req: Request) {
   const listingId = searchParams.get("listingId");
 
   if (!listingId) {
-    return NextResponse.json(
-      { error: "listingId query param required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "listingId query param required" }, { status: 400 });
   }
 
   const forms = await db
     .select()
     .from(disclosureForms)
-    .where(
-      and(
-        eq(disclosureForms.listingId, listingId),
-        eq(disclosureForms.userId, userId)
-      )
-    );
+    .where(and(eq(disclosureForms.listingId, listingId), eq(disclosureForms.userId, userId)));
 
   // Parse answers JSON for each form
   const parsed = forms.map((f) => ({

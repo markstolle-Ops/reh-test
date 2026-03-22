@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock @ai-sdk/openai
 vi.mock("@ai-sdk/openai", () => ({
@@ -11,7 +11,7 @@ vi.mock("ai", () => ({
 }));
 
 import { generateObject } from "ai";
-import { parseNaturalLanguageQuery, nlqOutputSchema } from "./nlq-parser";
+import { nlqOutputSchema, parseNaturalLanguageQuery } from "./nlq-parser";
 
 const mockGenerateObject = generateObject as ReturnType<typeof vi.fn>;
 
@@ -30,9 +30,7 @@ describe("parseNaturalLanguageQuery", () => {
       },
     });
 
-    const result = await parseNaturalLanguageQuery(
-      "3BR ranch under $350K in Phoenix"
-    );
+    const result = await parseNaturalLanguageQuery("3BR ranch under $350K in Phoenix");
 
     expect(result.minBeds).toBe(3);
     expect(result.propertyType).toBe("single_family");
@@ -51,9 +49,7 @@ describe("parseNaturalLanguageQuery", () => {
       },
     });
 
-    const result = await parseNaturalLanguageQuery(
-      "2 bedroom condo downtown Austin $200k-$400k"
-    );
+    const result = await parseNaturalLanguageQuery("2 bedroom condo downtown Austin $200k-$400k");
 
     expect(result.minBeds).toBe(2);
     expect(result.propertyType).toBe("condo");
@@ -67,9 +63,7 @@ describe("parseNaturalLanguageQuery", () => {
       object: {},
     });
 
-    const result = await parseNaturalLanguageQuery(
-      "big yard near good schools"
-    );
+    const result = await parseNaturalLanguageQuery("big yard near good schools");
 
     expect(result).toEqual({});
     expect(result.q).toBeUndefined();

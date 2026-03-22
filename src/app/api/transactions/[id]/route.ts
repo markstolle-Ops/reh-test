@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
 import { asc, eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { transactions, transactionEvents } from "@/db/schema";
+import { transactionEvents, transactions } from "@/db/schema";
 
 type Params = { params: Promise<{ id: string }> };
 

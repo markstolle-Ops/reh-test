@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mock the DB module ────────────────────────────────────────────────────────
 // vi.mock is hoisted, so factory cannot reference variables declared above it.
@@ -15,19 +15,16 @@ vi.mock("@/db", () => ({
 // buildCacheKey is stubbed to return a deterministic key.
 
 vi.mock("@/lib/redis", () => ({
-  cacheWrap: vi.fn(
-    async (_key: string, _ttl: number, fn: () => Promise<unknown>) => fn()
-  ),
+  cacheWrap: vi.fn(async (_key: string, _ttl: number, fn: () => Promise<unknown>) => fn()),
   buildCacheKey: vi.fn(
-    (prefix: string, params: Record<string, unknown>) =>
-      `${prefix}:${JSON.stringify(params)}`
+    (prefix: string, params: Record<string, unknown>) => `${prefix}:${JSON.stringify(params)}`,
   ),
 }));
 
 // ─── Import after mock declaration ────────────────────────────────────────────
 import { db } from "@/db";
+import { buildCacheKey, cacheWrap } from "@/lib/redis";
 import { searchListings } from "./listings-search";
-import { cacheWrap, buildCacheKey } from "@/lib/redis";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -94,11 +91,13 @@ describe("searchListings", () => {
     vi.clearAllMocks();
     // Reset cacheWrap to always pass through to fetchFn
     vi.mocked(cacheWrap).mockImplementation(
-      async (_key: string, _ttl: number, fn: () => Promise<unknown>) => fn()
+      async (_key: string, _ttl: number, fn: () => Promise<unknown>) => fn(),
     );
     const mockSelect = vi.mocked(db.select);
     mockSelect
-      .mockReturnValueOnce(makeQueryMock(mockListingsRows) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(
+        makeQueryMock(mockListingsRows) as unknown as ReturnType<typeof db.select>,
+      )
       .mockReturnValueOnce(makeQueryMock(mockMlsRows) as unknown as ReturnType<typeof db.select>);
   });
 
@@ -135,9 +134,7 @@ describe("searchListings", () => {
     const result = await searchListings({});
     // MLS listing lastSyncedAt: 2026-01-10 > Platform createdAt: 2026-01-01
     const dates = result.results.map((r) => r.createdAt);
-    expect(new Date(dates[0]).getTime()).toBeGreaterThanOrEqual(
-      new Date(dates[1]).getTime()
-    );
+    expect(new Date(dates[0]).getTime()).toBeGreaterThanOrEqual(new Date(dates[1]).getTime());
   });
 
   it("normalizes platform city correctly", async () => {

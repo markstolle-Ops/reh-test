@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock DB module before imports
 vi.mock("@/db", () => ({
@@ -8,8 +8,8 @@ vi.mock("@/db", () => ({
   },
 }));
 
-import { appendTransactionEvent, TransactionEventType } from "./events";
 import { db } from "@/db";
+import { appendTransactionEvent, type TransactionEventType } from "./events";
 
 describe("appendTransactionEvent", () => {
   beforeEach(() => {
@@ -78,7 +78,7 @@ describe("appendTransactionEvent", () => {
 
     expect(db.update).toHaveBeenCalledOnce();
     expect(mockUpdate.set).toHaveBeenCalledWith(
-      expect.objectContaining({ currentStatus: "offer_accepted" })
+      expect.objectContaining({ currentStatus: "offer_accepted" }),
     );
   });
 

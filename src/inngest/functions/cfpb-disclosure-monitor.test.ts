@@ -5,7 +5,7 @@
  * Checks whether the closing_disclosure_sent event was received;
  * alerts when missing and past mustSendBy. Skips cash transactions.
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── DB mock ──────────────────────────────────────────────────────────────────
 const mockSelectFn = vi.fn();

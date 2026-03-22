@@ -30,9 +30,7 @@ interface ListingRow {
  *
  * Returns null if fewer than 3 events (insufficient data for inference).
  */
-export async function buildPreferenceSummary(
-  events: BuyerEvent[]
-): Promise<string | null> {
+export async function buildPreferenceSummary(events: BuyerEvent[]): Promise<string | null> {
   if (events.length < 3) return null;
 
   // Collect listing IDs from viewed/saved events
@@ -62,9 +60,7 @@ export async function buildPreferenceSummary(
   }
 
   // Build lookup map
-  const listingMap = new Map<string, ListingRow>(
-    listingRows.map((l) => [l.id, l])
-  );
+  const listingMap = new Map<string, ListingRow>(listingRows.map((l) => [l.id, l]));
 
   // Aggregate prices and features from listing events
   const prices: number[] = [];
@@ -116,7 +112,7 @@ export async function buildPreferenceSummary(
   if (modalBeds != null) parts.push(`${modalBeds} bedroom`);
   if (modalPropType) parts.push(modalPropType);
   if (minPrice != null && maxPrice != null) {
-    const minK = Math.round(minPrice / 10000);  // cents to $k
+    const minK = Math.round(minPrice / 10000); // cents to $k
     const maxK = Math.round(maxPrice / 10000);
     if (minK === maxK) {
       parts.push(`$${minK}k`);

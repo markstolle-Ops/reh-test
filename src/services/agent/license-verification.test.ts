@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock database
 vi.mock("@/db", () => ({
@@ -26,8 +26,8 @@ vi.mock("drizzle-orm", () => ({
   eq: vi.fn((field, value) => ({ field, value })),
 }));
 
-import { verifyAgentLicense } from "./license-verification";
 import { db } from "@/db";
+import { verifyAgentLicense } from "./license-verification";
 
 describe("verifyAgentLicense - manual method", () => {
   beforeEach(() => {
@@ -107,9 +107,9 @@ describe("verifyAgentLicense - arello method", () => {
 
   it("throws error when ARELLO not configured", async () => {
     // No ARELLO_API_URL set
-    await expect(
-      verifyAgentLicense("agent_001", "CA", "arello")
-    ).rejects.toThrow("ARELLO not configured — use manual verification");
+    await expect(verifyAgentLicense("agent_001", "CA", "arello")).rejects.toThrow(
+      "ARELLO not configured — use manual verification",
+    );
   });
 
   it("calls ARELLO API and inserts check row when configured", async () => {
@@ -125,7 +125,7 @@ describe("verifyAgentLicense - arello method", () => {
           <LicenseStatus>Active</LicenseStatus>
           <LicenseNumber>DRE123456</LicenseNumber>
           <ExpirationDate>2026-12-31</ExpirationDate>
-        </LicenseVerificationResponse>`
+        </LicenseVerificationResponse>`,
       ),
     });
     vi.stubGlobal("fetch", mockFetch);
@@ -168,7 +168,7 @@ describe("verifyAgentLicense - arello method", () => {
         headers: expect.objectContaining({
           Authorization: "Basic dGVzdDp0ZXN0",
         }),
-      })
+      }),
     );
     expect(result.verified).toBe(true);
     expect(result.method).toBe("arello");

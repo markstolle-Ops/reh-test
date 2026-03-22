@@ -1,8 +1,8 @@
 "use client";
 
-import type { CommissionBreakdown } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { COMMISSION_RATE_DEFAULT } from "@/lib/constants";
+import type { CommissionBreakdown } from "@/types";
 
 interface BreakdownTableProps {
   breakdown: CommissionBreakdown;
@@ -15,8 +15,15 @@ function fmt(value: number): string {
 const commissionPct = `${(COMMISSION_RATE_DEFAULT * 100).toFixed(1)}%`;
 
 export function BreakdownTable({ breakdown }: BreakdownTableProps) {
-  const { traditionalCommission, platformFee, titleFee, attorneyFee, totalWithAgent, totalWithPlatform, savings } =
-    breakdown;
+  const {
+    traditionalCommission,
+    platformFee,
+    titleFee,
+    attorneyFee,
+    totalWithAgent,
+    totalWithPlatform,
+    savings,
+  } = breakdown;
 
   const hasAttorney = attorneyFee > 0;
 
@@ -32,16 +39,16 @@ export function BreakdownTable({ breakdown }: BreakdownTableProps) {
         </thead>
         <tbody className="divide-y">
           <tr>
-            <td className="py-2 pr-4 text-muted-foreground">
-              Agent Commission ({commissionPct})
-            </td>
+            <td className="py-2 pr-4 text-muted-foreground">Agent Commission ({commissionPct})</td>
             <td className="py-2 px-4 text-right">{fmt(traditionalCommission)}</td>
             <td className="py-2 pl-4 text-right text-muted-foreground">—</td>
           </tr>
           <tr>
             <td className="py-2 pr-4 text-muted-foreground">
               Platform Fee
-              <span className="ml-1 text-xs text-muted-foreground">(approximate — exact pricing coming soon)</span>
+              <span className="ml-1 text-xs text-muted-foreground">
+                (approximate — exact pricing coming soon)
+              </span>
             </td>
             <td className="py-2 px-4 text-right text-muted-foreground">—</td>
             <td className="py-2 pl-4 text-right">{fmt(platformFee)}</td>

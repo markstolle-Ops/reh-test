@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 // ACCT-06: Role switching
 // Tests skip gracefully when Clerk testing token is unavailable.
@@ -25,9 +25,7 @@ test.describe("ACCT-06: Role switching", () => {
     await expect(page).toHaveURL(/\/sign-in/);
   });
 
-  test("seller can switch to buyer role and is redirected to buyer dashboard", async ({
-    page,
-  }) => {
+  test("seller can switch to buyer role and is redirected to buyer dashboard", async ({ page }) => {
     // TODO: Use Clerk testing token to:
     // 1. Authenticate as a seller-role user
     // 2. Navigate to /seller/dashboard

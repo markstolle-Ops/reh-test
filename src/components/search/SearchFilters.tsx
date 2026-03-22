@@ -1,6 +1,6 @@
 "use client";
 
-import type { SearchParams, PropertyType } from "@/types";
+import type { PropertyType, SearchParams } from "@/types";
 
 interface SearchFiltersProps {
   params: SearchParams;
@@ -62,7 +62,9 @@ export function SearchFilters({ params, onChange }: SearchFiltersProps) {
               step={10000}
               value={params.minPrice ? params.minPrice / 100 : ""}
               onChange={(e) =>
-                update({ minPrice: e.target.value ? Math.round(Number(e.target.value) * 100) : undefined })
+                update({
+                  minPrice: e.target.value ? Math.round(Number(e.target.value) * 100) : undefined,
+                })
               }
               placeholder="No min"
               className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -79,7 +81,9 @@ export function SearchFilters({ params, onChange }: SearchFiltersProps) {
               step={10000}
               value={params.maxPrice ? params.maxPrice / 100 : ""}
               onChange={(e) =>
-                update({ maxPrice: e.target.value ? Math.round(Number(e.target.value) * 100) : undefined })
+                update({
+                  maxPrice: e.target.value ? Math.round(Number(e.target.value) * 100) : undefined,
+                })
               }
               placeholder="No max"
               className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -96,9 +100,7 @@ export function SearchFilters({ params, onChange }: SearchFiltersProps) {
         <select
           id="filter-min-beds"
           value={params.minBeds ?? ""}
-          onChange={(e) =>
-            update({ minBeds: e.target.value ? Number(e.target.value) : undefined })
-          }
+          onChange={(e) => update({ minBeds: e.target.value ? Number(e.target.value) : undefined })}
           className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
           <option value="">Any</option>
@@ -142,9 +144,7 @@ export function SearchFilters({ params, onChange }: SearchFiltersProps) {
           min={0}
           step={100}
           value={params.minSqft ?? ""}
-          onChange={(e) =>
-            update({ minSqft: e.target.value ? Number(e.target.value) : undefined })
-          }
+          onChange={(e) => update({ minSqft: e.target.value ? Number(e.target.value) : undefined })}
           placeholder="No min"
           className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />

@@ -3,8 +3,8 @@
 // Uses AI SDK v6 streamText() with inputSchema tool pattern.
 // UPL disclaimer is embedded in every system prompt via role-specific prompts.
 
-import { streamText, tool } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { streamText, tool } from "ai";
 import { z } from "zod";
 import { NEGOTIATION_BUYER_SYSTEM_PROMPT } from "@/ai/prompts/negotiation-buyer";
 import { NEGOTIATION_SELLER_SYSTEM_PROMPT } from "@/ai/prompts/negotiation-seller";
@@ -24,14 +24,10 @@ export const suggestOfferPriceSchema = z.object({
     .describe("Suggested offer or counteroffer price in cents"),
   rationale: z
     .string()
-    .describe(
-      "Data-driven rationale referencing comparable sales (not legal entitlements)"
-    ),
+    .describe("Data-driven rationale referencing comparable sales (not legal entitlements)"),
   confidenceLevel: z
     .enum(["low", "medium", "high"])
-    .describe(
-      "Confidence level based on data quality and number of comps available"
-    ),
+    .describe("Confidence level based on data quality and number of comps available"),
 });
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -61,9 +57,7 @@ export async function streamNegotiationGuidance({
   userMessage,
 }: StreamNegotiationGuidanceArgs) {
   const baseSystemPrompt =
-    userRole === "buyer"
-      ? NEGOTIATION_BUYER_SYSTEM_PROMPT
-      : NEGOTIATION_SELLER_SYSTEM_PROMPT;
+    userRole === "buyer" ? NEGOTIATION_BUYER_SYSTEM_PROMPT : NEGOTIATION_SELLER_SYSTEM_PROMPT;
 
   const listingPriceFormatted = (listingPrice / 100).toLocaleString("en-US", {
     style: "currency",
@@ -92,11 +86,7 @@ ${compsContext}`;
         description:
           "Suggest a data-driven offer or counteroffer price based on comparable sales. Returns structured JSON with price, rationale, and confidence level.",
         inputSchema: suggestOfferPriceSchema,
-        execute: async ({
-          suggestedOfferCents,
-          rationale,
-          confidenceLevel,
-        }) => {
+        execute: async ({ suggestedOfferCents, rationale, confidenceLevel }) => {
           return {
             suggestedOfferCents,
             rationale,

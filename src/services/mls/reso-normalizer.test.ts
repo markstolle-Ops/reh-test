@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { normalizeResoListing } from "./reso-normalizer";
+import { describe, expect, it } from "vitest";
 import type { ResoProperty } from "./reso-normalizer";
+import { normalizeResoListing } from "./reso-normalizer";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 

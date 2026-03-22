@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import type { SearchParams } from "@/types";
+import { type NextRequest, NextResponse } from "next/server";
 import { searchListings } from "@/services/search/listings-search";
 import { parseNaturalLanguageQuery } from "@/services/search/nlq-parser";
+import type { SearchParams } from "@/types";
 
 /**
  * GET /api/search
@@ -61,8 +61,7 @@ export async function GET(request: NextRequest) {
   if (maxSqft) params.maxSqft = Number(maxSqft);
 
   const propertyType = sp.get("propertyType");
-  if (propertyType)
-    params.propertyType = propertyType as SearchParams["propertyType"];
+  if (propertyType) params.propertyType = propertyType as SearchParams["propertyType"];
 
   const lat = sp.get("lat");
   if (lat) params.lat = Number(lat);
@@ -84,9 +83,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("[GET /api/search] error:", error);
-    return NextResponse.json(
-      { error: "Search failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Search failed" }, { status: 500 });
   }
 }

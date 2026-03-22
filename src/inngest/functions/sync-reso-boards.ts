@@ -9,12 +9,12 @@
  */
 
 import { eq } from "drizzle-orm";
-import { inngest } from "@/inngest/client";
 import { db } from "@/db";
-import { resoBoards, mlsListings } from "@/db/schema";
+import { mlsListings, resoBoards } from "@/db/schema";
+import { inngest } from "@/inngest/client";
+import type { ResoBoardConfig } from "@/services/mls/reso-client";
 import { fetchResoDelta } from "@/services/mls/reso-client";
 import { normalizeResoListing } from "@/services/mls/reso-normalizer";
-import type { ResoBoardConfig } from "@/services/mls/reso-client";
 
 // ─── Raw function (exported for testability) ──────────────────────────────────
 
@@ -24,10 +24,7 @@ import type { ResoBoardConfig } from "@/services/mls/reso-client";
  */
 export async function syncResoBoardsRaw(): Promise<void> {
   // Load all active boards
-  const boards = await db
-    .select()
-    .from(resoBoards)
-    .where(eq(resoBoards.active, true));
+  const boards = await db.select().from(resoBoards).where(eq(resoBoards.active, true));
 
   // Sync each board independently — one failure does not block others
   for (const board of boards) {
@@ -122,5 +119,5 @@ export const syncResoBoardsCron = inngest.createFunction(
     await step.run("sync-reso-boards", async () => {
       await syncResoBoardsRaw();
     });
-  }
+  },
 );

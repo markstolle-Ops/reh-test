@@ -39,11 +39,7 @@ interface StatusBadgeProps {
   onStatusChange?: (newStatus: ListingStatus) => Promise<void> | void;
 }
 
-export function StatusBadge({
-  listingId,
-  status,
-  onStatusChange,
-}: StatusBadgeProps) {
+export function StatusBadge({ listingId, status, onStatusChange }: StatusBadgeProps) {
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const transitions = VALID_TRANSITIONS[status];
@@ -84,12 +80,7 @@ export function StatusBadge({
       >
         {isPending ? "Updating..." : STATUS_LABELS[status]}
         {transitions.length > 0 && !isPending && (
-          <svg
-            className="size-3"
-            viewBox="0 0 12 12"
-            fill="currentColor"
-            aria-hidden="true"
-          >
+          <svg className="size-3" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
             <path d="M6 8L1 3h10L6 8z" />
           </svg>
         )}
@@ -98,11 +89,7 @@ export function StatusBadge({
       {open && transitions.length > 0 && (
         <>
           {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-10"
-            aria-hidden="true"
-            onClick={() => setOpen(false)}
-          />
+          <div className="fixed inset-0 z-10" aria-hidden="true" onClick={() => setOpen(false)} />
           <div className="absolute left-0 top-full z-20 mt-1 min-w-[120px] overflow-hidden rounded-lg border border-border bg-popover shadow-md">
             {transitions.map((t) => (
               <button

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 // ─── Mock mls-client ──────────────────────────────────────────────────────────
 // vi.mock factory cannot reference outer variables (hoisting).
@@ -8,8 +8,8 @@ vi.mock("@/services/search/mls-client", () => ({
   syncMlsListings: vi.fn().mockResolvedValue(undefined),
 }));
 
-import { syncMlsListingsRaw } from "./sync-mls-listings";
 import { syncMlsListings } from "@/services/search/mls-client";
+import { syncMlsListingsRaw } from "./sync-mls-listings";
 
 describe("syncMlsListingsRaw (Inngest raw function)", () => {
   it("calls syncMlsListings from mls-client", async () => {

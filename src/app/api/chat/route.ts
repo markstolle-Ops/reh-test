@@ -1,11 +1,11 @@
-import { streamText, tool } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { auth } from "@clerk/nextjs/server";
+import { streamText, tool } from "ai";
 import { z } from "zod";
+import { CHATBOT_SYSTEM_PROMPT } from "@/ai/prompts/chatbot-system";
 import { db } from "@/db";
 import { showingRequests } from "@/db/schema";
 import { queryKnowledgeBase } from "@/services/chat/rag";
-import { CHATBOT_SYSTEM_PROMPT } from "@/ai/prompts/chatbot-system";
 
 // ─── POST /api/chat ────────────────────────────────────────────────────────────
 // Accepts: { messages, listingId, listingState }
@@ -23,14 +23,11 @@ export async function POST(req: Request) {
   const { userId } = await auth();
 
   // Extract last user message for RAG query
-  const lastUserMessage = messages
-    ?.filter((m: { role: string }) => m.role === "user")
-    ?.at(-1)?.content as string | undefined;
+  const lastUserMessage = messages?.filter((m: { role: string }) => m.role === "user")?.at(-1)
+    ?.content as string | undefined;
 
   // Query knowledge base with last user message
-  const ragContext = lastUserMessage
-    ? await queryKnowledgeBase(lastUserMessage, listingState)
-    : "";
+  const ragContext = lastUserMessage ? await queryKnowledgeBase(lastUserMessage, listingState) : "";
 
   // Build system prompt with RAG context and state-specific guardrails
   const systemMessage = CHATBOT_SYSTEM_PROMPT({
@@ -45,30 +42,17 @@ export async function POST(req: Request) {
     tools: {
       // AI SDK v6: uses `inputSchema` instead of `parameters`
       scheduleShowing: tool({
-        description:
-          "Schedule a property showing request. Requires the user to be logged in.",
+        description: "Schedule a property showing request. Requires the user to be logged in.",
         inputSchema: z.object({
-          requestedDate: z
-            .string()
-            .describe("ISO 8601 date-time string for the requested showing"),
-          notes: z
-            .string()
-            .optional()
-            .describe("Optional notes or preferences for the showing"),
+          requestedDate: z.string().describe("ISO 8601 date-time string for the requested showing"),
+          notes: z.string().optional().describe("Optional notes or preferences for the showing"),
         }),
-        execute: async ({
-          requestedDate,
-          notes,
-        }: {
-          requestedDate: string;
-          notes?: string;
-        }) => {
+        execute: async ({ requestedDate, notes }: { requestedDate: string; notes?: string }) => {
           // Auth check — showing scheduling requires authentication
           if (!userId) {
             return {
               success: false,
-              error:
-                "You must be logged in to schedule a showing. Please sign in and try again.",
+              error: "You must be logged in to schedule a showing. Please sign in and try again.",
             };
           }
 

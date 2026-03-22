@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { setUserRole } from "@/lib/auth";
 import type { UserRole } from "@/types";
-import { Button } from "@/components/ui/button";
 
 export function RoleSwitcher() {
   const { user, isLoaded } = useUser();
@@ -16,8 +16,7 @@ export function RoleSwitcher() {
 
   const currentRole = user.publicMetadata?.role as UserRole | undefined;
   const targetRole: UserRole = currentRole === "buyer" ? "seller" : "buyer";
-  const targetPath =
-    targetRole === "buyer" ? "/buyer/dashboard" : "/seller/dashboard";
+  const targetPath = targetRole === "buyer" ? "/buyer/dashboard" : "/seller/dashboard";
 
   async function switchRole() {
     setIsLoading(true);
@@ -36,17 +35,9 @@ export function RoleSwitcher() {
   return (
     <div className="flex items-center gap-3">
       <span className="text-sm text-gray-500">
-        Role:{" "}
-        <span className="font-medium capitalize text-gray-800">
-          {currentRole ?? "none"}
-        </span>
+        Role: <span className="font-medium capitalize text-gray-800">{currentRole ?? "none"}</span>
       </span>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={switchRole}
-        disabled={isLoading}
-      >
+      <Button variant="outline" size="sm" onClick={switchRole} disabled={isLoading}>
         {isLoading ? "Switching..." : `Switch to ${targetRole}`}
       </Button>
     </div>

@@ -1,56 +1,56 @@
 import type { StateWorkflowConfig } from "@/workflow/types";
-import { caConfig } from "./CA";
-import { txConfig } from "./TX";
-import { flConfig } from "./FL";
-import { nyConfig } from "./NY";
-import { gaConfig } from "./GA";
-import { ncConfig } from "./NC";
-import { azConfig } from "./AZ";
-import { ohConfig } from "./OH";
-import { paConfig } from "./PA";
-import { ilConfig } from "./IL";
+import { akConfig } from "./AK";
 // 41 new states + DC
 import { alConfig } from "./AL";
-import { akConfig } from "./AK";
 import { arConfig } from "./AR";
+import { azConfig } from "./AZ";
+import { caConfig } from "./CA";
 import { coConfig } from "./CO";
 import { ctConfig } from "./CT";
+import { dcConfig } from "./DC";
 import { deConfig } from "./DE";
+import { flConfig } from "./FL";
+import { gaConfig } from "./GA";
 import { hiConfig } from "./HI";
-import { idConfig } from "./ID";
-import { inConfig } from "./IN";
 import { iaConfig } from "./IA";
+import { idConfig } from "./ID";
+import { ilConfig } from "./IL";
+import { inConfig } from "./IN";
 import { ksConfig } from "./KS";
 import { kyConfig } from "./KY";
 import { laConfig } from "./LA";
-import { meConfig } from "./ME";
-import { mdConfig } from "./MD";
 import { maConfig } from "./MA";
+import { mdConfig } from "./MD";
+import { meConfig } from "./ME";
 import { miConfig } from "./MI";
 import { mnConfig } from "./MN";
-import { msConfig } from "./MS";
 import { moConfig } from "./MO";
+import { msConfig } from "./MS";
 import { mtConfig } from "./MT";
+import { ncConfig } from "./NC";
+import { ndConfig } from "./ND";
 import { neConfig } from "./NE";
-import { nvConfig } from "./NV";
 import { nhConfig } from "./NH";
 import { njConfig } from "./NJ";
 import { nmConfig } from "./NM";
-import { ndConfig } from "./ND";
+import { nvConfig } from "./NV";
+import { nyConfig } from "./NY";
+import { ohConfig } from "./OH";
 import { okConfig } from "./OK";
 import { orConfig } from "./OR";
+import { paConfig } from "./PA";
 import { riConfig } from "./RI";
 import { scConfig } from "./SC";
 import { sdConfig } from "./SD";
 import { tnConfig } from "./TN";
+import { txConfig } from "./TX";
 import { utConfig } from "./UT";
-import { vtConfig } from "./VT";
 import { vaConfig } from "./VA";
+import { vtConfig } from "./VT";
 import { waConfig } from "./WA";
-import { wvConfig } from "./WV";
 import { wiConfig } from "./WI";
+import { wvConfig } from "./WV";
 import { wyConfig } from "./WY";
-import { dcConfig } from "./DC";
 
 /**
  * Registry of all 51 state workflow configs (50 states + DC).
@@ -120,7 +120,7 @@ export function getStateWorkflowConfig(stateCode: string): StateWorkflowConfig {
   const config = ALL_STATE_CONFIGS[stateCode];
   if (!config) {
     throw new Error(
-      `No workflow config for state "${stateCode}". Supported states: ${Object.keys(ALL_STATE_CONFIGS).join(", ")}`
+      `No workflow config for state "${stateCode}". Supported states: ${Object.keys(ALL_STATE_CONFIGS).join(", ")}`,
     );
   }
   return config;

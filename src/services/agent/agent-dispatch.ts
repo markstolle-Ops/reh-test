@@ -29,7 +29,7 @@ export interface DispatchResult {
  */
 export async function dispatchAgentForTransaction(
   transactionId: string,
-  propertyState: string
+  propertyState: string,
 ): Promise<DispatchResult | null> {
   return db.transaction(async (tx) => {
     // Row-level lock prevents concurrent double-assignment.

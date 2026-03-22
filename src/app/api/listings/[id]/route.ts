@@ -1,15 +1,15 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { listings, listingPhotos } from "@/db/schema";
+import { listingPhotos, listings } from "@/db/schema";
+import { inngest } from "@/inngest/client";
 import {
   addPhotoToListing,
   removePhotoFromListing,
   reorderPhotos,
 } from "@/services/listing/photos";
-import { inngest } from "@/inngest/client";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -126,12 +126,11 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   ]);
 
   const safeFields = Object.fromEntries(
-    Object.entries(body).filter(([key]) => ALLOWED_FIELDS.has(key))
+    Object.entries(body).filter(([key]) => ALLOWED_FIELDS.has(key)),
   );
 
   // Set publishedAt timestamp when status transitions to 'active'
-  const publishNow =
-    safeFields.status === "active" && existing.status !== "active";
+  const publishNow = safeFields.status === "active" && existing.status !== "active";
 
   const [updated] = await db
     .update(listings)

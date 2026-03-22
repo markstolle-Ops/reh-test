@@ -1,13 +1,11 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 // ACCT-03: Password reset
 // Clerk handles password reset natively — this test confirms the flow is accessible.
 // Tests skip gracefully when Clerk testing token is unavailable.
 
 test.describe("ACCT-03: Password reset", () => {
-  test("sign-in page is accessible for password reset flow", async ({
-    page,
-  }) => {
+  test("sign-in page is accessible for password reset flow", async ({ page }) => {
     // Clerk's SignIn component includes a "Forgot password?" link natively.
     // Navigate to /sign-in and verify the page loads.
     await page.goto("/sign-in");
@@ -15,9 +13,7 @@ test.describe("ACCT-03: Password reset", () => {
     await expect(page.locator("body")).toBeVisible();
   });
 
-  test("password reset flow is accessible from sign-in page", async ({
-    page,
-  }) => {
+  test("password reset flow is accessible from sign-in page", async ({ page }) => {
     if (!process.env.CLERK_TESTING_TOKEN) {
       test.skip();
     }

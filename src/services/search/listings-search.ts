@@ -1,9 +1,9 @@
 import { and, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { listings, mlsListings } from "@/db/schema";
+import { buildCacheKey, cacheWrap } from "@/lib/redis";
 import type { NormalizedListing, SearchParams } from "@/types";
 import { normalizeMlsListing, normalizePlatformListing } from "./normalize";
-import { cacheWrap, buildCacheKey } from "@/lib/redis";
 
 /**
  * Unified search across platform-native listings and MLS-ingested listings.
@@ -52,26 +52,18 @@ export async function searchListings(params: SearchParams): Promise<{
 
     if (q) {
       platformConditions.push(
-        or(
-          ilike(listings.city, `%${q}%`),
-          ilike(listings.zip, `%${q}%`)
-        ) as ReturnType<typeof eq>
+        or(ilike(listings.city, `%${q}%`), ilike(listings.zip, `%${q}%`)) as ReturnType<typeof eq>,
       );
     }
     if (minPrice !== undefined) platformConditions.push(gte(listings.price, minPrice));
     if (maxPrice !== undefined) platformConditions.push(lte(listings.price, maxPrice));
-    if (minBeds !== undefined)
-      platformConditions.push(gte(listings.bedrooms, minBeds));
-    if (maxBeds !== undefined)
-      platformConditions.push(lte(listings.bedrooms, maxBeds));
-    if (minBaths !== undefined)
-      platformConditions.push(gte(listings.bathrooms, String(minBaths)));
-    if (maxBaths !== undefined)
-      platformConditions.push(lte(listings.bathrooms, String(maxBaths)));
+    if (minBeds !== undefined) platformConditions.push(gte(listings.bedrooms, minBeds));
+    if (maxBeds !== undefined) platformConditions.push(lte(listings.bedrooms, maxBeds));
+    if (minBaths !== undefined) platformConditions.push(gte(listings.bathrooms, String(minBaths)));
+    if (maxBaths !== undefined) platformConditions.push(lte(listings.bathrooms, String(maxBaths)));
     if (minSqft !== undefined) platformConditions.push(gte(listings.sqft, minSqft));
     if (maxSqft !== undefined) platformConditions.push(lte(listings.sqft, maxSqft));
-    if (propertyType)
-      platformConditions.push(eq(listings.propertyType, propertyType));
+    if (propertyType) platformConditions.push(eq(listings.propertyType, propertyType));
 
     // PostGIS geographic radius filter (spherical distance via ::geography cast)
     if (lat !== undefined && lng !== undefined) {
@@ -80,7 +72,7 @@ export async function searchListings(params: SearchParams): Promise<{
           ${listings.location}::geography,
           ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography,
           ${radiusKm * 1000}
-        )` as ReturnType<typeof eq>
+        )` as ReturnType<typeof eq>,
       );
     }
 
@@ -97,30 +89,20 @@ export async function searchListings(params: SearchParams): Promise<{
 
     if (q) {
       mlsConditions.push(
-        or(
-          ilike(mlsListings.city, `%${q}%`),
-          ilike(mlsListings.zip, `%${q}%`)
-        ) as ReturnType<typeof eq>
+        or(ilike(mlsListings.city, `%${q}%`), ilike(mlsListings.zip, `%${q}%`)) as ReturnType<
+          typeof eq
+        >,
       );
     }
-    if (minPrice !== undefined)
-      mlsConditions.push(gte(mlsListings.price, minPrice));
-    if (maxPrice !== undefined)
-      mlsConditions.push(lte(mlsListings.price, maxPrice));
-    if (minBeds !== undefined)
-      mlsConditions.push(gte(mlsListings.bedrooms, minBeds));
-    if (maxBeds !== undefined)
-      mlsConditions.push(lte(mlsListings.bedrooms, maxBeds));
-    if (minBaths !== undefined)
-      mlsConditions.push(gte(mlsListings.bathrooms, String(minBaths)));
-    if (maxBaths !== undefined)
-      mlsConditions.push(lte(mlsListings.bathrooms, String(maxBaths)));
-    if (minSqft !== undefined)
-      mlsConditions.push(gte(mlsListings.sqft, minSqft));
-    if (maxSqft !== undefined)
-      mlsConditions.push(lte(mlsListings.sqft, maxSqft));
-    if (propertyType)
-      mlsConditions.push(eq(mlsListings.propertyType, propertyType));
+    if (minPrice !== undefined) mlsConditions.push(gte(mlsListings.price, minPrice));
+    if (maxPrice !== undefined) mlsConditions.push(lte(mlsListings.price, maxPrice));
+    if (minBeds !== undefined) mlsConditions.push(gte(mlsListings.bedrooms, minBeds));
+    if (maxBeds !== undefined) mlsConditions.push(lte(mlsListings.bedrooms, maxBeds));
+    if (minBaths !== undefined) mlsConditions.push(gte(mlsListings.bathrooms, String(minBaths)));
+    if (maxBaths !== undefined) mlsConditions.push(lte(mlsListings.bathrooms, String(maxBaths)));
+    if (minSqft !== undefined) mlsConditions.push(gte(mlsListings.sqft, minSqft));
+    if (maxSqft !== undefined) mlsConditions.push(lte(mlsListings.sqft, maxSqft));
+    if (propertyType) mlsConditions.push(eq(mlsListings.propertyType, propertyType));
 
     const mlsRows = await db
       .select()
@@ -135,7 +117,7 @@ export async function searchListings(params: SearchParams): Promise<{
     const normalizedMls = mlsRows.map(normalizeMlsListing);
 
     const combined = [...normalizedPlatform, ...normalizedMls].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
     return {

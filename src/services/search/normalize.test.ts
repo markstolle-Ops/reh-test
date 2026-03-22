@@ -1,8 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import {
-  normalizePlatformListing,
-  normalizeMlsListing,
-} from "./normalize";
+import { describe, expect, it, vi } from "vitest";
+import { normalizeMlsListing, normalizePlatformListing } from "./normalize";
 
 // ─── Mock env var for photo URL construction ────────────────────────────────
 vi.stubEnv("NEXT_PUBLIC_R2_PUBLIC_URL", "https://pub.r2.dev");

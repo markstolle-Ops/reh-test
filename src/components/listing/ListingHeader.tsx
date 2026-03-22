@@ -42,17 +42,14 @@ function formatLotSize(sqft: number | null | undefined): string {
 
 export function ListingHeader({ listing }: ListingHeaderProps) {
   const statusInfo = STATUS_LABELS[listing.status] ?? STATUS_LABELS.draft;
-  const propertyLabel =
-    PROPERTY_TYPE_LABELS[listing.propertyType] ?? listing.propertyType;
+  const propertyLabel = PROPERTY_TYPE_LABELS[listing.propertyType] ?? listing.propertyType;
   const isLandLot = listing.propertyType === "land_lot";
 
   return (
     <div className="space-y-4">
       {/* Price + badges row */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-3xl font-bold text-gray-900">
-          {formatPrice(listing.price)}
-        </span>
+        <span className="text-3xl font-bold text-gray-900">{formatPrice(listing.price)}</span>
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.className}`}
         >
@@ -65,9 +62,7 @@ export function ListingHeader({ listing }: ListingHeaderProps) {
 
       {/* Address */}
       <div>
-        <p className="text-xl font-semibold text-gray-900">
-          {listing.streetAddress}
-        </p>
+        <p className="text-xl font-semibold text-gray-900">{listing.streetAddress}</p>
         <p className="text-gray-600">
           {listing.city}, {listing.state} {listing.zip}
         </p>
@@ -77,20 +72,14 @@ export function ListingHeader({ listing }: ListingHeaderProps) {
       <div className="flex flex-wrap gap-6 text-sm text-gray-700">
         {!isLandLot && listing.bedrooms != null && (
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-900">
-              {listing.bedrooms}
-            </span>
-            <span className="text-gray-500">
-              {listing.bedrooms === 1 ? "Bed" : "Beds"}
-            </span>
+            <span className="font-semibold text-gray-900">{listing.bedrooms}</span>
+            <span className="text-gray-500">{listing.bedrooms === 1 ? "Bed" : "Beds"}</span>
           </div>
         )}
 
         {!isLandLot && listing.bathrooms != null && (
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-900">
-              {listing.bathrooms}
-            </span>
+            <span className="font-semibold text-gray-900">{listing.bathrooms}</span>
             <span className="text-gray-500">
               {Number(listing.bathrooms) === 1 ? "Bath" : "Baths"}
             </span>
@@ -99,9 +88,7 @@ export function ListingHeader({ listing }: ListingHeaderProps) {
 
         {listing.sqft != null && (
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-900">
-              {formatSqft(listing.sqft)}
-            </span>
+            <span className="font-semibold text-gray-900">{formatSqft(listing.sqft)}</span>
             <span className="text-gray-500">Interior</span>
           </div>
         )}

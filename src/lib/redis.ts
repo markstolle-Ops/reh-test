@@ -18,10 +18,7 @@ import { Redis } from "@upstash/redis";
 let _redis: Redis | null = null;
 
 function getRedis(): Redis | null {
-  if (
-    !process.env.UPSTASH_REDIS_REST_URL ||
-    !process.env.UPSTASH_REDIS_REST_TOKEN
-  ) {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
     return null;
   }
   if (!_redis) {
@@ -44,10 +41,7 @@ function getRedis(): Redis | null {
  * @param params  Key-value params contributing to the cache key
  * @returns       A string like "search:{json-of-sorted-params}"
  */
-export function buildCacheKey(
-  prefix: string,
-  params: Record<string, unknown>
-): string {
+export function buildCacheKey(prefix: string, params: Record<string, unknown>): string {
   const sorted = Object.keys(params)
     .sort()
     .reduce<Record<string, unknown>>((acc, key) => {
@@ -82,11 +76,7 @@ export async function cacheGet<T>(key: string): Promise<T | null> {
  * Stores a value in the cache with an expiry.
  * Silently no-ops if Redis is unavailable or the write fails.
  */
-export async function cacheSet(
-  key: string,
-  value: unknown,
-  ttlSeconds: number
-): Promise<void> {
+export async function cacheSet(key: string, value: unknown, ttlSeconds: number): Promise<void> {
   const redis = getRedis();
   if (!redis) return;
 
@@ -113,7 +103,7 @@ export async function cacheSet(
 export async function cacheWrap<T>(
   key: string,
   ttlSeconds: number,
-  fn: () => Promise<T>
+  fn: () => Promise<T>,
 ): Promise<T> {
   try {
     const cached = await cacheGet<T>(key);

@@ -1,14 +1,13 @@
 import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
 import { eq } from "drizzle-orm";
-
-import { inngest } from "@/inngest/client";
-import { db } from "@/db";
-import { listings } from "@/db/schema";
 import {
   LISTING_DESCRIPTION_PROMPT,
   type ListingDescriptionDetails,
 } from "@/ai/prompts/listing-description";
+import { db } from "@/db";
+import { listings } from "@/db/schema";
+import { inngest } from "@/inngest/client";
 
 // ─── Event payload types ──────────────────────────────────────────────────────
 
@@ -93,5 +92,5 @@ export async function generateListingDescription({
 export const generateListingDescriptionFn = inngest.createFunction(
   { id: "generate-listing-description", name: "Generate Listing Description" },
   { event: "listing/created" },
-  generateListingDescription
+  generateListingDescription,
 );

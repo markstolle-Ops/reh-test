@@ -4,13 +4,13 @@
 // X-UPL-Disclaimer: true header included on every response.
 
 import { auth } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
 import { differenceInDays } from "date-fns";
+import { eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { streamNegotiationGuidance } from "@/ai/agents/negotiation";
 import { db } from "@/db";
 import { listings } from "@/db/schema";
 import { fetchComps } from "@/services/negotiation/comps";
-import { streamNegotiationGuidance } from "@/ai/agents/negotiation";
 
 /**
  * POST /api/negotiation/strategy
@@ -34,24 +34,15 @@ export async function POST(req: NextRequest) {
   };
 
   if (!listingId || typeof listingId !== "string") {
-    return NextResponse.json(
-      { error: "listingId is required" },
-      { status: 422 }
-    );
+    return NextResponse.json({ error: "listingId is required" }, { status: 422 });
   }
 
   if (!message || typeof message !== "string") {
-    return NextResponse.json(
-      { error: "message is required" },
-      { status: 422 }
-    );
+    return NextResponse.json({ error: "message is required" }, { status: 422 });
   }
 
   if (role !== "buyer" && role !== "seller") {
-    return NextResponse.json(
-      { error: "role must be 'buyer' or 'seller'" },
-      { status: 422 }
-    );
+    return NextResponse.json({ error: "role must be 'buyer' or 'seller'" }, { status: 422 });
   }
 
   const listing = await db.query.listings.findFirst({
@@ -70,10 +61,7 @@ export async function POST(req: NextRequest) {
 
   // Compute days on market from createdAt (proxy until publishedAt is set)
   const publishedAt = listing.publishedAt ?? listing.createdAt;
-  const daysOnMarket = Math.max(
-    0,
-    differenceInDays(new Date(), new Date(publishedAt))
-  );
+  const daysOnMarket = Math.max(0, differenceInDays(new Date(), new Date(publishedAt)));
 
   // Stream negotiation guidance with UPL-compliant prompts
   const result = await streamNegotiationGuidance({

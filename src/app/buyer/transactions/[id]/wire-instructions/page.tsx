@@ -13,10 +13,10 @@
  *   - Wire data is NEVER sent via email — this page is the only source
  */
 
-import { redirect, notFound } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { transactions } from "@/db/schema";
@@ -60,12 +60,12 @@ export default async function WireInstructionsPage({ params }: PageProps) {
             Two-Factor Authentication Required
           </h1>
           <p className="text-amber-800 text-sm mb-4">
-            To protect against wire fraud, you must enable two-factor
-            authentication (2FA) before viewing wire instructions.
+            To protect against wire fraud, you must enable two-factor authentication (2FA) before
+            viewing wire instructions.
           </p>
           <p className="text-amber-800 text-sm mb-6">
-            Wire transfers cannot be reversed. This extra security step ensures
-            that only you can access these sensitive banking details.
+            Wire transfers cannot be reversed. This extra security step ensures that only you can
+            access these sensitive banking details.
           </p>
           <a
             href="https://accounts.clerk.dev/user/security"
@@ -94,9 +94,7 @@ export default async function WireInstructionsPage({ params }: PageProps) {
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="rounded-lg border border-red-200 bg-red-50 p-6">
           <h1 className="text-xl font-semibold text-red-800">Access Denied</h1>
-          <p className="mt-2 text-red-700 text-sm">
-            You are not the buyer on this transaction.
-          </p>
+          <p className="mt-2 text-red-700 text-sm">You are not the buyer on this transaction.</p>
           <Link
             href="/buyer/dashboard"
             className="mt-4 inline-block text-sm text-red-600 underline"
@@ -128,20 +126,14 @@ export default async function WireInstructionsPage({ params }: PageProps) {
       <h1 className="text-2xl font-bold text-gray-900">Wire Instructions</h1>
 
       {/* ─── Fraud Warning Banner ───────────────────────────────────────── */}
-      <div
-        role="alert"
-        className="rounded-lg border-2 border-red-500 bg-red-50 p-5"
-      >
-        <h2 className="text-base font-bold text-red-800 mb-2">
-          WIRE FRAUD WARNING
-        </h2>
+      <div role="alert" className="rounded-lg border-2 border-red-500 bg-red-50 p-5">
+        <h2 className="text-base font-bold text-red-800 mb-2">WIRE FRAUD WARNING</h2>
         <p className="text-sm text-red-800 leading-relaxed">
-          These wire instructions are the{" "}
-          <strong>ONLY authoritative source</strong>. If you received an email,
-          text message, or phone call with{" "}
-          <strong>DIFFERENT wire instructions</strong>, DO NOT send money. Call
-          your title company directly using a verified phone number you looked
-          up independently — not a number from the suspicious message.
+          These wire instructions are the <strong>ONLY authoritative source</strong>. If you
+          received an email, text message, or phone call with{" "}
+          <strong>DIFFERENT wire instructions</strong>, DO NOT send money. Call your title company
+          directly using a verified phone number you looked up independently — not a number from the
+          suspicious message.
         </p>
         <p className="text-sm text-red-700 mt-2 font-medium">
           Wire transfers cannot be reversed. Verify before sending.
@@ -152,9 +144,7 @@ export default async function WireInstructionsPage({ params }: PageProps) {
       {wireData ? (
         <div className="rounded-lg border bg-white p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Wiring Details
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">Wiring Details</h2>
             <span className="text-xs text-gray-400">
               Last updated:{" "}
               {new Date(wireData.updatedAt).toLocaleString("en-US", {
@@ -167,24 +157,18 @@ export default async function WireInstructionsPage({ params }: PageProps) {
           <dl className="space-y-3 text-sm">
             <div className="flex items-start justify-between py-2 border-b border-gray-100">
               <dt className="text-gray-500 font-medium">Bank Name</dt>
-              <dd className="text-gray-900 font-semibold text-right">
-                {wireData.bankName}
-              </dd>
+              <dd className="text-gray-900 font-semibold text-right">{wireData.bankName}</dd>
             </div>
 
             <div className="flex items-start justify-between py-2 border-b border-gray-100">
               <dt className="text-gray-500 font-medium">Account Name</dt>
-              <dd className="text-gray-900 font-semibold text-right">
-                {wireData.accountName}
-              </dd>
+              <dd className="text-gray-900 font-semibold text-right">{wireData.accountName}</dd>
             </div>
 
             {wireData.referenceNote && (
               <div className="flex items-start justify-between py-2 border-b border-gray-100">
                 <dt className="text-gray-500 font-medium">Reference / Memo</dt>
-                <dd className="text-gray-900 text-right">
-                  {wireData.referenceNote}
-                </dd>
+                <dd className="text-gray-900 text-right">{wireData.referenceNote}</dd>
               </div>
             )}
           </dl>
@@ -202,8 +186,7 @@ export default async function WireInstructionsPage({ params }: PageProps) {
             Wire instructions have not been set for this transaction yet.
           </p>
           <p className="text-xs text-gray-400 mt-1">
-            Contact your title company to confirm when wiring instructions will
-            be available.
+            Contact your title company to confirm when wiring instructions will be available.
           </p>
         </div>
       )}
@@ -215,8 +198,8 @@ export default async function WireInstructionsPage({ params }: PageProps) {
 
       {/* Legal disclaimer */}
       <p className="text-xs text-gray-400 text-center">
-        This is not legal advice. Consult a licensed attorney for questions
-        about contracts, legal obligations, or state-specific requirements.
+        This is not legal advice. Consult a licensed attorney for questions about contracts, legal
+        obligations, or state-specific requirements.
       </p>
     </div>
   );

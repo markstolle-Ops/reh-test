@@ -10,9 +10,9 @@
  * Export pattern: raw async fn for testability + inngest-wrapped fn for route.
  */
 
-import { inngest } from "@/inngest/client";
 import { db } from "@/db";
 import { transactionDeadlines } from "@/db/schema";
+import { inngest } from "@/inngest/client";
 import type { StateWorkflowConfig } from "@/workflow/types";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -42,12 +42,12 @@ export interface DeadlineRow {
  * dueAt = offerAcceptedDate + step.deadlineDays (calendar days, UTC).
  */
 export async function trackTransactionDeadlinesRaw(
-  params: TrackDeadlinesParams
+  params: TrackDeadlinesParams,
 ): Promise<TrackDeadlinesResult> {
   const { transactionId, config, offerAcceptedDate } = params;
 
   const stepsWithDeadlines = config.steps.filter(
-    (step) => step.deadlineDays !== undefined && step.deadlineDays !== null
+    (step) => step.deadlineDays !== undefined && step.deadlineDays !== null,
   );
 
   for (const step of stepsWithDeadlines) {
@@ -106,9 +106,7 @@ export const trackTransactionDeadlines = inngest.createFunction(
     });
 
     // 2. Re-fetch inserted deadlines for reminder scheduling
-    const stepsWithDeadlines = config.steps.filter(
-      (s) => s.deadlineDays !== undefined
-    );
+    const stepsWithDeadlines = config.steps.filter((s) => s.deadlineDays !== undefined);
 
     // 3. For each deadline step, schedule 48h / 24h / 0h reminders
     for (const step_ of stepsWithDeadlines) {
@@ -126,41 +124,35 @@ export const trackTransactionDeadlines = inngest.createFunction(
         const fireAt = new Date(dueAt.getTime() - reminder.msBeforeDue);
         const sleepUntil = fireAt.toISOString();
 
-        await step.sleepUntil(
-          `sleep-until-${step_.id}-${reminder.label}`,
-          sleepUntil
-        );
+        await step.sleepUntil(`sleep-until-${step_.id}-${reminder.label}`, sleepUntil);
 
-        await step.run(
-          `send-reminder-${step_.id}-${reminder.label}`,
-          async () => {
-            // Fire-and-forget: import Resend lazily to avoid test-time issues
-            const { Resend } = await import("resend");
-            const resend = new Resend(process.env.RESEND_API_KEY);
+        await step.run(`send-reminder-${step_.id}-${reminder.label}`, async () => {
+          // Fire-and-forget: import Resend lazily to avoid test-time issues
+          const { Resend } = await import("resend");
+          const resend = new Resend(process.env.RESEND_API_KEY);
 
-            const subject = `[${reminder.label === "0h" ? "TODAY" : `${reminder.label} Reminder`}] ${deadlineLabel} — ${propertyAddress}`;
-            const body = [
-              `This is a reminder that your <strong>${deadlineLabel}</strong> deadline is`,
-              reminder.label === "0h" ? "TODAY" : `in ${reminder.label}`,
-              `(${dueAt.toLocaleDateString("en-US", { dateStyle: "long" })}).`,
-              "",
-              "View your transaction dashboard for full details and next steps.",
-              "",
-              "<strong>IMPORTANT: Never send wire transfer instructions via email.</strong>",
-              "All payment instructions are only available in your secure transaction dashboard.",
-            ].join("\n");
+          const subject = `[${reminder.label === "0h" ? "TODAY" : `${reminder.label} Reminder`}] ${deadlineLabel} — ${propertyAddress}`;
+          const body = [
+            `This is a reminder that your <strong>${deadlineLabel}</strong> deadline is`,
+            reminder.label === "0h" ? "TODAY" : `in ${reminder.label}`,
+            `(${dueAt.toLocaleDateString("en-US", { dateStyle: "long" })}).`,
+            "",
+            "View your transaction dashboard for full details and next steps.",
+            "",
+            "<strong>IMPORTANT: Never send wire transfer instructions via email.</strong>",
+            "All payment instructions are only available in your secure transaction dashboard.",
+          ].join("\n");
 
-            await resend.emails.send({
-              from: "noreply@realestatehunter.com",
-              to: [buyerEmail, sellerEmail],
-              subject,
-              html: body.replace(/\n/g, "<br>"),
-            });
-          }
-        );
+          await resend.emails.send({
+            from: "noreply@realestatehunter.com",
+            to: [buyerEmail, sellerEmail],
+            subject,
+            html: body.replace(/\n/g, "<br>"),
+          });
+        });
       }
     }
 
     return { transactionId, inserted };
-  }
+  },
 );

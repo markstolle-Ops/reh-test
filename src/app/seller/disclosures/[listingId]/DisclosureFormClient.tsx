@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { DisclosureForm } from "@/components/disclosures/DisclosureForm";
+import { useState } from "react";
 import { AiFormAssistant } from "@/components/disclosures/AiFormAssistant";
 import type { FieldSchema } from "@/components/disclosures/DisclosureForm";
+import { DisclosureForm } from "@/components/disclosures/DisclosureForm";
 
 interface DisclosureFormClientProps {
   listingId: string;
@@ -130,11 +130,7 @@ export function DisclosureFormClient({
 
       {/* AI assistant sidebar */}
       <div className="lg:col-span-1 min-h-[500px]">
-        <AiFormAssistant
-          state={state}
-          formName={formName}
-          currentField={currentField}
-        />
+        <AiFormAssistant state={state} formName={formName} currentField={currentField} />
       </div>
     </div>
   );

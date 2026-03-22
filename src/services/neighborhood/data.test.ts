@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { getNeighborhoodData, getMarketTrends } from "./data";
+import { describe, expect, it } from "vitest";
+import { getMarketTrends, getNeighborhoodData } from "./data";
 
 describe("getNeighborhoodData", () => {
   it("returns neighborhood data for a valid zip", async () => {
@@ -130,9 +130,7 @@ describe("getMarketTrends", () => {
     const result1 = await getMarketTrends("78701", "TX");
     const result2 = await getMarketTrends("90210", "CA");
     // Median prices should differ for different markets
-    const allSame = result1.every(
-      (p, i) => p.medianPrice === result2[i].medianPrice
-    );
+    const allSame = result1.every((p, i) => p.medianPrice === result2[i].medianPrice);
     expect(allSame).toBe(false);
   });
 });

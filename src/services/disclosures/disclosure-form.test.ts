@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the db module
 vi.mock("@/db", () => ({
@@ -19,13 +19,13 @@ vi.mock("./form-schema", () => ({
   })),
 }));
 
-import {
-  createDisclosureForm,
-  updateDisclosureForm,
-  completeDisclosureForm,
-  getDisclosureForm,
-} from "./disclosure-form";
 import { db } from "@/db";
+import {
+  completeDisclosureForm,
+  createDisclosureForm,
+  getDisclosureForm,
+  updateDisclosureForm,
+} from "./disclosure-form";
 
 describe("disclosure-form", () => {
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("disclosure-form", () => {
           userId: "user-1",
           listingId: "listing-1",
           state: "CA",
-        })
+        }),
       );
       expect(result).toMatchObject({
         id: "form-1",
@@ -127,7 +127,7 @@ describe("disclosure-form", () => {
       expect(mockUpdate.set).toHaveBeenCalledWith(
         expect.objectContaining({
           status: "complete",
-        })
+        }),
       );
       expect(result).toMatchObject({ status: "complete" });
     });

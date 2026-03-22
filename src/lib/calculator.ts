@@ -1,4 +1,4 @@
-import { PLATFORM_FEE_PLACEHOLDER, COMMISSION_RATE_DEFAULT } from "@/lib/constants";
+import { COMMISSION_RATE_DEFAULT, PLATFORM_FEE_PLACEHOLDER } from "@/lib/constants";
 import { getStateInfo } from "@/lib/states";
 import type { CommissionBreakdown, LaunchState } from "@/types";
 
@@ -25,7 +25,7 @@ export function estimateTitleFee(homePrice: number, state: string): number {
 export function calculateSavings(
   homePrice: number,
   state: string,
-  commissionRate: number = COMMISSION_RATE_DEFAULT
+  commissionRate: number = COMMISSION_RATE_DEFAULT,
 ): CommissionBreakdown {
   // Edge case: zero price returns all zeros
   if (homePrice === 0) {
@@ -50,8 +50,7 @@ export function calculateSavings(
 
   // Attorney fee applies to both attorney-required and customary-attorney states
   const attorneyFee =
-    stateInfo.closingType === "attorney-required" ||
-    stateInfo.closingType === "customary-attorney"
+    stateInfo.closingType === "attorney-required" || stateInfo.closingType === "customary-attorney"
       ? ATTORNEY_FEE
       : 0;
 

@@ -4,9 +4,9 @@
 // TODO: Replace with ATTOM Data API when contract is established.
 // See: .planning/phases/04-transaction-engine-state-compliance/04-RESEARCH.md
 
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { mlsListings } from "@/db/schema";
-import { and, desc, eq } from "drizzle-orm";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,9 +64,7 @@ export async function fetchComps({
 
     // Build address from available fields — rawData holds full street address
     // but we use city/zip for a consistent display label in comps context
-    const address = [row.streetAddress, row.zip]
-      .filter(Boolean)
-      .join(", ");
+    const address = [row.streetAddress, row.zip].filter(Boolean).join(", ");
 
     return {
       soldPriceCents: row.price ?? 0,
@@ -96,9 +94,7 @@ export function formatCompsForPrompt(comps: Comp[]): string {
     });
     const sqft = c.sqft ? `${c.sqft.toLocaleString()} sqft` : "sqft unknown";
     const pricePerSqft =
-      c.sqft && c.sqft > 0
-        ? `$${Math.round(c.soldPriceCents / 100 / c.sqft)}/sqft`
-        : "";
+      c.sqft && c.sqft > 0 ? `$${Math.round(c.soldPriceCents / 100 / c.sqft)}/sqft` : "";
 
     return `${i + 1}. ${c.address} — Sold ${price} (${sqft}${pricePerSqft ? `, ${pricePerSqft}` : ""}) — ${c.daysAgo} days ago`;
   });

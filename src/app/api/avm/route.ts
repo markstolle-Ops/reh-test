@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getHomeValueEstimate } from "@/services/avm/housecanary";
 
 /**
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
   if (!street || !city || !state || !zip) {
     return NextResponse.json(
       { error: "street, city, state, and zip are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
   if (!estimate) {
     return NextResponse.json(
       { error: "Could not retrieve AVM estimate for the given address" },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
