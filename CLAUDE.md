@@ -65,7 +65,7 @@ src/
 
 ## Git
 
-- Remote: `roybomberger-arch/RealEstateHunter` on GitHub
+- Remote: `MarkatFinAIGuru/REH-Test` on GitHub
 - Single branch: `main`
 - GSD planning in `.planning/` — 6 phases completed
 

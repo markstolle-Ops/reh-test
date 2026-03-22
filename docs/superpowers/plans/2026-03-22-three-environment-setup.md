@@ -455,7 +455,7 @@ git remote -v
 
 If no remote exists, add it:
 ```bash
-git remote add origin https://github.com/roybomberger-arch/RealEstateHunter.git
+git remote add origin https://github.com/MarkatFinAIGuru/REH-Test.git
 ```
 
 Push all branches:
@@ -485,7 +485,7 @@ Expected: Logged in to github.com.
 - [ ] **Step 2: Protect the `main` branch**
 
 ```bash
-gh api repos/roybomberger-arch/RealEstateHunter/branches/main/protection \
+gh api repos/MarkatFinAIGuru/REH-Test/branches/main/protection \
   --method PUT \
   --input - <<EOF
 {
@@ -505,7 +505,7 @@ EOF
 - [ ] **Step 3: Protect the `staging` branch**
 
 ```bash
-gh api repos/roybomberger-arch/RealEstateHunter/branches/staging/protection \
+gh api repos/MarkatFinAIGuru/REH-Test/branches/staging/protection \
   --method PUT \
   --input - <<EOF
 {
@@ -523,12 +523,12 @@ EOF
 - [ ] **Step 4: Verify protection rules**
 
 ```bash
-gh api repos/roybomberger-arch/RealEstateHunter/branches/main/protection --jq '.required_pull_request_reviews.required_approving_review_count'
+gh api repos/MarkatFinAIGuru/REH-Test/branches/main/protection --jq '.required_pull_request_reviews.required_approving_review_count'
 ```
 Expected: `1`
 
 ```bash
-gh api repos/roybomberger-arch/RealEstateHunter/branches/staging/protection --jq '.required_status_checks.contexts'
+gh api repos/MarkatFinAIGuru/REH-Test/branches/staging/protection --jq '.required_status_checks.contexts'
 ```
 Expected: `["Lint", "Unit Tests", "E2E Tests", "Build"]`
 
