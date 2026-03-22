@@ -61,9 +61,12 @@ const SCHOOL_NAME_PARTS = [
 ];
 
 function schoolName(rand: () => number): string {
-  const first = SCHOOL_NAME_PARTS[0][rangeInt(rand(), 0, SCHOOL_NAME_PARTS[0].length - 1)];
-  const second = SCHOOL_NAME_PARTS[1][rangeInt(rand(), 0, SCHOOL_NAME_PARTS[1].length - 1)];
-  const third = SCHOOL_NAME_PARTS[2][rangeInt(rand(), 0, SCHOOL_NAME_PARTS[2].length - 1)];
+  const first =
+    SCHOOL_NAME_PARTS[0][rangeInt(rand(), 0, SCHOOL_NAME_PARTS[0].length - 1)];
+  const second =
+    SCHOOL_NAME_PARTS[1][rangeInt(rand(), 0, SCHOOL_NAME_PARTS[1].length - 1)];
+  const third =
+    SCHOOL_NAME_PARTS[2][rangeInt(rand(), 0, SCHOOL_NAME_PARTS[2].length - 1)];
   return [first, second, third].filter(Boolean).join(" ");
 }
 
@@ -105,7 +108,7 @@ function last12MonthLabels(): string[] {
  */
 export async function getNeighborhoodData(
   zip: string,
-  state: string,
+  state: string
 ): Promise<NeighborhoodData | null> {
   if (!isValidZip(zip)) return null;
 
@@ -119,7 +122,8 @@ export async function getNeighborhoodData(
 
   // Generate 1-3 nearby schools
   const schoolCount = rangeInt(rand(), 1, 3);
-  const nearbySchools: { name: string; rating: number; distance: string }[] = [];
+  const nearbySchools: { name: string; rating: number; distance: string }[] =
+    [];
   for (let i = 0; i < schoolCount; i++) {
     const rating = Math.max(1, Math.min(10, rangeInt(rand(), 1, 10)));
     const distanceMiles = (rand() * 2.5 + 0.1).toFixed(1);
@@ -146,7 +150,10 @@ export async function getNeighborhoodData(
  *
  * TODO: Replace with HouseCanary market analytics or ATTOM market stats endpoint
  */
-export async function getMarketTrends(zip: string, state: string): Promise<MarketTrendPoint[]> {
+export async function getMarketTrends(
+  zip: string,
+  state: string
+): Promise<MarketTrendPoint[]> {
   const rand = lcg(zipSeed(zip + state + "trends"));
 
   // Base median price: $200k – $900k depending on zip
@@ -156,13 +163,13 @@ export async function getMarketTrends(zip: string, state: string): Promise<Marke
   const seasonalPattern = [
     -0.03, // Jan
     -0.02, // Feb
-    0.01, // Mar
-    0.04, // Apr
-    0.06, // May
-    0.05, // Jun
-    0.03, // Jul
-    0.02, // Aug
-    0.0, // Sep
+    0.01,  // Mar
+    0.04,  // Apr
+    0.06,  // May
+    0.05,  // Jun
+    0.03,  // Jul
+    0.02,  // Aug
+    0.0,   // Sep
     -0.01, // Oct
     -0.02, // Nov
     -0.03, // Dec
@@ -195,14 +202,17 @@ export async function getMarketTrends(zip: string, state: string): Promise<Marke
     // DOM inversely correlated with price activity (spring = lower DOM)
     const domFactor = 1 - seasonal * 2;
     const domNoise = noiseRand() * 0.1 - 0.05;
-    const daysOnMarket = Math.max(1, Math.round(baseDom * (domFactor + domNoise)));
+    const daysOnMarket = Math.max(
+      1,
+      Math.round(baseDom * (domFactor + domNoise))
+    );
 
     // Inventory loosely tracks season (more in spring/summer)
     const inventoryFactor = 1 + seasonal * 1.5;
     const inventoryNoise = noiseRand() * 0.08 - 0.04;
     const activeInventory = Math.max(
       1,
-      Math.round(baseInventory * (inventoryFactor + inventoryNoise)),
+      Math.round(baseInventory * (inventoryFactor + inventoryNoise))
     );
 
     return { month, medianPrice, daysOnMarket, activeInventory };

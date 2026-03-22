@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import { CHATBOT_SYSTEM_PROMPT } from "./chatbot-system";
 
 describe("CHATBOT_SYSTEM_PROMPT", () => {

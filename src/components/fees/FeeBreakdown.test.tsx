@@ -8,9 +8,13 @@
  * The component-level rendering behavior is covered by the service tests and
  * end-to-end tests (Playwright).
  */
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import { calculateTransactionFees } from "@/services/fees/transaction-fees";
-import { formatCents, shouldShowAgentForHireFee, shouldShowAttorneyFee } from "./FeeBreakdown";
+import {
+  shouldShowAttorneyFee,
+  shouldShowAgentForHireFee,
+  formatCents,
+} from "./FeeBreakdown";
 
 describe("FeeBreakdown display logic", () => {
   it("shows attorney fee for GA listing (attorney-required)", () => {

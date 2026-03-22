@@ -1,10 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { listings } from "@/db/schema";
-import { inngest } from "@/inngest/client";
 import { createListing, listingSchema } from "@/services/listing/create";
+import { inngest } from "@/inngest/client";
 
 /**
  * POST /api/listings
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Validation failed", issues: parsed.error.issues },
-      { status: 422 },
+      { status: 422 }
     );
   }
 
@@ -55,7 +55,10 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const userListings = await db.select().from(listings).where(eq(listings.userId, userId));
+  const userListings = await db
+    .select()
+    .from(listings)
+    .where(eq(listings.userId, userId));
 
   return NextResponse.json({ listings: userListings });
 }

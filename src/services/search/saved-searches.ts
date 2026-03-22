@@ -8,7 +8,11 @@ import type { SearchParams } from "@/types";
  *
  * Filters are stored as a JSON string — parsed back when running alerts.
  */
-export async function createSavedSearch(userId: string, name: string, filters: SearchParams) {
+export async function createSavedSearch(
+  userId: string,
+  name: string,
+  filters: SearchParams
+) {
   const id = crypto.randomUUID();
   const [record] = await db
     .insert(savedSearches)

@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { calculateClosingDisclosureDeadline } from "./deadlines";
+import { describe, it, expect } from "vitest";
+import {
+  calculateClosingDisclosureDeadline,
+} from "./deadlines";
 
 // Business day helper: Monday–Friday only
 // A closing on Friday (5 days ahead) minus 3 business days = Tuesday

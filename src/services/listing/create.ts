@@ -1,11 +1,11 @@
 import { db } from "@/db";
 import { listings } from "@/db/schema";
+import type { ListingFormData, Listing } from "@/types";
 import { listingSchema } from "@/lib/listing-schema";
-import type { Listing, ListingFormData } from "@/types";
 
-export type { ListingInput } from "@/lib/listing-schema";
 // Re-export schema and type for backwards compatibility
 export { listingSchema } from "@/lib/listing-schema";
+export type { ListingInput } from "@/lib/listing-schema";
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
@@ -13,7 +13,10 @@ export { listingSchema } from "@/lib/listing-schema";
  * Creates a new listing in the database for the given user.
  * Validates the input with Zod before inserting.
  */
-export async function createListing(userId: string, data: ListingFormData): Promise<Listing> {
+export async function createListing(
+  userId: string,
+  data: ListingFormData
+): Promise<Listing> {
   // Validate — throws ZodError if invalid
   const validated = listingSchema.parse(data);
 

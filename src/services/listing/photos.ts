@@ -1,11 +1,14 @@
-import { and, eq, sql } from "drizzle-orm";
+import { sql, eq, and } from "drizzle-orm";
 import { db } from "@/db";
-import { listingPhotos, listings } from "@/db/schema";
+import { listings, listingPhotos } from "@/db/schema";
 
 /**
  * Appends a photo ID to the listing's photoOrder array.
  */
-export async function addPhotoToListing(listingId: string, photoId: string): Promise<void> {
+export async function addPhotoToListing(
+  listingId: string,
+  photoId: string
+): Promise<void> {
   await db
     .update(listings)
     .set({
@@ -18,7 +21,10 @@ export async function addPhotoToListing(listingId: string, photoId: string): Pro
 /**
  * Removes a photo ID from the listing's photoOrder array and deletes the photo row.
  */
-export async function removePhotoFromListing(listingId: string, photoId: string): Promise<void> {
+export async function removePhotoFromListing(
+  listingId: string,
+  photoId: string
+): Promise<void> {
   await db
     .update(listings)
     .set({
@@ -29,13 +35,18 @@ export async function removePhotoFromListing(listingId: string, photoId: string)
 
   await db
     .delete(listingPhotos)
-    .where(and(eq(listingPhotos.id, photoId), eq(listingPhotos.listingId, listingId)));
+    .where(
+      and(eq(listingPhotos.id, photoId), eq(listingPhotos.listingId, listingId))
+    );
 }
 
 /**
  * Replaces the listing's photoOrder array with a new order.
  */
-export async function reorderPhotos(listingId: string, newOrder: string[]): Promise<void> {
+export async function reorderPhotos(
+  listingId: string,
+  newOrder: string[]
+): Promise<void> {
   await db
     .update(listings)
     .set({

@@ -69,7 +69,7 @@ export interface SignWellWebhookPayload {
  * Inserts a signatureEnvelopes row after successful API call.
  */
 export async function createDocumentForSigning(
-  opts: CreateDocumentOptions,
+  opts: CreateDocumentOptions
 ): Promise<CreateDocumentResult> {
   const { pdfBase64, templateId, signers, name, listingId, disclosureFormId } = opts;
 
@@ -134,7 +134,7 @@ export async function createDocumentForSigning(
  * Fetch document status and recipient info from SignWell.
  */
 export async function getDocumentStatus(
-  signwellDocumentId: string,
+  signwellDocumentId: string
 ): Promise<SignWellDocumentStatus> {
   const response = await fetch(`${SIGNWELL_BASE}/documents/${signwellDocumentId}`, {
     method: "GET",
@@ -162,7 +162,7 @@ export async function getDocumentStatus(
  */
 export async function getEmbeddedSigningUrl(
   signwellDocumentId: string,
-  recipientId: string,
+  recipientId: string
 ): Promise<string | undefined> {
   const { recipients } = await getDocumentStatus(signwellDocumentId);
   const recipient = recipients.find((r) => r.id === recipientId);
@@ -173,7 +173,9 @@ export async function getEmbeddedSigningUrl(
  * Process a webhook event from SignWell.
  * Updates the signatureEnvelopes row based on event_type.
  */
-export async function processWebhookEvent(payload: SignWellWebhookPayload): Promise<void> {
+export async function processWebhookEvent(
+  payload: SignWellWebhookPayload
+): Promise<void> {
   const { event_type, document } = payload;
 
   if (event_type === "document_completed") {

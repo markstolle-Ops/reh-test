@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const LAUNCH_STATES = ["CA", "TX", "FL", "NY", "GA", "NC", "AZ", "OH", "PA", "IL"];
 
@@ -62,7 +62,9 @@ export function AgentProfileForm() {
     <form onSubmit={handleSubmit} className="mt-4 text-left space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            First Name
+          </label>
           <input
             type="text"
             required
@@ -72,7 +74,9 @@ export function AgentProfileForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Last Name
+          </label>
           <input
             type="text"
             required
@@ -84,7 +88,9 @@ export function AgentProfileForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">License Number</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          License Number
+        </label>
         <input
           type="text"
           required
@@ -96,7 +102,9 @@ export function AgentProfileForm() {
       </div>
 
       <div>
-        <p className="block text-sm font-medium text-gray-700 mb-2">Licensed States</p>
+        <p className="block text-sm font-medium text-gray-700 mb-2">
+          Licensed States
+        </p>
         <div className="flex flex-wrap gap-2">
           {LAUNCH_STATES.map((state) => (
             <button
@@ -115,7 +123,11 @@ export function AgentProfileForm() {
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-600 rounded-md bg-red-50 px-3 py-2">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-600 rounded-md bg-red-50 px-3 py-2">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"

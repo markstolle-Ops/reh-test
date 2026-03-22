@@ -24,5 +24,5 @@ export const syncMlsListingsCron = inngest.createFunction(
     await step.run("sync-mls-listings", async () => {
       await syncMlsListingsRaw();
     });
-  },
+  }
 );

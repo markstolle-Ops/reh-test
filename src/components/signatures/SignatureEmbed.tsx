@@ -1,7 +1,7 @@
 "use client";
 
-import Script from "next/script";
 import { useEffect, useRef } from "react";
+import Script from "next/script";
 
 interface SignatureEmbedProps {
   embeddedSigningUrl: string;
@@ -30,11 +30,7 @@ export function SignatureEmbed({
 
   function openEmbed() {
     if (typeof window === "undefined") return;
-    const SignWellEmbed = (
-      window as Window & {
-        SignWellEmbed?: new (opts: unknown) => { open: () => void; close?: () => void };
-      }
-    ).SignWellEmbed;
+    const SignWellEmbed = (window as Window & { SignWellEmbed?: new (opts: unknown) => { open: () => void; close?: () => void } }).SignWellEmbed;
     if (!SignWellEmbed) return;
 
     const embed = new SignWellEmbed({

@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { AvmEstimate } from "@/services/avm/housecanary";
 
 interface AvmWidgetProps {
@@ -91,7 +96,9 @@ export function AvmWidget({ address }: AvmWidgetProps) {
           <CardTitle>Home Value Estimate</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">Value estimate unavailable at this time.</p>
+          <p className="text-sm text-muted-foreground">
+            Value estimate unavailable at this time.
+          </p>
         </CardContent>
       </Card>
     );
@@ -117,23 +124,28 @@ export function AvmWidget({ address }: AvmWidgetProps) {
         <div>
           <p className="text-sm text-muted-foreground">Range</p>
           <p className="text-lg font-semibold text-foreground">
-            {formatCurrency(estimate.lowRange)} &ndash; {formatCurrency(estimate.highRange)}
+            {formatCurrency(estimate.lowRange)} &ndash;{" "}
+            {formatCurrency(estimate.highRange)}
           </p>
         </div>
 
         {/* Confidence score */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Confidence</span>
-          <span className="text-sm font-semibold text-foreground">{confidencePct}%</span>
+          <span className="text-sm font-semibold text-foreground">
+            {confidencePct}%
+          </span>
         </div>
 
         {/* Provider attribution */}
-        <p className="text-xs text-muted-foreground">Powered by {estimate.provider}</p>
+        <p className="text-xs text-muted-foreground">
+          Powered by {estimate.provider}
+        </p>
 
         {/* Mandatory disclaimer */}
         <p className="text-xs text-muted-foreground border-t pt-3">
-          This is an automated estimate, not an appraisal. For a precise value, consult a licensed
-          appraiser.
+          This is an automated estimate, not an appraisal. For a precise value,
+          consult a licensed appraiser.
         </p>
       </CardContent>
     </Card>

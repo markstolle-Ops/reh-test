@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Shared mock function references ──────────────────────────────────────────
 // These are declared outside vi.mock so they survive module resets and

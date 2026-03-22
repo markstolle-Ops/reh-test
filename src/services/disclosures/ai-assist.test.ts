@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock the AI SDK
 vi.mock("ai", () => ({
@@ -11,8 +11,8 @@ vi.mock("@ai-sdk/openai", () => ({
   openai: vi.fn(() => "mock-model"),
 }));
 
-import { streamText } from "ai";
 import { createDisclosureAssistStream } from "./ai-assist";
+import { streamText } from "ai";
 
 describe("ai-assist", () => {
   beforeEach(() => {
@@ -24,7 +24,7 @@ describe("ai-assist", () => {
       "CA",
       "California Transfer Disclosure Statement",
       "roof_age",
-      "How do I fill in the roof age?",
+      "How do I fill in the roof age?"
     );
 
     expect(streamText).toHaveBeenCalled();
@@ -38,7 +38,7 @@ describe("ai-assist", () => {
       "TX",
       "TREC Seller's Disclosure Notice",
       "foundation",
-      "What does foundation condition mean?",
+      "What does foundation condition mean?"
     );
 
     const callArgs = vi.mocked(streamText).mock.calls[0][0];
@@ -50,7 +50,7 @@ describe("ai-assist", () => {
       "FL",
       "Florida Seller's Disclosure",
       "sinkholes",
-      "What should I say about sinkholes?",
+      "What should I say about sinkholes?"
     );
 
     const callArgs = vi.mocked(streamText).mock.calls[0][0];
@@ -62,7 +62,7 @@ describe("ai-assist", () => {
       "CA",
       "California TDS",
       "lead_paint",
-      "What about lead paint?",
+      "What about lead paint?"
     );
 
     const callArgs = vi.mocked(streamText).mock.calls[0][0];
@@ -74,10 +74,12 @@ describe("ai-assist", () => {
       "NY",
       "NY Property Condition Disclosure",
       "structural",
-      "any question",
+      "any question"
     );
 
     const callArgs = vi.mocked(streamText).mock.calls[0][0];
-    expect(callArgs.system).toContain("This is not legal advice. Consult a licensed attorney.");
+    expect(callArgs.system).toContain(
+      "This is not legal advice. Consult a licensed attorney."
+    );
   });
 });

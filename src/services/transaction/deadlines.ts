@@ -52,7 +52,9 @@ function subtractBusinessDays(date: Date, days: number): Date {
  * mustReceiveBy = closing − 3 business days
  * mustSendBy    = closing − 6 business days (mail assumption)
  */
-export function calculateClosingDisclosureDeadline(closingDate: Date): ClosingDisclosureDeadline {
+export function calculateClosingDisclosureDeadline(
+  closingDate: Date
+): ClosingDisclosureDeadline {
   const mustReceiveBy = subtractBusinessDays(closingDate, 3);
   const mustSendBy = subtractBusinessDays(closingDate, 6);
 
@@ -69,7 +71,7 @@ export function calculateClosingDisclosureDeadline(closingDate: Date): ClosingDi
  */
 export function calculateTransactionDeadlines(
   offerAcceptedDate: Date,
-  config: StateWorkflowConfig,
+  config: StateWorkflowConfig
 ): DeadlineEntry[] {
   return config.steps.map((step) => {
     const dueAt = new Date(offerAcceptedDate);

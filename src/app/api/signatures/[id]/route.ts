@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { signatureEnvelopes } from "@/db/schema";
 import { getEmbeddedSigningUrl } from "@/services/signatures/signwell";
@@ -12,7 +12,10 @@ import { getEmbeddedSigningUrl } from "@/services/signatures/signwell";
  * id = envelopeId (internal DB primary key).
  * Requires authentication.
  */
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { userId } = await auth();
 
   if (!userId) {
@@ -39,7 +42,9 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     const { getDocumentStatus } = await import("@/services/signatures/signwell");
     const { recipients } = await getDocumentStatus(envelope.signwellDocumentId);
     signingUrls = Object.fromEntries(
-      recipients.filter((r) => r.id).map((r) => [r.id, r.embedded_signing_url]),
+      recipients
+        .filter((r) => r.id)
+        .map((r) => [r.id, r.embedded_signing_url])
     );
   } catch {
     // If SignWell API is unavailable, return envelope without signing URLs

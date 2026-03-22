@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { agentProfiles } from "@/db/schema";
 
@@ -43,11 +43,17 @@ export async function POST(_req: NextRequest) {
   const agent = rows[0];
 
   if (agent.stripeOnboardingComplete) {
-    return NextResponse.json({ error: "Stripe onboarding already complete" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Stripe onboarding already complete" },
+      { status: 400 }
+    );
   }
 
   if (!agent.stripeAccountId) {
-    return NextResponse.json({ error: "Stripe account not provisioned" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Stripe account not provisioned" },
+      { status: 500 }
+    );
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";

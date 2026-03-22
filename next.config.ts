@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
-const clerkDomain = process.env.NEXT_PUBLIC_CLERK_DOMAIN || "https://*.clerk.accounts.dev";
+const clerkDomain =
+  process.env.NEXT_PUBLIC_CLERK_DOMAIN || "https://*.clerk.accounts.dev";
 
 const nextConfig: NextConfig = {
   async headers() {

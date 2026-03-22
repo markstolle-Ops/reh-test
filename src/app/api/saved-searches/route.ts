@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSavedSearch, getSavedSearches } from "@/services/search/saved-searches";
 import type { SearchParams } from "@/types";
 

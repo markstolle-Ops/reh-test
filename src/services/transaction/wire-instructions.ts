@@ -13,7 +13,7 @@
 
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { transactions, wireInstructions } from "@/db/schema";
+import { wireInstructions, transactions } from "@/db/schema";
 import { appendTransactionEvent } from "@/services/transaction/events";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ export interface WireInstruction {
  * If instructions already exist, they are overwritten.
  */
 export async function setWireInstructions(
-  params: SetWireInstructionsParams,
+  params: SetWireInstructionsParams
 ): Promise<WireInstruction> {
   const {
     transactionId,
@@ -107,7 +107,7 @@ export async function setWireInstructions(
  */
 export async function getWireInstructions(
   transactionId: string,
-  viewerUserId: string,
+  viewerUserId: string
 ): Promise<WireInstruction | null> {
   // Verify transaction exists and viewer is authorized
   const transaction = await db.query.transactions.findFirst({

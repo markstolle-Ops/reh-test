@@ -1,6 +1,6 @@
 import { inngest } from "@/inngest/client";
-import type { DispatchResult } from "@/services/agent/agent-dispatch";
 import { dispatchAgentForTransaction } from "@/services/agent/agent-dispatch";
+import type { DispatchResult } from "@/services/agent/agent-dispatch";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -36,11 +36,13 @@ async function defaultSendNotification(opts: {
   });
   const user = await clerk.users.getUser(opts.agentUserId);
   const agentEmail =
-    user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress ??
-    user.emailAddresses[0]?.emailAddress;
+    user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
+      ?.emailAddress ?? user.emailAddresses[0]?.emailAddress;
 
   if (!agentEmail) {
-    console.warn(`[dispatch-agent] No email found for agent userId=${opts.agentUserId}`);
+    console.warn(
+      `[dispatch-agent] No email found for agent userId=${opts.agentUserId}`
+    );
     return;
   }
 
@@ -69,15 +71,18 @@ async function defaultSendNotification(opts: {
  */
 export async function dispatchAgentRaw(
   data: DispatchEventData,
-  sendNotification: SendNotification,
+  sendNotification: SendNotification
 ): Promise<DispatchResult | null> {
   const { transactionId, propertyState } = data;
 
-  const dispatchResult = await dispatchAgentForTransaction(transactionId, propertyState);
+  const dispatchResult = await dispatchAgentForTransaction(
+    transactionId,
+    propertyState
+  );
 
   if (!dispatchResult) {
     console.warn(
-      `[dispatch-agent] No available agents for state=${propertyState}, transactionId=${transactionId}`,
+      `[dispatch-agent] No available agents for state=${propertyState}, transactionId=${transactionId}`
     );
     return null;
   }
@@ -110,9 +115,12 @@ export const dispatchAgentFn = inngest.createFunction(
     const { transactionId, propertyState } = event.data as DispatchEventData;
 
     const result = await step.run("select-and-dispatch-agent", async () => {
-      return dispatchAgentRaw({ transactionId, propertyState }, defaultSendNotification);
+      return dispatchAgentRaw(
+        { transactionId, propertyState },
+        defaultSendNotification
+      );
     });
 
     return { dispatched: result !== null, result };
-  },
+  }
 );

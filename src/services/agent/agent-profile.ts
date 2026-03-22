@@ -1,5 +1,5 @@
-import { eq } from "drizzle-orm";
 import Stripe from "stripe";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { agentProfiles } from "@/db/schema";
 import { AGENT_FOR_HIRE_FEE_CENTS } from "@/lib/constants";
@@ -31,7 +31,9 @@ export type AgentProfile = typeof agentProfiles.$inferSelect;
  * Create a new agent profile and provision a Stripe Express account.
  * The Stripe account ID is stored on the profile for future payout routing.
  */
-export async function createAgentProfile(data: CreateAgentProfileData): Promise<AgentProfile> {
+export async function createAgentProfile(
+  data: CreateAgentProfileData
+): Promise<AgentProfile> {
   const id = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
   // Insert DB row first with placeholder Stripe ID to avoid orphaned Stripe accounts
@@ -72,8 +74,13 @@ export async function createAgentProfile(data: CreateAgentProfileData): Promise<
  * Retrieve an agent profile for a given Clerk user ID.
  * Returns null if no profile exists.
  */
-export async function getAgentProfile(userId: string): Promise<AgentProfile | null> {
-  const rows = await db.select().from(agentProfiles).where(eq(agentProfiles.userId, userId));
+export async function getAgentProfile(
+  userId: string
+): Promise<AgentProfile | null> {
+  const rows = await db
+    .select()
+    .from(agentProfiles)
+    .where(eq(agentProfiles.userId, userId));
 
   return rows[0] ?? null;
 }
@@ -84,7 +91,7 @@ export async function getAgentProfile(userId: string): Promise<AgentProfile | nu
  */
 export async function updateAgentProfile(
   agentId: string,
-  data: UpdateAgentProfileData,
+  data: UpdateAgentProfileData
 ): Promise<AgentProfile> {
   const updateData: Partial<AgentProfile> & { updatedAt: Date } = {
     updatedAt: new Date(),

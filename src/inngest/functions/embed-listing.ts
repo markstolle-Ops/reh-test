@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
-import { db } from "@/db";
 import { inngest } from "@/inngest/client";
+import { db } from "@/db";
 
 // ─── embedListingRaw ──────────────────────────────────────────────────────────
 
@@ -52,7 +52,9 @@ export async function embedListingRaw(listingId: string): Promise<void> {
   const sqftStr = listing.sqft != null ? `${listing.sqft}sqft` : "";
   const priceStr = `$${Math.round(listing.price / 100).toLocaleString()}`;
 
-  const textParts = [bedsStr, bathsStr, sqftStr, listing.property_type].filter(Boolean).join(" ");
+  const textParts = [bedsStr, bathsStr, sqftStr, listing.property_type]
+    .filter(Boolean)
+    .join(" ");
 
   const text = `${textParts} at ${listing.street_address}, ${listing.city}, ${listing.state} ${listing.zip} — ${priceStr}`;
 
@@ -92,5 +94,5 @@ export const embedListingFn = inngest.createFunction(
     await step.run("generate-and-store-embedding", async () => {
       await embedListingRaw(listingId);
     });
-  },
+  }
 );

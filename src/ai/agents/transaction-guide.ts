@@ -8,13 +8,16 @@
  * NEGO-03: AI guides buyer through offer/counteroffer process with templates
  */
 
-import { openai } from "@ai-sdk/openai";
 import { streamText, tool } from "ai";
+import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
-import { TRANSACTION_GUIDE_SYSTEM_PROMPT, UPL_DISCLAIMER } from "@/ai/prompts/transaction-guide";
-import { buildCacheKey, cacheWrap } from "@/lib/redis";
 import { queryKnowledgeBase } from "@/services/chat/rag";
 import { getStateWorkflowConfig } from "@/workflow/states";
+import {
+  TRANSACTION_GUIDE_SYSTEM_PROMPT,
+  UPL_DISCLAIMER,
+} from "@/ai/prompts/transaction-guide";
+import { cacheWrap, buildCacheKey } from "@/lib/redis";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -161,7 +164,7 @@ export async function streamTransactionGuide({
   // Key: "rag:{stateCode}:{queryHash}" — scoped per state and query.
   const ragCacheKey = buildCacheKey(`rag:${stateCode}`, { q: userMessage });
   const ragContext = await cacheWrap(ragCacheKey, 600, () =>
-    queryKnowledgeBase(userMessage, stateCode),
+    queryKnowledgeBase(userMessage, stateCode)
   );
 
   // 3. Build system prompt with state config and RAG context
@@ -187,16 +190,18 @@ export async function streamTransactionGuide({
             .positive()
             .describe("Offer price in cents (e.g. 35000000 for $350,000)"),
           buyerName: z.string().describe("Full name of the buyer"),
-          propertyAddress: z.string().describe("Full property address including city, state, zip"),
+          propertyAddress: z
+            .string()
+            .describe("Full property address including city, state, zip"),
           contingencies: z
             .array(z.string())
             .describe(
-              "List of contingencies (e.g. 'Inspection contingency — 10 days', 'Financing contingency — 21 days')",
+              "List of contingencies (e.g. 'Inspection contingency — 10 days', 'Financing contingency — 21 days')"
             ),
           closingDatePreference: z
             .string()
             .describe(
-              "Preferred closing date or timeline (e.g. '30 days from acceptance' or '2024-05-15')",
+              "Preferred closing date or timeline (e.g. '30 days from acceptance' or '2024-05-15')"
             ),
         }),
         execute: async ({
@@ -233,15 +238,19 @@ export async function streamTransactionGuide({
             .positive()
             .describe("Counter price in cents (e.g. 36000000 for $360,000)"),
           sellerName: z.string().describe("Full name of the seller"),
-          propertyAddress: z.string().describe("Full property address including city, state, zip"),
+          propertyAddress: z
+            .string()
+            .describe("Full property address including city, state, zip"),
           modifiedTerms: z
             .array(z.string())
             .describe(
-              "List of terms being modified from original offer (e.g. 'Remove inspection contingency', 'Closing date extended to 45 days')",
+              "List of terms being modified from original offer (e.g. 'Remove inspection contingency', 'Closing date extended to 45 days')"
             ),
           closingDatePreference: z
             .string()
-            .describe("Preferred closing date or timeline in the counteroffer"),
+            .describe(
+              "Preferred closing date or timeline in the counteroffer"
+            ),
         }),
         execute: async ({
           counterPriceCents,

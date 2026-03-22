@@ -53,7 +53,7 @@ export function formatDeadlineSummary(
     deadlineType: string;
     dueAt: Date;
     completedAt: Date | null;
-  }>,
+  }>
 ): string {
   if (deadlines.length === 0) {
     return "No deadlines scheduled yet.";
@@ -71,7 +71,10 @@ export function formatDeadlineSummary(
 /**
  * Formats a document compliance summary for inclusion in AI context.
  */
-export function formatDocumentSummary(params: { complete: string[]; missing: string[] }): string {
+export function formatDocumentSummary(params: {
+  complete: string[];
+  missing: string[];
+}): string {
   const lines: string[] = [];
 
   if (params.complete.length > 0) {

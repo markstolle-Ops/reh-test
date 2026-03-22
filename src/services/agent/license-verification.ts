@@ -18,7 +18,7 @@ export type AgentLicenseCheck = typeof agentLicenseChecks.$inferSelect;
 export async function verifyAgentLicense(
   agentId: string,
   state: string,
-  method: LicenseVerificationMethod = "manual",
+  method: LicenseVerificationMethod = "manual"
 ): Promise<AgentLicenseCheck> {
   if (method === "arello") {
     return verifyViaArello(agentId, state);
@@ -27,7 +27,10 @@ export async function verifyAgentLicense(
   return verifyManual(agentId, state);
 }
 
-async function verifyManual(agentId: string, state: string): Promise<AgentLicenseCheck> {
+async function verifyManual(
+  agentId: string,
+  state: string
+): Promise<AgentLicenseCheck> {
   const id = `lcheck_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   const now = new Date();
 
@@ -55,7 +58,10 @@ async function verifyManual(agentId: string, state: string): Promise<AgentLicens
   return check;
 }
 
-async function verifyViaArello(agentId: string, state: string): Promise<AgentLicenseCheck> {
+async function verifyViaArello(
+  agentId: string,
+  state: string
+): Promise<AgentLicenseCheck> {
   const arelloUrl = process.env.ARELLO_API_URL;
   const arelloCredentials = process.env.ARELLO_API_CREDENTIALS;
 

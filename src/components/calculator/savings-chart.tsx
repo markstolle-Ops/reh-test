@@ -1,6 +1,14 @@
 "use client";
 
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 import type { CommissionBreakdown } from "@/types";
 
 interface SavingsChartProps {
@@ -33,7 +41,12 @@ export function SavingsChart({ breakdown }: SavingsChartProps) {
   return (
     <ResponsiveContainer width="100%" height={260}>
       <BarChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
-        <XAxis dataKey="name" tick={{ fontSize: 13 }} tickLine={false} axisLine={false} />
+        <XAxis
+          dataKey="name"
+          tick={{ fontSize: 13 }}
+          tickLine={false}
+          axisLine={false}
+        />
         <YAxis
           tickFormatter={formatYAxis}
           tick={{ fontSize: 12 }}

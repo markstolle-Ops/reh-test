@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
 import { agentProfiles } from "@/db/schema";
@@ -35,14 +35,16 @@ export async function GET(req: NextRequest) {
     .from(agentProfiles);
 
   // Filter by state client-side (array contains check)
-  const agents = state ? rows.filter((a) => a.licenseStates.includes(state)) : rows;
+  const agents = state
+    ? rows.filter((a) => a.licenseStates.includes(state))
+    : rows;
 
   // Return lastName as initial only for privacy
   return NextResponse.json(
     agents.map((a) => ({
       ...a,
       lastName: a.lastName.charAt(0) + ".",
-    })),
+    }))
   );
 }
 
@@ -70,7 +72,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Validation failed", issues: parsed.error.issues },
-      { status: 422 },
+      { status: 422 }
     );
   }
 
@@ -81,7 +83,10 @@ export async function POST(req: NextRequest) {
     .where(eq(agentProfiles.userId, userId));
 
   if (existing.length > 0) {
-    return NextResponse.json({ error: "Agent profile already exists" }, { status: 409 });
+    return NextResponse.json(
+      { error: "Agent profile already exists" },
+      { status: 409 }
+    );
   }
 
   const profile = await createAgentProfile({

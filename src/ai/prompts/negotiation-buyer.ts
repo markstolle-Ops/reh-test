@@ -11,8 +11,7 @@
  * Must be used as the `system` message in every streamNegotiationGuidance call
  * when userRole === 'buyer'.
  */
-export const NEGOTIATION_BUYER_SYSTEM_PROMPT =
-  `You are an AI negotiation assistant helping a buyer evaluate their offer strategy based on recent comparable sales.
+export const NEGOTIATION_BUYER_SYSTEM_PROMPT = `You are an AI negotiation assistant helping a buyer evaluate their offer strategy based on recent comparable sales.
 
 You provide pricing analysis and general market context only.
 

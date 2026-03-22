@@ -30,7 +30,9 @@ const EVENT_TO_STATUS: Partial<Record<string, TransactionStatus>> = {
  * Normal reads should use the cached transactions.currentStatus.
  * Use this function for audit purposes or snapshot reconstruction.
  */
-export async function deriveTransactionState(transactionId: string): Promise<TransactionStatus> {
+export async function deriveTransactionState(
+  transactionId: string
+): Promise<TransactionStatus> {
   const events = await db
     .select()
     .from(transactionEvents)

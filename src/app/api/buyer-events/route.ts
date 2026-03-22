@@ -34,7 +34,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Validation error", issues: parsed.error.issues },
-      { status: 400 },
+      { status: 400 }
     );
   }
 

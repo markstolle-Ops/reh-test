@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Mock submitToMls ─────────────────────────────────────────────────────────
 
@@ -103,7 +103,9 @@ describe("syndicateToMlsRaw", () => {
 
     const { syndicateToMlsRaw } = await import("./syndicate-to-mls");
 
-    await expect(syndicateToMlsRaw("nonexistent-listing")).rejects.toThrow(/not found/i);
+    await expect(syndicateToMlsRaw("nonexistent-listing")).rejects.toThrow(
+      /not found/i
+    );
   });
 
   it("returns the submitToMls result", async () => {

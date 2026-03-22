@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -10,12 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculateSavings } from "@/lib/calculator";
 import { LAUNCH_STATES } from "@/lib/constants";
 import { STATE_INFO } from "@/lib/states";
-import type { CommissionBreakdown } from "@/types";
-import { BreakdownTable } from "./breakdown-table";
 import { SavingsChart } from "./savings-chart";
+import { BreakdownTable } from "./breakdown-table";
+import type { CommissionBreakdown } from "@/types";
 
 const DEFAULT_HOME_PRICE = 400000;
 const DEFAULT_STATE = "CA";
@@ -28,7 +28,9 @@ function formatInputValue(raw: string): string {
 }
 
 export function SavingsCalculator() {
-  const [displayValue, setDisplayValue] = useState<string>(DEFAULT_HOME_PRICE.toLocaleString());
+  const [displayValue, setDisplayValue] = useState<string>(
+    DEFAULT_HOME_PRICE.toLocaleString()
+  );
   const [homePrice, setHomePrice] = useState<number>(DEFAULT_HOME_PRICE);
   const [state, setState] = useState<string>(DEFAULT_STATE);
 

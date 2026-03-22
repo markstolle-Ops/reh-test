@@ -29,12 +29,7 @@ export function DisclosureForm({
   onSave,
   onComplete,
 }: DisclosureFormProps) {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<Record<string, unknown>>({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<Record<string, unknown>>({
     defaultValues: initialAnswers,
   });
 
@@ -80,11 +75,16 @@ export function DisclosureForm({
               {sectionFields.map((field) => {
                 // Disable all fields except opt_out when NY opt-out is selected
                 const isDisabled =
-                  state === "NY" && watchOptOut === true && field.id !== "opt_out_with_credit";
+                  state === "NY" &&
+                  watchOptOut === true &&
+                  field.id !== "opt_out_with_credit";
 
                 return (
                   <div key={field.id} className="space-y-1">
-                    <label htmlFor={field.id} className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor={field.id}
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       {field.label}
                       {field.required && <span className="ml-1 text-red-500">*</span>}
                     </label>
@@ -95,10 +95,7 @@ export function DisclosureForm({
                         type="text"
                         disabled={isDisabled}
                         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100"
-                        {...register(field.id, {
-                          required:
-                            field.required && !isDisabled ? `${field.label} is required` : false,
-                        })}
+                        {...register(field.id, { required: field.required && !isDisabled ? `${field.label} is required` : false })}
                       />
                     )}
 
@@ -108,10 +105,7 @@ export function DisclosureForm({
                         rows={3}
                         disabled={isDisabled}
                         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100"
-                        {...register(field.id, {
-                          required:
-                            field.required && !isDisabled ? `${field.label} is required` : false,
-                        })}
+                        {...register(field.id, { required: field.required && !isDisabled ? `${field.label} is required` : false })}
                       />
                     )}
 
@@ -133,21 +127,18 @@ export function DisclosureForm({
                         id={field.id}
                         disabled={isDisabled}
                         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100"
-                        {...register(field.id, {
-                          required:
-                            field.required && !isDisabled ? `${field.label} is required` : false,
-                        })}
+                        {...register(field.id, { required: field.required && !isDisabled ? `${field.label} is required` : false })}
                       >
                         <option value="">Select an option</option>
                         {field.options?.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
+                          <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
                     )}
 
-                    {field.helpText && <p className="text-xs text-gray-500">{field.helpText}</p>}
+                    {field.helpText && (
+                      <p className="text-xs text-gray-500">{field.helpText}</p>
+                    )}
 
                     {errors[field.id] && (
                       <p className="text-xs text-red-500">

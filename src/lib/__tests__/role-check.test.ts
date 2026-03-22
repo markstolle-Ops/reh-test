@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import { getUserDashboardPath, isValidRole } from "@/lib/role-check";
 
 describe("getUserDashboardPath", () => {

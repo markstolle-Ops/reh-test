@@ -1,10 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import type { FieldSchema } from "@/components/disclosures/DisclosureForm";
+import { eq, and } from "drizzle-orm";
 import { db } from "@/db";
-import { disclosureForms, listings } from "@/db/schema";
+import { listings, disclosureForms } from "@/db/schema";
 import { getFormSchemaForState } from "@/services/disclosures/form-schema";
+import type { FieldSchema } from "@/components/disclosures/DisclosureForm";
 import { DisclosureFormClient } from "./DisclosureFormClient";
 
 interface PageProps {
@@ -40,7 +40,12 @@ export default async function DisclosureFormPage({ params }: PageProps) {
   const [existingForm] = await db
     .select()
     .from(disclosureForms)
-    .where(and(eq(disclosureForms.listingId, listingId), eq(disclosureForms.userId, userId)));
+    .where(
+      and(
+        eq(disclosureForms.listingId, listingId),
+        eq(disclosureForms.userId, userId)
+      )
+    );
 
   const parsedForm = existingForm
     ? {
@@ -49,7 +54,9 @@ export default async function DisclosureFormPage({ params }: PageProps) {
       }
     : null;
 
-  const schemaFields: FieldSchema[] = schema ? (JSON.parse(schema.fields) as FieldSchema[]) : [];
+  const schemaFields: FieldSchema[] = schema
+    ? (JSON.parse(schema.fields) as FieldSchema[])
+    : [];
 
   const isOptional = schema?.required === false;
   const isGA = state === "GA";
@@ -66,9 +73,9 @@ export default async function DisclosureFormPage({ params }: PageProps) {
 
       {/* Attorney review pending notice */}
       <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
-        <strong>Notice:</strong> This disclosure form is a placeholder pending attorney review. The
-        fields shown are representative but have not been reviewed for legal accuracy. Do not rely
-        on this form for legal compliance until attorney review is complete.
+        <strong>Notice:</strong> This disclosure form is a placeholder pending attorney review.
+        The fields shown are representative but have not been reviewed for legal accuracy.
+        Do not rely on this form for legal compliance until attorney review is complete.
       </div>
 
       {/* GA optional banner */}

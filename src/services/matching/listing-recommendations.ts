@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
-import type { NormalizedListing } from "@/types";
 import { getRecentEvents } from "./buyer-events";
 import { buildPreferenceSummary } from "./preference-profile";
+import type { NormalizedListing } from "@/types";
 
 // ─── getRecommendations ───────────────────────────────────────────────────────
 
@@ -19,7 +19,9 @@ import { buildPreferenceSummary } from "./preference-profile";
  *
  * Returns empty array if buyer has < 3 events or no preference data.
  */
-export async function getRecommendations(userId: string): Promise<NormalizedListing[]> {
+export async function getRecommendations(
+  userId: string
+): Promise<NormalizedListing[]> {
   const events = await getRecentEvents(userId);
   const summary = await buildPreferenceSummary(events);
 
@@ -98,6 +100,8 @@ export async function getRecommendations(userId: string): Promise<NormalizedList
     lng: null,
     status: row.status,
     createdAt:
-      typeof row.created_at === "string" ? row.created_at : new Date(row.created_at).toISOString(),
+      typeof row.created_at === "string"
+        ? row.created_at
+        : new Date(row.created_at).toISOString(),
   }));
 }

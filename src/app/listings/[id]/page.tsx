@@ -1,17 +1,18 @@
-import { eq } from "drizzle-orm";
-import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
-import { AvmWidget } from "@/components/avm/AvmWidget";
-import { ChatWidget } from "@/components/chatbot/ChatWidget";
-import { FeeBreakdown } from "@/components/fees/FeeBreakdown";
-import { ListingDetails } from "@/components/listing/ListingDetails";
+import type { Metadata } from "next";
+
+import { db } from "@/db";
+import { listings, listingPhotos } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { ListingGallery } from "@/components/listing/ListingGallery";
 import { ListingHeader } from "@/components/listing/ListingHeader";
-import { MarketTrends } from "@/components/neighborhood/MarketTrends";
+import { ListingDetails } from "@/components/listing/ListingDetails";
 import { NeighborhoodWidget } from "@/components/neighborhood/NeighborhoodWidget";
-import { db } from "@/db";
-import { listingPhotos, listings } from "@/db/schema";
+import { MarketTrends } from "@/components/neighborhood/MarketTrends";
+import { AvmWidget } from "@/components/avm/AvmWidget";
+import { FeeBreakdown } from "@/components/fees/FeeBreakdown";
+import { ChatWidget } from "@/components/chatbot/ChatWidget";
 import type { LaunchState } from "@/types";
 
 interface PageProps {
@@ -30,13 +31,15 @@ function getListingWithPhotos(id: string) {
       return listing ?? null;
     },
     ["listing-detail", id],
-    { tags: [`listing-${id}`, "listings"], revalidate: 3600 },
+    { tags: [`listing-${id}`, "listings"], revalidate: 3600 }
   )();
 }
 
 // ─── SEO metadata ─────────────────────────────────────────────────────────────
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { id } = await params;
   const listing = await getListingWithPhotos(id);
 
@@ -71,11 +74,13 @@ export default async function ListingDetailPage({ params }: PageProps) {
   const orderedPhotos =
     photoOrder.length > 0
       ? [
-          ...photoOrder.map((pid) => photosRaw.find((p) => p.id === pid)).filter(Boolean),
+          ...photoOrder
+            .map((pid) => photosRaw.find((p) => p.id === pid))
+            .filter(Boolean),
           ...photosRaw.filter((p) => !photoOrder.includes(p.id)),
         ].filter(
           (
-            p,
+            p
           ): p is {
             id: string;
             r2Key: string;
@@ -85,7 +90,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
             height: number | null;
             sizeBytes: number | null;
             uploadedAt: Date;
-          } => p !== undefined,
+          } => p !== undefined
         )
       : photosRaw;
 
@@ -135,7 +140,10 @@ export default async function ListingDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* FeeBreakdown — COST-03/COST-04: full fee breakdown visible before commitment */}
           {(listing.status === "active" || listing.status === "pending") && (
-            <FeeBreakdown homePrice={listing.price} state={listing.state as LaunchState} />
+            <FeeBreakdown
+              homePrice={listing.price}
+              state={listing.state as LaunchState}
+            />
           )}
         </div>
       </div>

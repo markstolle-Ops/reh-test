@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Mock modules ─────────────────────────────────────────────────────────────
 
@@ -72,7 +72,7 @@ describe("buildPreferenceSummary", () => {
 
     const result = await buildPreferenceSummary(events);
     expect(result).not.toBeNull();
-    expect(result).toContain("3"); // beds
+    expect(result).toContain("3");          // beds
     expect(result).toContain("single_family");
     expect(result).toContain("Phoenix");
     expect(result).toContain("AZ");
@@ -126,24 +126,9 @@ describe("buildPreferenceSummary", () => {
       city: "Scottsdale",
     });
     const events = [
-      makeEvent({
-        id: "evt-1",
-        eventType: "search_executed",
-        listingId: null,
-        metadata: searchMeta,
-      }),
-      makeEvent({
-        id: "evt-2",
-        eventType: "search_executed",
-        listingId: null,
-        metadata: searchMeta,
-      }),
-      makeEvent({
-        id: "evt-3",
-        eventType: "search_executed",
-        listingId: null,
-        metadata: searchMeta,
-      }),
+      makeEvent({ id: "evt-1", eventType: "search_executed", listingId: null, metadata: searchMeta }),
+      makeEvent({ id: "evt-2", eventType: "search_executed", listingId: null, metadata: searchMeta }),
+      makeEvent({ id: "evt-3", eventType: "search_executed", listingId: null, metadata: searchMeta }),
     ];
 
     // No listing lookups needed for search_executed

@@ -14,14 +14,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { stateCode, transactionId, message, role = "buyer" } = await req.json();
+  const {
+    stateCode,
+    transactionId,
+    message,
+    role = "buyer",
+  } = await req.json();
 
   if (!stateCode || typeof stateCode !== "string") {
-    return NextResponse.json({ error: "stateCode is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "stateCode is required" },
+      { status: 400 }
+    );
   }
 
   if (!message || typeof message !== "string") {
-    return NextResponse.json({ error: "message is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "message is required" },
+      { status: 400 }
+    );
   }
 
   const result = await streamTransactionGuide({

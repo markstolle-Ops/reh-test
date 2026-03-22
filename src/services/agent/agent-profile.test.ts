@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // Mock database
 vi.mock("@/db", () => ({
@@ -18,11 +18,13 @@ vi.mock("@/db", () => ({
 
 // Mock Stripe — must use function (not arrow) for constructor mock
 vi.mock("stripe", () => {
-  const Stripe = vi.fn(() => ({
-    accounts: {
-      create: vi.fn().mockResolvedValue({ id: "acct_test_123" }),
-    },
-  }));
+  const Stripe = vi.fn(function () {
+    return {
+      accounts: {
+        create: vi.fn().mockResolvedValue({ id: "acct_test_123" }),
+      },
+    };
+  });
   return { default: Stripe };
 });
 
@@ -37,8 +39,8 @@ vi.mock("drizzle-orm", () => ({
   eq: vi.fn((field, value) => ({ field, value })),
 }));
 
-import { db } from "@/db";
 import { createAgentProfile, getAgentProfile, updateAgentProfile } from "./agent-profile";
+import { db } from "@/db";
 
 describe("createAgentProfile", () => {
   beforeEach(() => {

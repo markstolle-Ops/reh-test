@@ -1,6 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  buildOfferTemplate,
+  buildCounterTemplate,
+} from "./transaction-guide";
 import { TRANSACTION_GUIDE_SYSTEM_PROMPT, UPL_DISCLAIMER } from "@/ai/prompts/transaction-guide";
-import { buildCounterTemplate, buildOfferTemplate } from "./transaction-guide";
 
 // ─── Mock external dependencies ──────────────────────────────────────────────
 // These tests cover pure functions only — no AI/DB calls needed.

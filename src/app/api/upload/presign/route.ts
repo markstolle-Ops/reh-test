@@ -1,12 +1,17 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { auth } from "@clerk/nextjs/server";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { listings } from "@/db/schema";
 
-const ALLOWED_CONTENT_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const ALLOWED_CONTENT_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
 
 /**
  * POST /api/upload/presign
@@ -32,7 +37,7 @@ export async function POST(req: NextRequest) {
   if (!fileName || !contentType || !listingId) {
     return NextResponse.json(
       { error: "fileName, contentType, and listingId are required" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -40,7 +45,7 @@ export async function POST(req: NextRequest) {
   if (!ALLOWED_CONTENT_TYPES.has(contentType)) {
     return NextResponse.json(
       { error: "Unsupported content type. Allowed: JPEG, PNG, WebP, GIF" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 

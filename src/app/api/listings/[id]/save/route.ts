@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
-import { type NextRequest, NextResponse } from "next/server";
-import { isListingSaved, toggleSavedListing } from "@/services/search/saved-listings";
+import { NextRequest, NextResponse } from "next/server";
+import { toggleSavedListing, isListingSaved } from "@/services/search/saved-listings";
 
 /**
  * POST /api/listings/[id]/save
@@ -11,7 +11,10 @@ import { isListingSaved, toggleSavedListing } from "@/services/search/saved-list
  * Body: { source: "platform" | "mls" }
  * Returns: { saved: boolean }
  */
-export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -39,7 +42,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
  *
  * Returns: { saved: boolean }
  */
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

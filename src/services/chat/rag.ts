@@ -1,5 +1,5 @@
-import { openai } from "@ai-sdk/openai";
 import { embed } from "ai";
+import { openai } from "@ai-sdk/openai";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 
@@ -26,7 +26,10 @@ interface KnowledgeChunkRow extends Record<string, unknown> {
  * @param state      - Optional state code to filter results (e.g. "CA", "TX")
  * @returns          - Concatenated chunk content strings, newline-separated
  */
-export async function queryKnowledgeBase(query: string, state?: string): Promise<string> {
+export async function queryKnowledgeBase(
+  query: string,
+  state?: string
+): Promise<string> {
   let embedding: number[];
 
   try {

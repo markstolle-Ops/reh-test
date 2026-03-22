@@ -1,17 +1,17 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { listingSchema } from "@/lib/listing-schema";
 import type { Listing } from "@/types";
 import { PhotoUploader } from "./PhotoUploader";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,56 +30,11 @@ const PROPERTY_TYPE_OPTIONS = [
 ] as const;
 
 const US_STATES = [
-  "AL",
-  "AK",
-  "AZ",
-  "AR",
-  "CA",
-  "CO",
-  "CT",
-  "DE",
-  "FL",
-  "GA",
-  "HI",
-  "ID",
-  "IL",
-  "IN",
-  "IA",
-  "KS",
-  "KY",
-  "LA",
-  "ME",
-  "MD",
-  "MA",
-  "MI",
-  "MN",
-  "MS",
-  "MO",
-  "MT",
-  "NE",
-  "NV",
-  "NH",
-  "NJ",
-  "NM",
-  "NY",
-  "NC",
-  "ND",
-  "OH",
-  "OK",
-  "OR",
-  "PA",
-  "RI",
-  "SC",
-  "SD",
-  "TN",
-  "TX",
-  "UT",
-  "VT",
-  "VA",
-  "WA",
-  "WV",
-  "WI",
-  "WY",
+  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA",
+  "HI","ID","IL","IN","IA","KS","KY","LA","ME","MD",
+  "MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
+  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC",
+  "SD","TN","TX","UT","VT","VA","WA","WV","WI","WY",
 ];
 
 const TOTAL_STEPS = 4;
@@ -91,9 +46,11 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
   const [step, setStep] = useState(1);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [listingId, setListingId] = useState<string | null>(initialData?.id ?? null);
+  const [listingId, setListingId] = useState<string | null>(
+    initialData?.id ?? null
+  );
   const [descriptionStatus, setDescriptionStatus] = useState<string>(
-    initialData?.descriptionStatus ?? "pending",
+    initialData?.descriptionStatus ?? "pending"
   );
   const [pollActive, setPollActive] = useState(false);
 
@@ -115,7 +72,10 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
           propertyType: initialData.propertyType,
           price: initialData.price / 100, // DB stores cents, form displays dollars
           bedrooms: initialData.bedrooms ?? undefined,
-          bathrooms: initialData.bathrooms != null ? parseFloat(initialData.bathrooms) : undefined,
+          bathrooms:
+            initialData.bathrooms != null
+              ? parseFloat(initialData.bathrooms)
+              : undefined,
           sqft: initialData.sqft ?? undefined,
           lotSizeSqft: initialData.lotSizeSqft ?? undefined,
           yearBuilt: initialData.yearBuilt ?? undefined,
@@ -215,7 +175,10 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
         setListingId(listing.id);
         setDescriptionStatus(listing.descriptionStatus);
         // Start polling for AI description if status is pending/generating
-        if (listing.descriptionStatus === "pending" || listing.descriptionStatus === "generating") {
+        if (
+          listing.descriptionStatus === "pending" ||
+          listing.descriptionStatus === "generating"
+        ) {
           setPollActive(true);
         }
         // Move to step 3 (photos) after create
@@ -249,12 +212,7 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
               }`}
             >
               {s < step ? (
-                <svg
-                  className="size-3.5"
-                  viewBox="0 0 14 14"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
+                <svg className="size-3.5" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
                   <path d="M11.03 3.22a.75.75 0 010 1.06l-5.5 5.5a.75.75 0 01-1.06 0l-2.5-2.5a.75.75 0 111.06-1.06L5 8.19l4.97-4.97a.75.75 0 011.06 0z" />
                 </svg>
               ) : (
@@ -262,7 +220,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
               )}
             </div>
             {s < TOTAL_STEPS && (
-              <div className={`h-px w-8 ${s < step ? "bg-primary" : "bg-muted-foreground/20"}`} />
+              <div
+                className={`h-px w-8 ${s < step ? "bg-primary" : "bg-muted-foreground/20"}`}
+              />
             )}
           </div>
         ))}
@@ -290,7 +250,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                   {...register("streetAddress")}
                 />
                 {errors.streetAddress && (
-                  <p className="text-xs text-destructive">{errors.streetAddress.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.streetAddress.message}
+                  </p>
                 )}
               </div>
 
@@ -305,7 +267,11 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                     aria-invalid={!!errors.city}
                     {...register("city")}
                   />
-                  {errors.city && <p className="text-xs text-destructive">{errors.city.message}</p>}
+                  {errors.city && (
+                    <p className="text-xs text-destructive">
+                      {errors.city.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -326,7 +292,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                     ))}
                   </select>
                   {errors.state && (
-                    <p className="text-xs text-destructive">{errors.state.message}</p>
+                    <p className="text-xs text-destructive">
+                      {errors.state.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -343,7 +311,11 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                     aria-invalid={!!errors.zip}
                     {...register("zip")}
                   />
-                  {errors.zip && <p className="text-xs text-destructive">{errors.zip.message}</p>}
+                  {errors.zip && (
+                    <p className="text-xs text-destructive">
+                      {errors.zip.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -364,7 +336,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                     ))}
                   </select>
                   {errors.propertyType && (
-                    <p className="text-xs text-destructive">{errors.propertyType.message}</p>
+                    <p className="text-xs text-destructive">
+                      {errors.propertyType.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -395,14 +369,19 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                     aria-invalid={!!errors.price}
                     {...register("price", {
                       valueAsNumber: true,
-                      setValueAs: (v) => (v === "" ? undefined : Math.round(parseFloat(v) * 100)),
+                      setValueAs: (v) =>
+                        v === "" ? undefined : Math.round(parseFloat(v) * 100),
                     })}
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Enter in dollars (e.g., 350000 for $350,000)
                 </p>
-                {errors.price && <p className="text-xs text-destructive">{errors.price.message}</p>}
+                {errors.price && (
+                  <p className="text-xs text-destructive">
+                    {errors.price.message}
+                  </p>
+                )}
               </div>
 
               {/* Beds/Baths — hidden for land_lot */}
@@ -421,7 +400,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                       {...register("bedrooms", { valueAsNumber: true })}
                     />
                     {errors.bedrooms && (
-                      <p className="text-xs text-destructive">{errors.bedrooms.message}</p>
+                      <p className="text-xs text-destructive">
+                        {errors.bedrooms.message}
+                      </p>
                     )}
                   </div>
 
@@ -439,7 +420,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                       {...register("bathrooms", { valueAsNumber: true })}
                     />
                     {errors.bathrooms && (
-                      <p className="text-xs text-destructive">{errors.bathrooms.message}</p>
+                      <p className="text-xs text-destructive">
+                        {errors.bathrooms.message}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -522,7 +505,8 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
               <CardTitle>Property Description</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {descriptionStatus === "pending" || descriptionStatus === "generating" ? (
+              {(descriptionStatus === "pending" ||
+                descriptionStatus === "generating") ? (
                 <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3">
                   <svg
                     className="size-4 animate-spin text-primary"
@@ -544,7 +528,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
-                  <span className="text-sm text-primary">Generating AI description...</span>
+                  <span className="text-sm text-primary">
+                    Generating AI description...
+                  </span>
                 </div>
               ) : descriptionStatus === "ready" ? (
                 <p className="text-xs text-green-600">
@@ -568,7 +554,9 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
                   {...register("description")}
                 />
                 {errors.description && (
-                  <p className="text-xs text-destructive">{errors.description.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.description.message}
+                  </p>
                 )}
               </div>
             </CardContent>
@@ -584,7 +572,12 @@ export function ListingForm({ mode, initialData }: ListingFormProps) {
 
         {/* ── Navigation Buttons ───────────────────────────────────── */}
         <div className="flex items-center justify-between">
-          <Button type="button" variant="outline" onClick={prevStep} disabled={step === 1}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={prevStep}
+            disabled={step === 1}
+          >
             Back
           </Button>
 

@@ -6,7 +6,7 @@
  */
 
 import { db } from "@/db";
-import { transactionEvents, transactions } from "@/db/schema";
+import { transactions, transactionEvents } from "@/db/schema";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -26,8 +26,16 @@ export type Transaction = typeof transactions.$inferSelect;
  * Create a transaction record and append the initial offer_submitted event.
  * Both inserts run atomically — if either fails, neither persists.
  */
-export async function createTransaction(params: CreateTransactionParams): Promise<Transaction> {
-  const { listingId, buyerUserId, sellerUserId, propertyState, offerPriceCents } = params;
+export async function createTransaction(
+  params: CreateTransactionParams
+): Promise<Transaction> {
+  const {
+    listingId,
+    buyerUserId,
+    sellerUserId,
+    propertyState,
+    offerPriceCents,
+  } = params;
 
   return db.transaction(async (tx) => {
     const id = crypto.randomUUID();

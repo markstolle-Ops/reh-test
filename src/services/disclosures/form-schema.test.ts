@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
-  getAvailableFormSchemas,
   getFormSchemaForState,
+  getAvailableFormSchemas,
   LAUNCH_STATE_SCHEMAS,
 } from "./form-schema";
 

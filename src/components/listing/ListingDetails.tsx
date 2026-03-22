@@ -22,16 +22,22 @@ function formatLotSize(sqft: number | null | undefined): string {
 
 export function ListingDetails({ listing }: ListingDetailsProps) {
   const isLandLot = listing.propertyType === "land_lot";
-  const propertyLabel = PROPERTY_TYPE_LABELS[listing.propertyType] ?? listing.propertyType;
-  const hasDescription = listing.description && listing.description.trim().length > 0;
+  const propertyLabel =
+    PROPERTY_TYPE_LABELS[listing.propertyType] ?? listing.propertyType;
+  const hasDescription =
+    listing.description && listing.description.trim().length > 0;
 
   return (
     <div className="space-y-6">
       {/* Description */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">About This Property</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">
+          About This Property
+        </h2>
         {hasDescription ? (
-          <p className="text-gray-700 leading-relaxed whitespace-pre-line">{listing.description}</p>
+          <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+            {listing.description}
+          </p>
         ) : (
           <p className="text-gray-400 italic">Description coming soon...</p>
         )}
@@ -39,7 +45,9 @@ export function ListingDetails({ listing }: ListingDetailsProps) {
 
       {/* Property details table */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">Property Details</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">
+          Property Details
+        </h2>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
           <div className="flex justify-between sm:flex-col">
             <dt className="text-gray-500">Property Type</dt>
@@ -65,7 +73,9 @@ export function ListingDetails({ listing }: ListingDetailsProps) {
           {listing.lotSizeSqft != null && (
             <div className="flex justify-between sm:flex-col">
               <dt className="text-gray-500">Lot Size</dt>
-              <dd className="font-medium text-gray-900">{formatLotSize(listing.lotSizeSqft)}</dd>
+              <dd className="font-medium text-gray-900">
+                {formatLotSize(listing.lotSizeSqft)}
+              </dd>
             </div>
           )}
 

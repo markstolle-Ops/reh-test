@@ -1,5 +1,5 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -17,7 +17,7 @@ vi.mock("@/services/chat/rag", () => ({
 vi.mock("@/ai/prompts/chatbot-system", () => ({
   CHATBOT_SYSTEM_PROMPT: vi.fn(
     ({ context, listingState }: { context: string; listingState: string }) =>
-      `SYSTEM:${listingState}:${context}`,
+      `SYSTEM:${listingState}:${context}`
   ),
 }));
 
@@ -101,7 +101,10 @@ describe("POST /api/chat", () => {
 
     const response = await POST(req);
 
-    expect(mockQueryKnowledgeBase).toHaveBeenCalledWith("What is the listing price?", "CA");
+    expect(mockQueryKnowledgeBase).toHaveBeenCalledWith(
+      "What is the listing price?",
+      "CA"
+    );
     expect(capturedSystemMessage).toContain("SYSTEM:CA:RAG context from knowledge base");
     expect(response.status).toBe(200);
   });
@@ -133,11 +136,9 @@ describe("POST /api/chat", () => {
     await POST(req);
 
     // Get the scheduleShowing tool that was passed to streamText
-    const showingTool = capturedTools.scheduleShowing as
-      | {
-          execute?: (args: Record<string, unknown>) => Promise<unknown>;
-        }
-      | undefined;
+    const showingTool = capturedTools.scheduleShowing as {
+      execute?: (args: Record<string, unknown>) => Promise<unknown>;
+    } | undefined;
     expect(showingTool).toBeDefined();
     expect(showingTool?.execute).toBeDefined();
 
@@ -150,7 +151,9 @@ describe("POST /api/chat", () => {
     });
 
     expect(dbInsertCalled).toBe(true);
-    expect(result).toEqual(expect.objectContaining({ success: true }));
+    expect(result).toEqual(
+      expect.objectContaining({ success: true })
+    );
   });
 
   it("scheduleShowing tool returns success confirmation message", async () => {
@@ -164,11 +167,9 @@ describe("POST /api/chat", () => {
 
     await POST(req);
 
-    const showingTool = capturedTools.scheduleShowing as
-      | {
-          execute?: (args: Record<string, unknown>) => Promise<unknown>;
-        }
-      | undefined;
+    const showingTool = capturedTools.scheduleShowing as {
+      execute?: (args: Record<string, unknown>) => Promise<unknown>;
+    } | undefined;
 
     const result = (await showingTool?.execute?.({
       requestedDate: "2026-04-20T14:00:00Z",
@@ -203,11 +204,9 @@ describe("POST /api/chat", () => {
 
     await POST(req);
 
-    const showingTool = capturedTools.scheduleShowing as
-      | {
-          execute?: (args: Record<string, unknown>) => Promise<unknown>;
-        }
-      | undefined;
+    const showingTool = capturedTools.scheduleShowing as {
+      execute?: (args: Record<string, unknown>) => Promise<unknown>;
+    } | undefined;
 
     // Execute without userId
     const result = (await showingTool?.execute?.({

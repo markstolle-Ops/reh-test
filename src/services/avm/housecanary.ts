@@ -59,7 +59,9 @@ function rangeInt(value: number, min: number, max: number): number {
  * TODO: Replace with HouseCanary API call when vendor contract is signed.
  * HouseCanary endpoint: GET /v2/property/value?address={street}&zipcode={zip}
  */
-export async function getHomeValueEstimate(address: AvmAddress): Promise<AvmEstimate | null> {
+export async function getHomeValueEstimate(
+  address: AvmAddress
+): Promise<AvmEstimate | null> {
   if (!isValidZip(address.zip)) return null;
 
   const seed = strSeed(address.state + address.zip);
@@ -69,7 +71,7 @@ export async function getHomeValueEstimate(address: AvmAddress): Promise<AvmEsti
   const basePrice = rangeInt(rand(), 150000, 1500000);
 
   // Confidence: 0.70–0.95 (realistic AVM confidence range)
-  const confidence = 0.7 + rand() * 0.25;
+  const confidence = 0.70 + rand() * 0.25;
 
   // Range spread: ±5–12% of base price
   const spreadPct = 0.05 + rand() * 0.07;

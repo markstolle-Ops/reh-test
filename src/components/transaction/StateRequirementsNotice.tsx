@@ -1,5 +1,5 @@
-import type { ClosingType } from "@/types";
 import { getStateWorkflowConfig } from "@/workflow/states";
+import type { ClosingType } from "@/types";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,7 +43,9 @@ interface StateRequirementsNoticeProps {
  * Server Component — renders a prominent amber/yellow banner displaying
  * state-specific legal requirements before a transaction begins (LEGL-07).
  */
-export function StateRequirementsNotice({ stateCode }: StateRequirementsNoticeProps) {
+export function StateRequirementsNotice({
+  stateCode,
+}: StateRequirementsNoticeProps) {
   const notice = getRequirementsNotice(stateCode);
 
   const closingTypeLabel: Record<string, string> = {
@@ -74,7 +76,9 @@ export function StateRequirementsNotice({ stateCode }: StateRequirementsNoticePr
         </div>
         <div className="flex-1 space-y-2">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-amber-900">{stateCode} State Requirements</h3>
+            <h3 className="text-sm font-semibold text-amber-900">
+              {stateCode} State Requirements
+            </h3>
             <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
               {closingTypeLabel[notice.closingType] ?? notice.closingType}
             </span>
@@ -84,7 +88,8 @@ export function StateRequirementsNotice({ stateCode }: StateRequirementsNoticePr
 
           {notice.attorneyRequired && (
             <p className="text-sm font-medium text-amber-900">
-              You will be connected with an attorney referral as part of this transaction.
+              You will be connected with an attorney referral as part of this
+              transaction.
             </p>
           )}
 

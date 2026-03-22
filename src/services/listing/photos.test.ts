@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock the db module before imports
 vi.mock("@/db", () => ({
@@ -8,8 +8,12 @@ vi.mock("@/db", () => ({
   },
 }));
 
+import {
+  addPhotoToListing,
+  removePhotoFromListing,
+  reorderPhotos,
+} from "./photos";
 import { db } from "@/db";
-import { addPhotoToListing, removePhotoFromListing, reorderPhotos } from "./photos";
 
 describe("addPhotoToListing", () => {
   beforeEach(() => {
@@ -47,7 +51,9 @@ describe("reorderPhotos", () => {
     await reorderPhotos("listing-123", newOrder);
 
     expect(db.update).toHaveBeenCalledOnce();
-    expect(mockUpdate.set).toHaveBeenCalledWith(expect.objectContaining({ photoOrder: newOrder }));
+    expect(mockUpdate.set).toHaveBeenCalledWith(
+      expect.objectContaining({ photoOrder: newOrder })
+    );
   });
 });
 

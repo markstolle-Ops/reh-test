@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Mock modules ─────────────────────────────────────────────────────────────
 // All vi.mock calls are hoisted — use vi.fn() inline only (Vitest hoisting rule).
@@ -167,7 +167,7 @@ describe("checkSavedSearchAlertRaw", () => {
     expect(mockSendEmail).toHaveBeenCalledWith(
       expect.objectContaining({
         subject: expect.stringContaining("Austin Homes"),
-      }),
+      })
     );
     expect(vi.mocked(db.update)).toHaveBeenCalledTimes(1);
   });

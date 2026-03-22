@@ -2,7 +2,11 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/layout/nav";
 
-export default async function SellerLayout({ children }: { children: React.ReactNode }) {
+export default async function SellerLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const user = await currentUser();
 
   if (!user) {

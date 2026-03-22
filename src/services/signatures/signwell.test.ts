@@ -62,7 +62,7 @@ describe("SignWell adapter", () => {
           headers: expect.objectContaining({
             "x-api-key": "test-api-key",
           }),
-        }),
+        })
       );
     });
 
@@ -87,7 +87,9 @@ describe("SignWell adapter", () => {
         name: "Test Document",
       });
 
-      const callBody = JSON.parse((mockFetch.mock.calls[0][1] as RequestInit).body as string);
+      const callBody = JSON.parse(
+        (mockFetch.mock.calls[0][1] as RequestInit).body as string
+      );
       expect(callBody.test_mode).toBe(true);
 
       vi.unstubAllEnvs();
@@ -114,7 +116,9 @@ describe("SignWell adapter", () => {
         name: "Test Document",
       });
 
-      const callBody = JSON.parse((mockFetch.mock.calls[0][1] as RequestInit).body as string);
+      const callBody = JSON.parse(
+        (mockFetch.mock.calls[0][1] as RequestInit).body as string
+      );
       expect(callBody.test_mode).toBe(false);
 
       vi.unstubAllEnvs();
@@ -149,7 +153,9 @@ describe("SignWell adapter", () => {
         name: "Multi-Party Document",
       });
 
-      const callBody = JSON.parse((mockFetch.mock.calls[0][1] as RequestInit).body as string);
+      const callBody = JSON.parse(
+        (mockFetch.mock.calls[0][1] as RequestInit).body as string
+      );
       expect(callBody.recipients).toHaveLength(3);
       expect(callBody.recipients[0].name).toBe("Alice Buyer");
       expect(callBody.recipients[0].email).toBe("alice@example.com");
@@ -177,7 +183,9 @@ describe("SignWell adapter", () => {
         name: "Test Document",
       });
 
-      const callBody = JSON.parse((mockFetch.mock.calls[0][1] as RequestInit).body as string);
+      const callBody = JSON.parse(
+        (mockFetch.mock.calls[0][1] as RequestInit).body as string
+      );
       expect(callBody.embedded_signing).toBe(true);
       expect(callBody.recipients[0].send_email).toBe(false);
     });
@@ -191,7 +199,9 @@ describe("SignWell adapter", () => {
         ok: true,
         json: async () => ({
           id: "sw-doc-999",
-          recipients: [{ id: "r1", embedded_signing_url: "https://signwell.com/sign/r1" }],
+          recipients: [
+            { id: "r1", embedded_signing_url: "https://signwell.com/sign/r1" },
+          ],
         }),
       });
 
@@ -228,7 +238,7 @@ describe("SignWell adapter", () => {
           headers: expect.objectContaining({
             "x-api-key": "test-api-key",
           }),
-        }),
+        })
       );
       expect(result.status).toBe("completed");
       expect(result.recipients).toHaveLength(1);
@@ -296,7 +306,7 @@ describe("SignWell adapter", () => {
           status: "completed",
           auditTrail: JSON.stringify(payload.document.audit_trail),
           completedAt: expect.any(Date),
-        }),
+        })
       );
     });
 
@@ -322,7 +332,7 @@ describe("SignWell adapter", () => {
       expect(updateChain.set).toHaveBeenCalledWith(
         expect.objectContaining({
           status: "declined",
-        }),
+        })
       );
     });
   });

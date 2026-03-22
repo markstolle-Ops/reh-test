@@ -1,8 +1,8 @@
-import { and, eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { db } from "@/db";
 import { listings } from "@/db/schema";
-import type { Listing, ListingFormData, ListingStatus } from "@/types";
+import type { ListingFormData, ListingStatus, Listing } from "@/types";
 
 // ─── Valid Status Transitions ─────────────────────────────────────────────────
 
@@ -15,7 +15,10 @@ const VALID_TRANSITIONS: Record<ListingStatus, ListingStatus[]> = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-async function getOwnedListing(listingId: string, userId: string): Promise<Listing> {
+async function getOwnedListing(
+  listingId: string,
+  userId: string
+): Promise<Listing> {
   const rows = await db
     .select()
     .from(listings)
@@ -45,7 +48,7 @@ async function getOwnedListing(listingId: string, userId: string): Promise<Listi
 export async function updateListing(
   listingId: string,
   userId: string,
-  data: Partial<ListingFormData & { description: string }>,
+  data: Partial<ListingFormData & { description: string }>
 ): Promise<Listing> {
   // Verify ownership — throws if not found or wrong user
   await getOwnedListing(listingId, userId);
@@ -82,7 +85,7 @@ export async function updateListing(
 export async function updateListingStatus(
   listingId: string,
   userId: string,
-  newStatus: ListingStatus,
+  newStatus: ListingStatus
 ): Promise<Listing> {
   const listing = await getOwnedListing(listingId, userId);
 
@@ -92,11 +95,11 @@ export async function updateListingStatus(
   if (!allowed.includes(newStatus)) {
     if (currentStatus === "sold") {
       throw new Error(
-        "Invalid status transition: sold is a terminal status — cannot reactivate a sold listing",
+        "Invalid status transition: sold is a terminal status — cannot reactivate a sold listing"
       );
     }
     throw new Error(
-      `Invalid status transition: cannot go from "${currentStatus}" to "${newStatus}"`,
+      `Invalid status transition: cannot go from "${currentStatus}" to "${newStatus}"`
     );
   }
 

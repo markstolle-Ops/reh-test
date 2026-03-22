@@ -10,8 +10,8 @@
  * See .env.example for details.
  */
 
-import { eq } from "drizzle-orm";
 import { Resend } from "resend";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { mlsSyndications } from "@/db/schema";
 
@@ -78,12 +78,17 @@ function buildBrokerEmailHtml(request: MlsSyndicationRequest): string {
 
   const priceFormatted = formatCentsAsDollars(price);
   const sqftFormatted = sqft ? sqft.toLocaleString("en-US") : "N/A";
-  const lotFormatted = lotSizeSqft ? lotSizeSqft.toLocaleString("en-US") : "N/A";
+  const lotFormatted = lotSizeSqft
+    ? lotSizeSqft.toLocaleString("en-US")
+    : "N/A";
   const propertyTypeLabel = propertyType.replace(/_/g, " ");
 
   const photoHtml = photoUrls
     .slice(0, 10)
-    .map((url, i) => `<p><a href="${url}">Photo ${i + 1}: ${url}</a></p>`)
+    .map(
+      (url, i) =>
+        `<p><a href="${url}">Photo ${i + 1}: ${url}</a></p>`
+    )
     .join("\n");
 
   return `
@@ -140,8 +145,12 @@ function generateSubmissionId(): string {
  * Persists a syndication record to the mls_syndications table.
  * Returns { submissionId, status: 'submitted', submittedAt }.
  */
-export async function submitToMls(request: MlsSyndicationRequest): Promise<MlsSyndicationStatus> {
-  const brokerEmail = process.env.MLS_BROKER_EMAIL ?? "mls-intake@placeholder.example.com";
+export async function submitToMls(
+  request: MlsSyndicationRequest
+): Promise<MlsSyndicationStatus> {
+  const brokerEmail =
+    process.env.MLS_BROKER_EMAIL ??
+    "mls-intake@placeholder.example.com";
 
   const resend = new Resend(process.env.RESEND_API_KEY);
   const submissionId = generateSubmissionId();
@@ -178,7 +187,9 @@ export async function submitToMls(request: MlsSyndicationRequest): Promise<MlsSy
  *
  * Reads from the mls_syndications table. Returns null if no submission exists.
  */
-export async function getMlsStatus(listingId: string): Promise<MlsSyndicationStatus | null> {
+export async function getMlsStatus(
+  listingId: string
+): Promise<MlsSyndicationStatus | null> {
   const rows = await db
     .select()
     .from(mlsSyndications)

@@ -1,11 +1,16 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getStateInfo } from "@/lib/states";
-import type { TransactionFees } from "@/services/fees/transaction-fees";
 import { calculateTransactionFees } from "@/services/fees/transaction-fees";
+import type { TransactionFees } from "@/services/fees/transaction-fees";
 import type { LaunchState } from "@/types";
+import { getStateInfo } from "@/lib/states";
 
 // ─── Exported utilities (used by tests and other components) ──────────────────
 
@@ -89,20 +94,29 @@ export function FeeBreakdown({ homePrice, state }: FeeBreakdownProps) {
       </CardHeader>
       <CardContent className="space-y-1">
         <FeeRow label="Platform Fee" value={formatCents(fees.platformFee)} />
-        <FeeRow label="Title Company Fee" value={formatCents(fees.titleFee)} />
+        <FeeRow
+          label="Title Company Fee"
+          value={formatCents(fees.titleFee)}
+        />
 
         {showAttorney && (
           <FeeRow
             label={
               <span>
-                Attorney Fee <span className="text-xs text-muted-foreground">{attorneyNote}</span>
+                Attorney Fee{" "}
+                <span className="text-xs text-muted-foreground">
+                  {attorneyNote}
+                </span>
               </span>
             }
             value={formatCents(fees.attorneyFee)}
           />
         )}
 
-        <FeeRow label="Flat-Fee MLS Listing" value={formatCents(fees.mlsSyndicationFee)} />
+        <FeeRow
+          label="Flat-Fee MLS Listing"
+          value={formatCents(fees.mlsSyndicationFee)}
+        />
 
         {fees.agentForHireFee > 0 && (
           <FeeRow
@@ -121,8 +135,14 @@ export function FeeBreakdown({ homePrice, state }: FeeBreakdownProps) {
         <Separator className="my-2" />
 
         <FeeRow
-          label={<span className="font-semibold text-foreground">Total Platform Fees</span>}
-          value={<span className="font-bold">{formatCents(fees.totalFees)}</span>}
+          label={
+            <span className="font-semibold text-foreground">
+              Total Platform Fees
+            </span>
+          }
+          value={
+            <span className="font-bold">{formatCents(fees.totalFees)}</span>
+          }
         />
 
         <FeeRow
@@ -135,7 +155,9 @@ export function FeeBreakdown({ homePrice, state }: FeeBreakdownProps) {
         />
 
         <FeeRow
-          label={<span className="font-semibold text-foreground">Your Savings</span>}
+          label={
+            <span className="font-semibold text-foreground">Your Savings</span>
+          }
           value={
             <span className="font-bold text-green-600 dark:text-green-400">
               {formatCents(fees.savings)}
@@ -144,7 +166,8 @@ export function FeeBreakdown({ homePrice, state }: FeeBreakdownProps) {
         />
 
         <p className="text-xs text-muted-foreground pt-3 border-t mt-2">
-          Fees are estimates and may vary. Title company fees depend on your chosen provider.
+          Fees are estimates and may vary. Title company fees depend on your
+          chosen provider.
         </p>
       </CardContent>
     </Card>

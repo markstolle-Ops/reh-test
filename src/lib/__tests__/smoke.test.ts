@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
-  ATTORNEY_STATES,
-  COMMISSION_RATE_DEFAULT,
-  CUSTOMARY_ATTORNEY_STATES,
-  LAUNCH_STATES,
   PLATFORM_FEE_PLACEHOLDER,
+  LAUNCH_STATES,
+  ATTORNEY_STATES,
+  CUSTOMARY_ATTORNEY_STATES,
+  COMMISSION_RATE_DEFAULT,
 } from "@/lib/constants";
 
 describe("constants", () => {

@@ -1,9 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import {
-  completeDisclosureForm,
   getDisclosureForm,
   updateDisclosureForm,
+  completeDisclosureForm,
 } from "@/services/disclosures/disclosure-form";
 
 interface RouteParams {

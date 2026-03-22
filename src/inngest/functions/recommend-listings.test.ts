@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Mock modules ─────────────────────────────────────────────────────────────
 
@@ -29,7 +29,10 @@ vi.mock("@/inngest/client", () => ({
 // ─── Import after mocks ────────────────────────────────────────────────────────
 import { db } from "@/db";
 import { getRecommendations } from "@/services/matching/listing-recommendations";
-import { getActiveBuyerUserIds, sendRecommendationEmailRaw } from "./recommend-listings";
+import {
+  getActiveBuyerUserIds,
+  sendRecommendationEmailRaw,
+} from "./recommend-listings";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -60,10 +63,9 @@ describe("getActiveBuyerUserIds", () => {
   });
 
   it("loads distinct userIds with recent buyer events", async () => {
-    vi.mocked(db.execute).mockResolvedValue([
-      { user_id: "user-1" },
-      { user_id: "user-2" },
-    ] as unknown as Awaited<ReturnType<typeof db.execute>>);
+    vi.mocked(db.execute).mockResolvedValue(
+      [{ user_id: "user-1" }, { user_id: "user-2" }] as unknown as Awaited<ReturnType<typeof db.execute>>
+    );
 
     const result = await getActiveBuyerUserIds();
 
@@ -73,7 +75,7 @@ describe("getActiveBuyerUserIds", () => {
 
   it("returns empty array when no users have recent events", async () => {
     vi.mocked(db.execute).mockResolvedValue(
-      [] as unknown as Awaited<ReturnType<typeof db.execute>>,
+      [] as unknown as Awaited<ReturnType<typeof db.execute>>
     );
 
     const result = await getActiveBuyerUserIds();
@@ -109,7 +111,7 @@ describe("sendRecommendationEmailRaw", () => {
       expect.objectContaining({
         to: "user@example.com",
         subject: expect.stringContaining("listing"),
-      }),
+      })
     );
   });
 
@@ -126,7 +128,7 @@ describe("sendRecommendationEmailRaw", () => {
     const listings = Array.from({ length: 8 }, (_, i) => ({
       ...sampleListing,
       id: `listing-${i}`,
-      price: 30000000 + i * 1000000,
+      price: (30000000 + i * 1000000),
     }));
 
     vi.mocked(getRecommendations).mockResolvedValue(listings);

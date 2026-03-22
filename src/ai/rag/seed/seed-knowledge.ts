@@ -11,14 +11,15 @@
  *   - pgvector migration (001_pgvector.sql) already applied to database
  */
 
-import { openai } from "@ai-sdk/openai";
-import { embed } from "ai";
-import { and, eq, sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
 import * as fs from "fs";
 import * as path from "path";
+import { embed } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { sql } from "drizzle-orm";
 import { knowledgeChunks } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
 
 // ─── Source documents ─────────────────────────────────────────────────────────
 
@@ -34,7 +35,10 @@ const DOCS_TO_SEED = [
     state: null,
   },
   {
-    path: path.resolve(process.cwd(), "docs/legal/state-compliance-classification.md"),
+    path: path.resolve(
+      process.cwd(),
+      "docs/legal/state-compliance-classification.md"
+    ),
     source: "state-compliance-classification",
     state: null,
   },
@@ -75,7 +79,7 @@ async function seedDocument(
   db: ReturnType<typeof createDb>,
   docPath: string,
   source: string,
-  state: string | null,
+  state: string | null
 ) {
   if (!fs.existsSync(docPath)) {
     console.warn(`[seed] Skipping ${source} — file not found: ${docPath}`);

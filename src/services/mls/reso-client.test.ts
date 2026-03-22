@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { fetchResoListings, fetchResoDelta } from "./reso-client";
 import type { ResoBoardConfig } from "./reso-client";
-import { fetchResoDelta, fetchResoListings } from "./reso-client";
 
 // ─── Mock fetch ───────────────────────────────────────────────────────────────
 
@@ -14,7 +14,10 @@ const testBoard: ResoBoardConfig = {
   name: "Test MLS",
 };
 
-function makeResoResponse(value: object[], nextLink?: string): Response {
+function makeResoResponse(
+  value: object[],
+  nextLink?: string
+): Response {
   return {
     ok: true,
     json: async () => ({
@@ -38,7 +41,9 @@ describe("fetchResoListings", () => {
 
     expect(mockFetch).toHaveBeenCalledOnce();
     const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
-    expect((init.headers as Record<string, string>)["Authorization"]).toBe("Bearer test-token-abc");
+    expect((init.headers as Record<string, string>)["Authorization"]).toBe(
+      "Bearer test-token-abc"
+    );
   });
 
   it("calls /Property endpoint on the board apiUrl", async () => {
@@ -84,7 +89,7 @@ describe("fetchResoListings", () => {
 
     mockFetch
       .mockResolvedValueOnce(
-        makeResoResponse(page1, "https://api.example.com/reso/Property?$skip=100"),
+        makeResoResponse(page1, "https://api.example.com/reso/Property?$skip=100")
       )
       .mockResolvedValueOnce(makeResoResponse(page2));
 
@@ -102,7 +107,7 @@ describe("fetchResoListings", () => {
     const page = [{ ListingKey: "L1" }];
     for (let i = 0; i < 11; i++) {
       mockFetch.mockResolvedValueOnce(
-        makeResoResponse(page, "https://api.example.com/reso/Property?$skip=" + (i + 1) * 100),
+        makeResoResponse(page, "https://api.example.com/reso/Property?$skip=" + (i + 1) * 100)
       );
     }
 

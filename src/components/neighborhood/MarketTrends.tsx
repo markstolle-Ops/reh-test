@@ -2,16 +2,21 @@
 
 import { useEffect, useState } from "react";
 import {
-  CartesianGrid,
-  Legend,
-  Line,
   LineChart,
-  ResponsiveContainer,
-  Tooltip,
+  Line,
   XAxis,
   YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { MarketTrendPoint } from "@/services/neighborhood/data";
 
 interface MarketTrendsProps {
@@ -57,7 +62,13 @@ function MarketTrendsSkeleton() {
 
 // ─── Summary stat card ────────────────────────────────────────────────────────
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function StatCard({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
   return (
     <div className="rounded-lg bg-muted/50 p-3 text-center">
       <p className="text-xs text-muted-foreground mb-1">{label}</p>
@@ -120,7 +131,9 @@ export function MarketTrends({ zip, state }: MarketTrendsProps) {
 
   // Compute summary stats from the most recent data point
   const latest = trends[trends.length - 1];
-  const avgDom = Math.round(trends.reduce((sum, p) => sum + p.daysOnMarket, 0) / trends.length);
+  const avgDom = Math.round(
+    trends.reduce((sum, p) => sum + p.daysOnMarket, 0) / trends.length
+  );
 
   return (
     <Card>
@@ -130,9 +143,17 @@ export function MarketTrends({ zip, state }: MarketTrendsProps) {
       <CardContent className="space-y-4">
         {/* Line chart */}
         <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={trends} margin={{ top: 4, right: 16, left: 8, bottom: 4 }}>
+          <LineChart
+            data={trends}
+            margin={{ top: 4, right: 16, left: 8, bottom: 4 }}
+          >
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-            <XAxis dataKey="month" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+            <XAxis
+              dataKey="month"
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={false}
+            />
             <YAxis
               yAxisId="price"
               orientation="left"
@@ -159,8 +180,7 @@ export function MarketTrends({ zip, state }: MarketTrendsProps) {
             />
             <Tooltip
               formatter={(value, name) => {
-                if (name === "Median Price")
-                  return [formatTooltipPrice(Number(value ?? 0)), String(name)];
+                if (name === "Median Price") return [formatTooltipPrice(Number(value ?? 0)), String(name)];
                 return [value ?? 0, String(name)];
               }}
               contentStyle={{
@@ -171,7 +191,11 @@ export function MarketTrends({ zip, state }: MarketTrendsProps) {
                 color: "var(--card-foreground)",
               }}
             />
-            <Legend wrapperStyle={{ fontSize: 12 }} iconType="circle" iconSize={8} />
+            <Legend
+              wrapperStyle={{ fontSize: 12 }}
+              iconType="circle"
+              iconSize={8}
+            />
             <Line
               yAxisId="price"
               type="monotone"
@@ -197,9 +221,15 @@ export function MarketTrends({ zip, state }: MarketTrendsProps) {
 
         {/* Summary stat cards */}
         <div className="grid grid-cols-3 gap-3">
-          <StatCard label="Current Median Price" value={formatPrice(latest.medianPrice)} />
+          <StatCard
+            label="Current Median Price"
+            value={formatPrice(latest.medianPrice)}
+          />
           <StatCard label="Avg Days on Market" value={`${avgDom} days`} />
-          <StatCard label="Active Inventory" value={`${latest.activeInventory} units`} />
+          <StatCard
+            label="Active Inventory"
+            value={`${latest.activeInventory} units`}
+          />
         </div>
 
         {/* Source attribution */}

@@ -21,7 +21,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx biome check . || echo "::warning::Biome check found issues — fix before enforcing"
+      - run: npx biome check .
 
   unit-test:
     name: Unit Tests

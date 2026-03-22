@@ -1,14 +1,14 @@
 import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { transactions } from "@/db/schema";
-import { inngest } from "@/inngest/client";
 import {
   appendTransactionEvent,
   type TransactionEventType,
   type TransactionStatus,
 } from "@/services/transaction/events";
+import { inngest } from "@/inngest/client";
 import { getStateWorkflowConfig } from "@/workflow/states";
 
 type Params = { params: Promise<{ id: string }> };
@@ -41,7 +41,7 @@ const VALID_EVENT_TYPES = new Set<TransactionEventType>([
 function deriveNewStatus(
   eventType: TransactionEventType,
   currentStatus: TransactionStatus,
-  propertyState: string,
+  propertyState: string
 ): TransactionStatus | undefined {
   // Get workflow config to determine attorney requirement
   let stateConfig;
@@ -126,11 +126,17 @@ export async function POST(req: NextRequest, { params }: Params) {
   };
 
   if (!eventType || typeof eventType !== "string") {
-    return NextResponse.json({ error: "eventType is required" }, { status: 422 });
+    return NextResponse.json(
+      { error: "eventType is required" },
+      { status: 422 }
+    );
   }
 
   if (!VALID_EVENT_TYPES.has(eventType as TransactionEventType)) {
-    return NextResponse.json({ error: `Invalid eventType: ${eventType}` }, { status: 422 });
+    return NextResponse.json(
+      { error: `Invalid eventType: ${eventType}` },
+      { status: 422 }
+    );
   }
 
   const safePayload =
@@ -142,7 +148,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   const newStatus = deriveNewStatus(
     eventType as TransactionEventType,
     transaction.currentStatus as TransactionStatus,
-    transaction.propertyState,
+    transaction.propertyState
   );
 
   const event = await appendTransactionEvent({

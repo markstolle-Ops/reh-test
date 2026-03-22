@@ -5,7 +5,10 @@ import { buyerEvents } from "@/db/schema";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type BuyerEventType = "listing_viewed" | "listing_saved" | "search_executed";
+export type BuyerEventType =
+  | "listing_viewed"
+  | "listing_saved"
+  | "search_executed";
 
 const VALID_EVENT_TYPES = new Set<BuyerEventType>([
   "listing_viewed",
@@ -35,10 +38,12 @@ export interface BuyerEvent {
  * Append-only insert of a buyer behavioral event.
  * Validates eventType against allowed set before writing.
  */
-export async function recordBuyerEvent(input: BuyerEventInput): Promise<BuyerEvent> {
+export async function recordBuyerEvent(
+  input: BuyerEventInput
+): Promise<BuyerEvent> {
   if (!VALID_EVENT_TYPES.has(input.eventType)) {
     throw new Error(
-      `Invalid eventType: "${input.eventType}". Must be one of: listing_viewed, listing_saved, search_executed`,
+      `Invalid eventType: "${input.eventType}". Must be one of: listing_viewed, listing_saved, search_executed`
     );
   }
 
@@ -62,14 +67,22 @@ export async function recordBuyerEvent(input: BuyerEventInput): Promise<BuyerEve
  * Load buyer events from the trailing N days (default 90).
  * Used by the preference profiler to build a buyer's interest signature.
  */
-export async function getRecentEvents(userId: string, days = 90): Promise<BuyerEvent[]> {
+export async function getRecentEvents(
+  userId: string,
+  days = 90
+): Promise<BuyerEvent[]> {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
 
   const rows = await db
     .select()
     .from(buyerEvents)
-    .where(and(sql`${buyerEvents.userId} = ${userId}`, gt(buyerEvents.occurredAt, cutoff)))
+    .where(
+      and(
+        sql`${buyerEvents.userId} = ${userId}`,
+        gt(buyerEvents.occurredAt, cutoff)
+      )
+    )
     .orderBy(desc(buyerEvents.occurredAt));
 
   return rows as BuyerEvent[];

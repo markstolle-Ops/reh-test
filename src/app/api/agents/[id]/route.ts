@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
 import { agentProfiles } from "@/db/schema";
@@ -18,7 +18,10 @@ const updateAgentSchema = z.object({
  * Return public profile for a given agent ID.
  * Excludes stripeAccountId and internal fields.
  */
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params;
 
   const rows = await db
@@ -50,7 +53,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
  *
  * Update mutable agent profile fields. Auth required — must be profile owner.
  */
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { userId } = await auth();
 
   if (!userId) {
@@ -84,7 +90,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Validation failed", issues: parsed.error.issues },
-      { status: 422 },
+      { status: 422 }
     );
   }
 

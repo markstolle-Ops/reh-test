@@ -1,7 +1,7 @@
+import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { type NextRequest, NextResponse } from "next/server";
-import type { SignWellWebhookPayload } from "@/services/signatures/signwell";
 import { processWebhookEvent } from "@/services/signatures/signwell";
+import type { SignWellWebhookPayload } from "@/services/signatures/signwell";
 
 /**
  * POST /api/signatures/webhook
@@ -17,10 +17,18 @@ export async function POST(req: NextRequest) {
   const secret = process.env.SIGNWELL_WEBHOOK_SECRET;
   if (secret) {
     const signature = req.headers.get("x-signwell-signature") ?? "";
-    const expected = createHmac("sha256", secret).update(rawBody).digest("hex");
+    const expected = createHmac("sha256", secret)
+      .update(rawBody)
+      .digest("hex");
 
-    if (!signature || !timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
-      return NextResponse.json({ error: "Invalid webhook signature" }, { status: 401 });
+    if (
+      !signature ||
+      !timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+    ) {
+      return NextResponse.json(
+        { error: "Invalid webhook signature" },
+        { status: 401 }
+      );
     }
   }
 

@@ -23,9 +23,14 @@ export async function POST(req: Request) {
   if (!state || !formName || !message) {
     return NextResponse.json(
       { error: "state, formName, and message are required" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
-  return createDisclosureAssistStream(state, formName, fieldContext ?? "", message);
+  return createDisclosureAssistStream(
+    state,
+    formName,
+    fieldContext ?? "",
+    message
+  );
 }

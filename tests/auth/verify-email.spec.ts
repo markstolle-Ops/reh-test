@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 // ACCT-02: Email verification
 // Clerk handles email verification natively — this test confirms the flow is enabled,

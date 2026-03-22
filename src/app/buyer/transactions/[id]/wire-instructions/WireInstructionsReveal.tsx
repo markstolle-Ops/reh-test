@@ -37,7 +37,9 @@ export default function WireInstructionsReveal({
     setError(null);
 
     try {
-      const res = await fetch(`/api/wire-instructions/${transactionId}?reveal=true`);
+      const res = await fetch(
+        `/api/wire-instructions/${transactionId}?reveal=true`
+      );
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -49,7 +51,9 @@ export default function WireInstructionsReveal({
       setFullAccount(data.wireInstructions.accountNumber);
       setRevealed(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to reveal numbers");
+      setError(
+        err instanceof Error ? err.message : "Failed to reveal numbers"
+      );
     } finally {
       setLoading(false);
     }
@@ -62,28 +66,38 @@ export default function WireInstructionsReveal({
     <div className="space-y-3 border-t border-gray-100 pt-3">
       <div className="flex items-start justify-between py-2 border-b border-gray-100 text-sm">
         <dt className="text-gray-500 font-medium">Routing Number</dt>
-        <dd className="text-gray-900 font-mono font-semibold text-right">{displayRouting}</dd>
+        <dd className="text-gray-900 font-mono font-semibold text-right">
+          {displayRouting}
+        </dd>
       </div>
 
       <div className="flex items-start justify-between py-2 border-b border-gray-100 text-sm">
         <dt className="text-gray-500 font-medium">Account Number</dt>
-        <dd className="text-gray-900 font-mono font-semibold text-right">{displayAccount}</dd>
+        <dd className="text-gray-900 font-mono font-semibold text-right">
+          {displayAccount}
+        </dd>
       </div>
 
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && (
+        <p className="text-xs text-red-600">{error}</p>
+      )}
 
       <button
         onClick={handleReveal}
         disabled={loading}
         className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
       >
-        {loading ? "Loading..." : revealed ? "Hide full numbers" : "Reveal full numbers"}
+        {loading
+          ? "Loading..."
+          : revealed
+          ? "Hide full numbers"
+          : "Reveal full numbers"}
       </button>
 
       {revealed && (
         <p className="text-xs text-amber-700 text-center">
-          Full numbers are now visible. This access has been logged. Do not screenshot or share
-          these numbers.
+          Full numbers are now visible. This access has been logged.
+          Do not screenshot or share these numbers.
         </p>
       )}
     </div>

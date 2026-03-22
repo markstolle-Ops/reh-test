@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import { calculateSavings, estimateTitleFee } from "@/lib/calculator";
 import { getStateInfo } from "@/lib/states";
 
@@ -60,14 +60,14 @@ describe("calculateSavings", () => {
   it("totalWithAgent equals traditionalCommission + titleFee + attorneyFee", () => {
     const result = calculateSavings(400000, "GA");
     expect(result.totalWithAgent).toBe(
-      result.traditionalCommission + result.titleFee + result.attorneyFee,
+      result.traditionalCommission + result.titleFee + result.attorneyFee
     );
   });
 
   it("totalWithPlatform equals platformFee + titleFee + attorneyFee", () => {
     const result = calculateSavings(400000, "GA");
     expect(result.totalWithPlatform).toBe(
-      result.platformFee + result.titleFee + result.attorneyFee,
+      result.platformFee + result.titleFee + result.attorneyFee
     );
   });
 

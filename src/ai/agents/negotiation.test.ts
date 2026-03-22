@@ -1,9 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   NEGOTIATION_BUYER_SYSTEM_PROMPT,
   NEGOTIATION_SELLER_SYSTEM_PROMPT,
 } from "@/ai/prompts/negotiation-buyer";
-import { NEGOTIATION_SELLER_SYSTEM_PROMPT as SELLER_FROM_SELLER_FILE } from "@/ai/prompts/negotiation-seller";
+import {
+  NEGOTIATION_SELLER_SYSTEM_PROMPT as SELLER_FROM_SELLER_FILE,
+} from "@/ai/prompts/negotiation-seller";
 import { suggestOfferPriceSchema } from "./negotiation";
 
 describe("Negotiation buyer prompt", () => {

@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type { NeighborhoodData } from "@/services/neighborhood/data";
 
 interface NeighborhoodWidgetProps {
@@ -29,7 +34,15 @@ function crimeLabel(crimeIndex: number): {
 
 // ─── Score bar ────────────────────────────────────────────────────────────────
 
-function ScoreBar({ label, score, max = 100 }: { label: string; score: number; max?: number }) {
+function ScoreBar({
+  label,
+  score,
+  max = 100,
+}: {
+  label: string;
+  score: number;
+  max?: number;
+}) {
   const pct = Math.round((score / max) * 100);
   return (
     <div className="flex items-center gap-3">
@@ -44,9 +57,7 @@ function ScoreBar({ label, score, max = 100 }: { label: string; score: number; m
           role="progressbar"
         />
       </div>
-      <span
-        className={`text-sm font-semibold w-10 text-right tabular-nums ${scoreColor(score, max)}`}
-      >
+      <span className={`text-sm font-semibold w-10 text-right tabular-nums ${scoreColor(score, max)}`}>
         {score}
       </span>
     </div>
@@ -150,11 +161,16 @@ export function NeighborhoodWidget({ zip, state }: NeighborhoodWidgetProps) {
           {data.nearbySchools.length > 0 && (
             <ul className="space-y-1">
               {data.nearbySchools.map((school, i) => (
-                <li key={i} className="flex items-center justify-between text-sm">
+                <li
+                  key={i}
+                  className="flex items-center justify-between text-sm"
+                >
                   <span className="text-foreground">{school.name}</span>
                   <span className="text-muted-foreground text-xs">
                     {school.distance} &bull;{" "}
-                    <span className={scoreColor(school.rating, 10)}>{school.rating}/10</span>
+                    <span className={scoreColor(school.rating, 10)}>
+                      {school.rating}/10
+                    </span>
                   </span>
                 </li>
               ))}

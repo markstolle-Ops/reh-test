@@ -76,7 +76,7 @@ export function generateChecklist(config: StateWorkflowConfig): ChecklistItem[] 
  */
 export function checkDocumentCompliance(
   config: StateWorkflowConfig,
-  transactionEvents: TransactionEventRecord[],
+  transactionEvents: TransactionEventRecord[]
 ): DocumentComplianceResult {
   const eventTypes = new Set(transactionEvents.map((e) => e.eventType));
 
@@ -112,12 +112,14 @@ export function checkDocumentCompliance(
  */
 export function formatChecklistWithStatus(
   checklist: ChecklistItem[],
-  compliance: DocumentComplianceResult,
+  compliance: DocumentComplianceResult
 ): ChecklistWithStatus[] {
   const completeSet = new Set(compliance.complete);
 
   return checklist.map((item) => {
-    const missingDocuments = item.requiredDocuments.filter((doc) => !completeSet.has(doc));
+    const missingDocuments = item.requiredDocuments.filter(
+      (doc) => !completeSet.has(doc)
+    );
 
     return {
       stepId: item.stepId,

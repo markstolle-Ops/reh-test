@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { deleteSavedSearch } from "@/services/search/saved-searches";
 
 /**
@@ -10,7 +10,7 @@ import { deleteSavedSearch } from "@/services/search/saved-searches";
  */
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId } = await auth();
   if (!userId) {

@@ -4,7 +4,7 @@
  * Tests the raw (non-Inngest-wrapped) function that inserts deadline rows
  * from state workflow config steps into the transactionDeadlines table.
  */
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── DB mock ──────────────────────────────────────────────────────────────────
 // NOTE: vi.mock factory must use vi.fn() inline (not outer variables) due to

@@ -1,10 +1,10 @@
-import { estimateTitleFee } from "@/lib/calculator";
 import {
-  AGENT_FOR_HIRE_FEE_CENTS,
-  COMMISSION_RATE_DEFAULT,
   PLATFORM_FEE_PLACEHOLDER,
+  COMMISSION_RATE_DEFAULT,
+  AGENT_FOR_HIRE_FEE_CENTS,
 } from "@/lib/constants";
 import { getStateInfo } from "@/lib/states";
+import { estimateTitleFee } from "@/lib/calculator";
 import type { LaunchState } from "@/types";
 
 /**
@@ -43,7 +43,10 @@ const MLS_SYNDICATION_FEE_CENTS = 29900;
  * @param state - Two-letter launch state code
  * @returns TransactionFees with all fee components
  */
-export function calculateTransactionFees(homePrice: number, state: LaunchState): TransactionFees {
+export function calculateTransactionFees(
+  homePrice: number,
+  state: LaunchState
+): TransactionFees {
   const stateInfo = getStateInfo(state);
 
   const platformFee = PLATFORM_FEE_PLACEHOLDER;
@@ -57,20 +60,23 @@ export function calculateTransactionFees(homePrice: number, state: LaunchState):
 
   // Attorney fee applies to attorney-required (GA, NC) and customary-attorney (NY, IL) states
   const attorneyFee =
-    stateInfo.closingType === "attorney-required" || stateInfo.closingType === "customary-attorney"
+    stateInfo.closingType === "attorney-required" ||
+    stateInfo.closingType === "customary-attorney"
       ? ATTORNEY_FEE_CENTS
       : 0;
 
   // Agent-for-hire fee: $500 for attorney-required (GA, NC) and customary-attorney (NY, IL) states.
   // Attorney/customary-attorney states require licensed agent involvement at closing.
   const agentForHireFee =
-    stateInfo.closingType === "attorney-required" || stateInfo.closingType === "customary-attorney"
+    stateInfo.closingType === "attorney-required" ||
+    stateInfo.closingType === "customary-attorney"
       ? AGENT_FOR_HIRE_FEE_CENTS
       : 0;
 
   const mlsSyndicationFee = MLS_SYNDICATION_FEE_CENTS;
 
-  const totalFees = platformFee + titleFee + attorneyFee + agentForHireFee + mlsSyndicationFee;
+  const totalFees =
+    platformFee + titleFee + attorneyFee + agentForHireFee + mlsSyndicationFee;
 
   const traditionalCommission = Math.round(homePriceDollars * COMMISSION_RATE_DEFAULT * 100);
 

@@ -1,5 +1,5 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { Mock } from "vitest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // ─── Mocks (must be hoisted before imports) ───────────────────────────────────
 
@@ -14,9 +14,9 @@ vi.mock("next/cache", () => ({
   revalidateTag: vi.fn(),
 }));
 
-import { revalidateTag } from "next/cache";
-import { db } from "@/db";
 import { updateListing, updateListingStatus } from "./update";
+import { db } from "@/db";
+import { revalidateTag } from "next/cache";
 
 // ─── Test Data ────────────────────────────────────────────────────────────────
 
@@ -97,9 +97,9 @@ describe("updateListing", () => {
     };
     (db.select as Mock).mockReturnValue(mockSelect);
 
-    await expect(updateListing("listing-001", "user-abc", { price: 40000000 })).rejects.toThrow(
-      /not found|forbidden|unauthorized/i,
-    );
+    await expect(
+      updateListing("listing-001", "user-abc", { price: 40000000 })
+    ).rejects.toThrow(/not found|forbidden|unauthorized/i);
 
     expect(db.update).not.toHaveBeenCalled();
   });
@@ -111,9 +111,9 @@ describe("updateListing", () => {
     };
     (db.select as Mock).mockReturnValue(mockSelect);
 
-    await expect(updateListing("listing-999", "user-abc", { price: 40000000 })).rejects.toThrow(
-      /not found|forbidden|unauthorized/i,
-    );
+    await expect(
+      updateListing("listing-999", "user-abc", { price: 40000000 })
+    ).rejects.toThrow(/not found|forbidden|unauthorized/i);
   });
 
   it("sets descriptionStatus to 'edited' when description field is updated", async () => {
@@ -145,7 +145,10 @@ describe("updateListingStatus", () => {
     vi.clearAllMocks();
   });
 
-  function setupDbMocksForStatus(existingStatus: string, updatedListing?: typeof baseListing) {
+  function setupDbMocksForStatus(
+    existingStatus: string,
+    updatedListing?: typeof baseListing
+  ) {
     const existing = { ...baseListing, status: existingStatus as any };
     const mockSelect = {
       from: vi.fn().mockReturnThis(),
@@ -213,9 +216,9 @@ describe("updateListingStatus", () => {
   it("rejects sold -> active transition (sold is terminal)", async () => {
     setupDbMocksForStatus("sold");
 
-    await expect(updateListingStatus("listing-001", "user-abc", "active")).rejects.toThrow(
-      /invalid.*transition|sold.*terminal|cannot.*reactivate/i,
-    );
+    await expect(
+      updateListingStatus("listing-001", "user-abc", "active")
+    ).rejects.toThrow(/invalid.*transition|sold.*terminal|cannot.*reactivate/i);
 
     expect(db.update).not.toHaveBeenCalled();
   });
@@ -223,9 +226,9 @@ describe("updateListingStatus", () => {
   it("rejects sold -> pending transition (sold is terminal)", async () => {
     setupDbMocksForStatus("sold");
 
-    await expect(updateListingStatus("listing-001", "user-abc", "pending")).rejects.toThrow(
-      /invalid.*transition|sold.*terminal|cannot.*reactivate/i,
-    );
+    await expect(
+      updateListingStatus("listing-001", "user-abc", "pending")
+    ).rejects.toThrow(/invalid.*transition|sold.*terminal|cannot.*reactivate/i);
 
     expect(db.update).not.toHaveBeenCalled();
   });
@@ -233,9 +236,9 @@ describe("updateListingStatus", () => {
   it("rejects sold -> draft transition (sold is terminal)", async () => {
     setupDbMocksForStatus("sold");
 
-    await expect(updateListingStatus("listing-001", "user-abc", "draft")).rejects.toThrow(
-      /invalid.*transition|sold.*terminal|cannot.*reactivate/i,
-    );
+    await expect(
+      updateListingStatus("listing-001", "user-abc", "draft")
+    ).rejects.toThrow(/invalid.*transition|sold.*terminal|cannot.*reactivate/i);
 
     expect(db.update).not.toHaveBeenCalled();
   });
@@ -255,9 +258,9 @@ describe("updateListingStatus", () => {
     };
     (db.select as Mock).mockReturnValue(mockSelect);
 
-    await expect(updateListingStatus("listing-999", "user-abc", "active")).rejects.toThrow(
-      /not found|forbidden|unauthorized/i,
-    );
+    await expect(
+      updateListingStatus("listing-999", "user-abc", "active")
+    ).rejects.toThrow(/not found|forbidden|unauthorized/i);
   });
 
   it("does not set publishedAt when transitioning from active to pending", async () => {

@@ -21,11 +21,25 @@ export interface ListingDescriptionDetails {
  * @param details - Structured property details to embed in the prompt
  * @returns Full system + user prompt string
  */
-export function LISTING_DESCRIPTION_PROMPT(details: ListingDescriptionDetails): string {
-  const { beds, baths, sqft, lotSizeSqft, city, state, propertyType, yearBuilt } = details;
+export function LISTING_DESCRIPTION_PROMPT(
+  details: ListingDescriptionDetails
+): string {
+  const {
+    beds,
+    baths,
+    sqft,
+    lotSizeSqft,
+    city,
+    state,
+    propertyType,
+    yearBuilt,
+  } = details;
 
   const propertyTypeLabel = propertyType.replace(/_/g, " ");
-  const lotInfo = lotSizeSqft && lotSizeSqft > 0 ? ` on a ${lotSizeSqft} sq ft lot` : "";
+  const lotInfo =
+    lotSizeSqft && lotSizeSqft > 0
+      ? ` on a ${lotSizeSqft} sq ft lot`
+      : "";
   const yearInfo = yearBuilt ? `, built in ${yearBuilt}` : "";
 
   return `You are a professional real estate copywriter with deep expertise in MLS listings. \

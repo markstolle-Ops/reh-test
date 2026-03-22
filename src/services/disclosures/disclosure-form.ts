@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { db } from "@/db";
 import { disclosureForms } from "@/db/schema";
 import { getFormSchemaForState } from "./form-schema";
@@ -39,12 +39,10 @@ function parseRecord(row: {
 export async function createDisclosureForm(
   userId: string,
   listingId: string,
-  state: string,
+  state: string
 ): Promise<DisclosureFormRecord> {
   const schema = getFormSchemaForState(state);
-  const formSchemaId = schema
-    ? `${state.toLowerCase()}-${schema.version}`
-    : `${state.toLowerCase()}-1.0`;
+  const formSchemaId = schema ? `${state.toLowerCase()}-${schema.version}` : `${state.toLowerCase()}-1.0`;
 
   const id = crypto.randomUUID();
 
@@ -71,7 +69,7 @@ export async function createDisclosureForm(
 export async function updateDisclosureForm(
   userId: string,
   formId: string,
-  answers: Record<string, unknown>,
+  answers: Record<string, unknown>
 ): Promise<DisclosureFormRecord | null> {
   const [row] = await db
     .update(disclosureForms)
@@ -89,7 +87,7 @@ export async function updateDisclosureForm(
  */
 export async function completeDisclosureForm(
   userId: string,
-  formId: string,
+  formId: string
 ): Promise<DisclosureFormRecord | null> {
   const [row] = await db
     .update(disclosureForms)
@@ -105,8 +103,13 @@ export async function completeDisclosureForm(
  * Retrieves a disclosure form by ID with answers parsed from JSON.
  * Returns null if not found.
  */
-export async function getDisclosureForm(formId: string): Promise<DisclosureFormRecord | null> {
-  const rows = await db.select().from(disclosureForms).where(eq(disclosureForms.id, formId));
+export async function getDisclosureForm(
+  formId: string
+): Promise<DisclosureFormRecord | null> {
+  const rows = await db
+    .select()
+    .from(disclosureForms)
+    .where(eq(disclosureForms.id, formId));
 
   if (!rows[0]) return null;
   return parseRecord(rows[0]);

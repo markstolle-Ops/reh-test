@@ -1,6 +1,6 @@
-import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { UserButton, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export async function Nav() {
   const { userId } = await auth();

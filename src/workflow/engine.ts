@@ -1,4 +1,4 @@
-import { createActor, fromPromise, setup } from "xstate";
+import { setup, fromPromise, createActor } from "xstate";
 import type { StateWorkflowConfig } from "@/workflow/types";
 
 // ─── Event types ────────────────────────────────────────────────────────────
@@ -49,8 +49,10 @@ export const transactionMachine = setup({
     }),
   },
   guards: {
-    requiresAttorney: ({ context }) => context.config.closingType === "attorney-required",
-    requiresCustomaryAttorney: ({ context }) => context.config.closingType === "customary-attorney",
+    requiresAttorney: ({ context }) =>
+      context.config.closingType === "attorney-required",
+    requiresCustomaryAttorney: ({ context }) =>
+      context.config.closingType === "customary-attorney",
   },
 }).createMachine({
   id: "transaction",
@@ -177,7 +179,7 @@ export const transactionMachine = setup({
 export function createTransactionActor(
   transactionId: string,
   propertyState: string,
-  config: StateWorkflowConfig,
+  config: StateWorkflowConfig
 ) {
   return createActor(transactionMachine, {
     input: { transactionId, propertyState, config },

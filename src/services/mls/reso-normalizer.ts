@@ -37,13 +37,13 @@ export interface ResoProperty {
  */
 export interface NormalizedResoRow {
   id: string;
-  mlsSource: string; // "reso:{boardId}"
-  rawData: string; // JSON-stringified ResoProperty
+  mlsSource: string;          // "reso:{boardId}"
+  rawData: string;             // JSON-stringified ResoProperty
   streetAddress: string | null;
   city: string | null;
   state: string | null;
   zip: string | null;
-  price: number | null; // in cents
+  price: number | null;        // in cents
   bedrooms: number | null;
   bathrooms: number | null;
   sqft: number | null;
@@ -64,7 +64,10 @@ const MAX_PHOTOS = 20;
  * @param raw      Raw RESO Property from OData response
  * @param boardId  RESO board identifier (e.g. "crmls")
  */
-export function normalizeResoListing(raw: ResoProperty, boardId: string): NormalizedResoRow {
+export function normalizeResoListing(
+  raw: ResoProperty,
+  boardId: string
+): NormalizedResoRow {
   return {
     id: raw.ListingKey ?? "",
     mlsSource: `reso:${boardId}`,

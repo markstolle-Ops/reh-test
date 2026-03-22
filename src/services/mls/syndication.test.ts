@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Mock Resend ──────────────────────────────────────────────────────────────
 
@@ -7,11 +7,13 @@ const { mockSendEmail } = vi.hoisted(() => ({
 }));
 
 vi.mock("resend", () => ({
-  Resend: vi.fn(() => ({
-    emails: {
-      send: mockSendEmail,
-    },
-  })),
+  Resend: vi.fn(function () {
+    return {
+      emails: {
+        send: mockSendEmail,
+      },
+    };
+  }),
 }));
 
 // ─── Mock DB ──────────────────────────────────────────────────────────────────

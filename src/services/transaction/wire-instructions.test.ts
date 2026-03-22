@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock DB module before imports — uses inline vi.fn() to avoid hoisting issues
 vi.mock("@/db", () => ({
@@ -17,9 +17,9 @@ vi.mock("@/services/transaction/events", () => ({
   appendTransactionEvent: vi.fn(),
 }));
 
+import { setWireInstructions, getWireInstructions } from "./wire-instructions";
 import { db } from "@/db";
 import { appendTransactionEvent } from "@/services/transaction/events";
-import { getWireInstructions, setWireInstructions } from "./wire-instructions";
 
 // ─── setWireInstructions ──────────────────────────────────────────────────────
 
@@ -157,9 +157,9 @@ describe("getWireInstructions", () => {
       sellerUserId: "viewer-user",
     } as any);
 
-    await expect(getWireInstructions("txn-1", "viewer-user")).rejects.toThrow(
-      "Unauthorized: only the buyer can view wire instructions",
-    );
+    await expect(
+      getWireInstructions("txn-1", "viewer-user")
+    ).rejects.toThrow("Unauthorized: only the buyer can view wire instructions");
   });
 
   it("returns null when no wire instructions exist for the transaction", async () => {
@@ -187,15 +187,17 @@ describe("getWireInstructions", () => {
       sellerUserId: "seller-user",
     } as any);
 
-    await expect(getWireInstructions("txn-1", "unauthorized-user")).rejects.toThrow("Unauthorized");
+    await expect(
+      getWireInstructions("txn-1", "unauthorized-user")
+    ).rejects.toThrow("Unauthorized");
   });
 
   it("throws an error when the transaction does not exist", async () => {
     vi.mocked(db.query.transactions.findFirst).mockResolvedValue(undefined);
 
-    await expect(getWireInstructions("txn-missing", "any-user")).rejects.toThrow(
-      "Transaction not found",
-    );
+    await expect(
+      getWireInstructions("txn-missing", "any-user")
+    ).rejects.toThrow("Transaction not found");
   });
 
   it("logs wire_instructions_viewed event via appendTransactionEvent when data is fetched", async () => {

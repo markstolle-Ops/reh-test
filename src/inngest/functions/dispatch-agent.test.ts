@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Mock modules ─────────────────────────────────────────────────────────────
 // All vi.mock calls are hoisted — use vi.fn() inline only (Vitest hoisting rule).
@@ -31,7 +31,10 @@ describe("dispatchAgentRaw", () => {
   it("calls dispatchAgentForTransaction with transactionId and propertyState", async () => {
     vi.mocked(dispatchAgentForTransaction).mockResolvedValueOnce(null);
 
-    await dispatchAgentRaw({ transactionId: "tx-1", propertyState: "CA" }, vi.fn());
+    await dispatchAgentRaw(
+      { transactionId: "tx-1", propertyState: "CA" },
+      vi.fn()
+    );
 
     expect(dispatchAgentForTransaction).toHaveBeenCalledWith("tx-1", "CA");
   });
@@ -40,7 +43,10 @@ describe("dispatchAgentRaw", () => {
     vi.mocked(dispatchAgentForTransaction).mockResolvedValueOnce(null);
 
     const mockSendEmail = vi.fn();
-    await dispatchAgentRaw({ transactionId: "tx-1", propertyState: "CA" }, mockSendEmail);
+    await dispatchAgentRaw(
+      { transactionId: "tx-1", propertyState: "CA" },
+      mockSendEmail
+    );
 
     expect(mockSendEmail).not.toHaveBeenCalled();
   });
@@ -55,7 +61,10 @@ describe("dispatchAgentRaw", () => {
 
     const mockSendEmail = vi.fn().mockResolvedValueOnce(undefined);
 
-    await dispatchAgentRaw({ transactionId: "tx-42", propertyState: "GA" }, mockSendEmail);
+    await dispatchAgentRaw(
+      { transactionId: "tx-42", propertyState: "GA" },
+      mockSendEmail
+    );
 
     expect(mockSendEmail).toHaveBeenCalledTimes(1);
     const emailCall = mockSendEmail.mock.calls[0][0];
@@ -69,7 +78,10 @@ describe("dispatchAgentRaw", () => {
   it("returns dispatchResult (null if no agent)", async () => {
     vi.mocked(dispatchAgentForTransaction).mockResolvedValueOnce(null);
 
-    const result = await dispatchAgentRaw({ transactionId: "tx-1", propertyState: "TX" }, vi.fn());
+    const result = await dispatchAgentRaw(
+      { transactionId: "tx-1", propertyState: "TX" },
+      vi.fn()
+    );
 
     expect(result).toBeNull();
   });
@@ -85,7 +97,7 @@ describe("dispatchAgentRaw", () => {
 
     const result = await dispatchAgentRaw(
       { transactionId: "tx-2", propertyState: "NY" },
-      vi.fn().mockResolvedValueOnce(undefined),
+      vi.fn().mockResolvedValueOnce(undefined)
     );
 
     expect(result).toEqual(dispatchResult);

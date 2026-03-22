@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 // ACCT-01: User signup flow
 // Tests skip gracefully when Clerk testing token is unavailable.
@@ -12,7 +12,9 @@ test.describe("ACCT-01: User signup", () => {
     await expect(page.locator("body")).toBeVisible();
   });
 
-  test("authenticated user signup flow with email verification", async ({ page }) => {
+  test("authenticated user signup flow with email verification", async ({
+    page,
+  }) => {
     if (!process.env.CLERK_TESTING_TOKEN) {
       test.skip();
     }

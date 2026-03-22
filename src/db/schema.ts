@@ -33,7 +33,12 @@ export const propertyTypeEnum = pgEnum("property_type", [
   "land_lot",
 ]);
 
-export const listingStatusEnum = pgEnum("listing_status", ["draft", "active", "pending", "sold"]);
+export const listingStatusEnum = pgEnum("listing_status", [
+  "draft",
+  "active",
+  "pending",
+  "sold",
+]);
 
 // ─── Users ────────────────────────────────────────────────────────────────────
 
@@ -214,10 +219,10 @@ export const mlsListings = pgTable("mls_listings", {
 // Each board has its own credentials, coverage states, and sync schedule.
 
 export const resoBoards = pgTable("reso_boards", {
-  id: text("id").primaryKey(), // e.g. "crmls"
-  name: text("name").notNull(), // "CRMLS", "Bright MLS", etc.
-  apiUrl: text("api_url").notNull(), // RESO Web API base URL
-  apiToken: text("api_token").notNull(), // Bearer token (encrypted at rest via Supabase)
+  id: text("id").primaryKey(),                                        // e.g. "crmls"
+  name: text("name").notNull(),                                        // "CRMLS", "Bright MLS", etc.
+  apiUrl: text("api_url").notNull(),                                   // RESO Web API base URL
+  apiToken: text("api_token").notNull(),                               // Bearer token (encrypted at rest via Supabase)
   coverageStates: text("coverage_states").array().default([]).notNull(), // ["CA","AZ"]
   active: boolean("active").default(false).notNull(),
   syncIntervalMinutes: integer("sync_interval_minutes").default(60).notNull(),
@@ -237,7 +242,9 @@ export const transactions = pgTable("transactions", {
   buyerUserId: text("buyer_user_id").notNull(),
   sellerUserId: text("seller_user_id").notNull(),
   propertyState: text("property_state").notNull(),
-  currentStatus: transactionStatusEnum("current_status").default("offer_submitted").notNull(),
+  currentStatus: transactionStatusEnum("current_status")
+    .default("offer_submitted")
+    .notNull(),
   offerPriceCents: integer("offer_price_cents").notNull(),
   counterPriceCents: integer("counter_price_cents"),
   closingDate: timestamp("closing_date"),
@@ -410,12 +417,15 @@ export const listingsRelations = relations(listings, ({ many }) => ({
   mlsSyndications: many(mlsSyndications),
 }));
 
-export const mlsSyndicationsRelations = relations(mlsSyndications, ({ one }) => ({
-  listing: one(listings, {
-    fields: [mlsSyndications.listingId],
-    references: [listings.id],
-  }),
-}));
+export const mlsSyndicationsRelations = relations(
+  mlsSyndications,
+  ({ one }) => ({
+    listing: one(listings, {
+      fields: [mlsSyndications.listingId],
+      references: [listings.id],
+    }),
+  })
+);
 
 export const listingPhotosRelations = relations(listingPhotos, ({ one }) => ({
   listing: one(listings, {
@@ -424,84 +434,114 @@ export const listingPhotosRelations = relations(listingPhotos, ({ one }) => ({
   }),
 }));
 
-export const showingRequestsRelations = relations(showingRequests, ({ one }) => ({
-  listing: one(listings, {
-    fields: [showingRequests.listingId],
-    references: [listings.id],
-  }),
-}));
+export const showingRequestsRelations = relations(
+  showingRequests,
+  ({ one }) => ({
+    listing: one(listings, {
+      fields: [showingRequests.listingId],
+      references: [listings.id],
+    }),
+  })
+);
 
-export const disclosureFormsRelations = relations(disclosureForms, ({ one }) => ({
-  listing: one(listings, {
-    fields: [disclosureForms.listingId],
-    references: [listings.id],
-  }),
-}));
+export const disclosureFormsRelations = relations(
+  disclosureForms,
+  ({ one }) => ({
+    listing: one(listings, {
+      fields: [disclosureForms.listingId],
+      references: [listings.id],
+    }),
+  })
+);
 
-export const signatureEnvelopesRelations = relations(signatureEnvelopes, ({ one }) => ({
-  listing: one(listings, {
-    fields: [signatureEnvelopes.listingId],
-    references: [listings.id],
-  }),
-}));
+export const signatureEnvelopesRelations = relations(
+  signatureEnvelopes,
+  ({ one }) => ({
+    listing: one(listings, {
+      fields: [signatureEnvelopes.listingId],
+      references: [listings.id],
+    }),
+  })
+);
 
-export const transactionsRelations = relations(transactions, ({ one, many }) => ({
-  listing: one(listings, {
-    fields: [transactions.listingId],
-    references: [listings.id],
-  }),
-  events: many(transactionEvents),
-  deadlines: many(transactionDeadlines),
-  wireInstructions: one(wireInstructions, {
-    fields: [transactions.id],
-    references: [wireInstructions.transactionId],
-  }),
-}));
+export const transactionsRelations = relations(
+  transactions,
+  ({ one, many }) => ({
+    listing: one(listings, {
+      fields: [transactions.listingId],
+      references: [listings.id],
+    }),
+    events: many(transactionEvents),
+    deadlines: many(transactionDeadlines),
+    wireInstructions: one(wireInstructions, {
+      fields: [transactions.id],
+      references: [wireInstructions.transactionId],
+    }),
+  })
+);
 
-export const wireInstructionsRelations = relations(wireInstructions, ({ one }) => ({
-  transaction: one(transactions, {
-    fields: [wireInstructions.transactionId],
-    references: [transactions.id],
-  }),
-}));
+export const wireInstructionsRelations = relations(
+  wireInstructions,
+  ({ one }) => ({
+    transaction: one(transactions, {
+      fields: [wireInstructions.transactionId],
+      references: [transactions.id],
+    }),
+  })
+);
 
-export const transactionEventsRelations = relations(transactionEvents, ({ one }) => ({
-  transaction: one(transactions, {
-    fields: [transactionEvents.transactionId],
-    references: [transactions.id],
-  }),
-}));
+export const transactionEventsRelations = relations(
+  transactionEvents,
+  ({ one }) => ({
+    transaction: one(transactions, {
+      fields: [transactionEvents.transactionId],
+      references: [transactions.id],
+    }),
+  })
+);
 
-export const transactionDeadlinesRelations = relations(transactionDeadlines, ({ one }) => ({
-  transaction: one(transactions, {
-    fields: [transactionDeadlines.transactionId],
-    references: [transactions.id],
-  }),
-}));
+export const transactionDeadlinesRelations = relations(
+  transactionDeadlines,
+  ({ one }) => ({
+    transaction: one(transactions, {
+      fields: [transactionDeadlines.transactionId],
+      references: [transactions.id],
+    }),
+  })
+);
 
-export const agentProfilesRelations = relations(agentProfiles, ({ one, many }) => ({
-  user: one(users, {
-    fields: [agentProfiles.userId],
-    references: [users.id],
-  }),
-  licenseChecks: many(agentLicenseChecks),
-  requests: many(agentRequests),
-}));
+export const agentProfilesRelations = relations(
+  agentProfiles,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [agentProfiles.userId],
+      references: [users.id],
+    }),
+    licenseChecks: many(agentLicenseChecks),
+    requests: many(agentRequests),
+  })
+);
 
-export const agentLicenseChecksRelations = relations(agentLicenseChecks, ({ one }) => ({
-  agent: one(agentProfiles, {
-    fields: [agentLicenseChecks.agentId],
-    references: [agentProfiles.id],
-  }),
-}));
+export const agentLicenseChecksRelations = relations(
+  agentLicenseChecks,
+  ({ one }) => ({
+    agent: one(agentProfiles, {
+      fields: [agentLicenseChecks.agentId],
+      references: [agentProfiles.id],
+    }),
+  })
+);
 
-export const agentRequestsRelations = relations(agentRequests, ({ one }) => ({
-  transaction: one(transactions, {
-    fields: [agentRequests.transactionId],
-    references: [transactions.id],
-  }),
-  agent: one(agentProfiles, {
-    fields: [agentRequests.agentId],
-    references: [agentProfiles.id],
-  }),
-}));
+export const agentRequestsRelations = relations(
+  agentRequests,
+  ({ one }) => ({
+    transaction: one(transactions, {
+      fields: [agentRequests.transactionId],
+      references: [transactions.id],
+    }),
+    agent: one(agentProfiles, {
+      fields: [agentRequests.agentId],
+      references: [agentProfiles.id],
+    }),
+  })
+);
