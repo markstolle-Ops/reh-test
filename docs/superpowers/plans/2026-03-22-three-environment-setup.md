@@ -128,7 +128,7 @@ git commit -m "feat: add OpenNext config for Cloudflare Pages"
 Create `wrangler.toml` at the project root:
 
 ```toml
-name = "realestatehunter"
+name = "reh-test"
 compatibility_date = "2026-03-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".open-next"
@@ -386,7 +386,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .open-next --project-name=realestatehunter --branch=${{ github.ref_name }}
+          command: pages deploy .open-next --project-name=reh-test --branch=${{ github.ref_name }}
 ```
 
 - [ ] **Step 3: Verify workflow YAML is valid**

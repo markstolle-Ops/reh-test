@@ -160,9 +160,9 @@ R2 bucket bindings are configured in `wrangler.toml` with per-environment blocks
 
 Cloudflare auto-generates URLs per branch:
 
-- `main` → `reh.pages.dev` (or custom domain)
-- `staging` → `staging.reh.pages.dev`
-- `dev` → `dev.reh.pages.dev`
+- `main` → `reh-test.pages.dev` (or custom domain)
+- `staging` → `staging.reh-test.pages.dev`
+- `dev` → `dev.reh-test.pages.dev`
 
 Custom domains can be configured later:
 
