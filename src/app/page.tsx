@@ -1,7 +1,19 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { SavingsCalculator } from "@/components/calculator/savings-calculator";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { userId, sessionClaims } = await auth();
+
+  // If signed in, redirect to dashboard or onboarding
+  if (userId) {
+    const role = (sessionClaims as { role?: string })?.role;
+    if (role === "buyer") redirect("/buyer/dashboard");
+    else if (role === "seller") redirect("/seller/dashboard");
+    else redirect("/onboarding");
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center gap-12 px-4 py-12">
       {/* Hero */}
