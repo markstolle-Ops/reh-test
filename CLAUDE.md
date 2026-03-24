@@ -26,7 +26,13 @@ AI-powered real estate transaction platform replacing traditional agents across 
 npm run dev        # Start dev server
 npm run build      # Production build
 npm run start      # Start production server
+npx playwright test        # Run E2E tests (requires: npx playwright install)
+npx vitest run             # Run unit tests
 ```
+
+## Pre-Push Checklist
+
+Before committing UI or behavior changes, always run `npx playwright test` locally to catch E2E test mismatches. If a test fails due to your change (e.g. renamed heading, moved element), update the test in `tests/` to match.
 
 ## Project Structure
 
