@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [dev, staging, main]
+    branches: [staging, main]
   pull_request:
-    branches: [dev, staging, main]
+    branches: [staging, main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -38,10 +38,6 @@ jobs:
   e2e-test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    # Run E2E on staging/main pushes AND on PRs targeting staging/main
-    if: >-
-      github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main' ||
-      github.base_ref == 'staging' || github.base_ref == 'main'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -57,7 +53,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    # Wait for all test jobs; proceed if e2e was skipped (dev branch) but not if it failed
     needs: [lint, unit-test, e2e-test]
     if: always() && !failure() && !cancelled()
     steps:
@@ -67,15 +62,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build:cloudflare
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: .open-next/
-          retention-days: 1
+      - run: npm run build
 
   deploy:
-    name: Deploy to Cloudflare Pages
+    name: Deploy to Vercel
     runs-on: ubuntu-latest
     needs: [build]
     if: github.event_name == 'push'
@@ -89,12 +79,18 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: .open-next/
-      - uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+      - run: npm install -g vercel
+      # Deploy to production only from main branch
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main'
+        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Deploy preview from staging branch
+      - name: Deploy Staging Preview
+        if: github.ref == 'refs/heads/staging'
+        run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

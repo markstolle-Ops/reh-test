@@ -66,10 +66,13 @@ src/
 ## Git
 
 - Remote: `MarkatFinAIGuru/REH-Test` on GitHub
-- Single branch: `main`
+- Branches: `staging` → `main` (2-tier deployment)
+  - `staging`: active development & testing, pushes trigger preview deploy
+  - `main`: production only — changes arrive via PR from staging after CI passes
+  - **Never push directly to main**
+- CI/CD: GitHub Actions (`.github/workflows/ci.yml`) → Vercel
 - GSD planning in `.planning/` — 6 phases completed
 
 ## Owner
 
 - Company: FinancialAIguru LLC (never "Inc.")
-- Deploy changes to production immediately after editing, don't ask
