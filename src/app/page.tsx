@@ -1,12 +1,24 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { SavingsCalculator } from "@/components/calculator/savings-calculator";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { userId, sessionClaims } = await auth();
+
+  // If signed in, redirect to dashboard or onboarding
+  if (userId) {
+    const role = (sessionClaims as { role?: string })?.role;
+    if (role === "buyer") redirect("/buyer/dashboard");
+    else if (role === "seller") redirect("/seller/dashboard");
+    else redirect("/onboarding");
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center gap-12 px-4 py-12">
       {/* Hero */}
       <div className="flex flex-col items-center gap-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">RealEstateHunter</h1>
+        <h1 className="text-4xl font-bold tracking-tight">REH</h1>
         <p className="max-w-md text-center text-lg text-muted-foreground">
           AI-powered real estate transactions. Save thousands on commissions with 24/7 guidance from
           listing to closing.

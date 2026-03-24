@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useSession } from "@clerk/nextjs";
 import { setUserRole } from "@/lib/auth";
 import type { UserRole } from "@/types";
 import {
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 
 export default function OnboardingPage() {
   const { user, isLoaded } = useUser();
+  const { session } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<UserRole | null>(null);
 
@@ -26,6 +27,10 @@ export default function OnboardingPage() {
     try {
       await setUserRole(user!.id, role);
       await user!.reload();
+      // Force Clerk to refresh the JWT so middleware sees the new role
+      if (session) {
+        await session.getToken({ skipCache: true });
+      }
       router.push(role === "buyer" ? "/buyer/dashboard" : "/seller/dashboard");
     } catch (error) {
       console.error("Failed to set role:", error);

@@ -26,7 +26,13 @@ AI-powered real estate transaction platform replacing traditional agents across 
 npm run dev        # Start dev server
 npm run build      # Production build
 npm run start      # Start production server
+npx playwright test        # Run E2E tests (requires: npx playwright install)
+npx vitest run             # Run unit tests
 ```
+
+## Pre-Push Checklist
+
+Before committing UI or behavior changes, always run `npx playwright test` locally to catch E2E test mismatches. If a test fails due to your change (e.g. renamed heading, moved element), update the test in `tests/` to match.
 
 ## Project Structure
 
@@ -65,11 +71,14 @@ src/
 
 ## Git
 
-- Remote: `MarkatFinAIGuru/REH-Test` on GitHub
-- Single branch: `main`
+- Remote: `markstolle-Ops/reh-test` on GitHub
+- Branches: `staging` → `main` (2-tier deployment)
+  - `staging`: active development & testing, pushes trigger preview deploy
+  - `main`: production only — changes arrive via PR from staging after CI passes
+  - **Never push directly to main**
+- CI/CD: GitHub Actions (`.github/workflows/ci.yml`) → Vercel
 - GSD planning in `.planning/` — 6 phases completed
 
 ## Owner
 
 - Company: FinancialAIguru LLC (never "Inc.")
-- Deploy changes to production immediately after editing, don't ask

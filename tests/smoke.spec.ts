@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("homepage has RealEstateHunter heading", async ({ page }) => {
+test("homepage has REH heading", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "RealEstateHunter" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "REH" })).toBeVisible();
 });
