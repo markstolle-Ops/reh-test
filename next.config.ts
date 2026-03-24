@@ -11,13 +11,13 @@ const cspHeader = isDev
   : // Strict CSP for production
     [
       "default-src 'self'",
-      // Allow SignWell iframe and Clerk
-      `frame-src https://www.signwell.com ${clerkDomain}`,
-      // Allow SignWell and Clerk scripts
-      `script-src 'self' 'unsafe-inline' https://cdn.signwell.com ${clerkDomain}`,
+      // Allow SignWell iframe, Clerk, and Cloudflare Turnstile (CAPTCHA)
+      `frame-src https://www.signwell.com https://challenges.cloudflare.com ${clerkDomain}`,
+      // Allow SignWell, Clerk, and Turnstile scripts
+      `script-src 'self' 'unsafe-inline' https://cdn.signwell.com https://challenges.cloudflare.com ${clerkDomain}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
-      `connect-src 'self' https://www.signwell.com https://api.clerk.dev ${clerkDomain}`,
+      `connect-src 'self' https://www.signwell.com https://api.clerk.dev https://challenges.cloudflare.com ${clerkDomain}`,
       "font-src 'self' https:",
       `worker-src 'self' blob: ${clerkDomain}`,
     ].join("; ");
