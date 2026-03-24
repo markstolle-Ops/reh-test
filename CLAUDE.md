@@ -65,7 +65,7 @@ src/
 
 ## Git
 
-- Remote: `realestatehunter-com/reh-test` on GitHub
+- Remote: `markstolle-Ops/reh-test` on GitHub
 - Branches: `staging` → `main` (2-tier deployment)
   - `staging`: active development & testing, pushes trigger preview deploy
   - `main`: production only — changes arrive via PR from staging after CI passes
