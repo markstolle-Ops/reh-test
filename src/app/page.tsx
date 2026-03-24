@@ -18,7 +18,7 @@ export default async function HomePage() {
     <main className="flex min-h-screen flex-col items-center gap-12 px-4 py-12">
       {/* Hero */}
       <div className="flex flex-col items-center gap-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">RealEstateHunter</h1>
+        <h1 className="text-4xl font-bold tracking-tight">REH</h1>
         <p className="max-w-md text-center text-lg text-muted-foreground">
           AI-powered real estate transactions. Save thousands on commissions with 24/7 guidance from
           listing to closing.
