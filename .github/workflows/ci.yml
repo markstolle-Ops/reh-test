@@ -87,10 +87,19 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      # Deploy preview from staging branch
+      # Deploy preview from staging branch and update stable alias
       - name: Deploy Staging Preview
         if: github.ref == 'refs/heads/staging'
-        run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }}
+        id: staging-deploy
+        run: |
+          DEPLOY_URL=$(vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }})
+          echo "deploy_url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Alias Staging Deploy
+        if: github.ref == 'refs/heads/staging' && steps.staging-deploy.outputs.deploy_url
+        run: vercel alias ${{ steps.staging-deploy.outputs.deploy_url }} reh-test-staging.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
